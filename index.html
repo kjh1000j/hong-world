@@ -56,7 +56,7 @@
   <!-- 하늘 -->
   <div id="sky">
     <!-- 햇님 -->
-    <div class="obj" style="top:18px;right:16px;z-index:50;" onclick="showSunBbl()">
+    <div class="obj" style="top:38px;right:16px;z-index:50;" onclick="showSunBbl()">
       <svg width="70" height="70" viewBox="0 0 64 64">
         <g style="transform-origin:32px 32px;animation:spinSun 8s linear infinite;">
           <line x1="32" y1="4"  x2="32" y2="13" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
@@ -423,5 +423,85 @@ world.addEventListener('click',function(e){
 updatePlayer(); updateScroll();
 setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0';setTimeout(()=>h.remove(),1000);}},6000);
 </script>
+
+<!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
+<div id="music-btn" onclick="toggleMusic()" style="
+  position:fixed; bottom:14px; right:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="배경음악 켜기/끄기">🔇</div>
+
+<script>
+let audioCtx = null, playing = false, nodes = [];
+
+function createBGM() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain();
+  master.gain.value = 0.18;
+  master.connect(audioCtx.destination);
+
+  // 잔잔한 자연 느낌 — 낮은 드론 + 멜로디 아르페지오
+  const notes = [261.6, 293.7, 329.6, 392.0, 440.0, 392.0, 329.6, 293.7];
+  const bpm = 72;
+  const beat = 60 / bpm;
+
+  function playNote(freq, time, dur) {
+    const osc = audioCtx.createOscillator();
+    const env = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    env.gain.setValueAtTime(0, time);
+    env.gain.linearRampToValueAtTime(0.4, time + 0.05);
+    env.gain.exponentialRampToValueAtTime(0.01, time + dur);
+    osc.connect(env); env.connect(master);
+    osc.start(time); osc.stop(time + dur + 0.1);
+    nodes.push(osc);
+  }
+
+  // 드론 (지속음)
+  const drone = audioCtx.createOscillator();
+  const droneGain = audioCtx.createGain();
+  drone.type = 'sine';
+  drone.frequency.value = 65.4;
+  droneGain.gain.value = 0.12;
+  drone.connect(droneGain); droneGain.connect(master);
+  drone.start();
+  nodes.push(drone);
+
+  // 멜로디 루프
+  function scheduleLoop(startTime) {
+    notes.forEach((freq, i) => {
+      playNote(freq, startTime + i * beat, beat * 1.2);
+      playNote(freq * 2, startTime + i * beat + beat * 0.5, beat * 0.8);
+    });
+    const loopDur = notes.length * beat;
+    setTimeout(() => {
+      if (playing) scheduleLoop(audioCtx.currentTime);
+    }, loopDur * 1000 - 200);
+  }
+
+  scheduleLoop(audioCtx.currentTime + 0.1);
+}
+
+function toggleMusic() {
+  const btn = document.getElementById('music-btn');
+  if (playing) {
+    nodes.forEach(n => { try { n.stop(); } catch(e){} });
+    nodes = [];
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+    playing = false;
+    btn.textContent = '🔇';
+  } else {
+    createBGM();
+    playing = true;
+    btn.textContent = '🔊';
+  }
+}
+</script>
+
 </body>
 </html>
