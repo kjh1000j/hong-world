@@ -49,6 +49,52 @@
 </style>
 </head>
 <body>
+
+<!-- 입장 안내 팝업 -->
+<div id="intro-popup" style="
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.75);
+  z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+">
+  <div style="
+    background:linear-gradient(135deg,#fffdf0,#fff8e0);
+    border:3px solid #f5c842;
+    border-radius:20px;
+    padding:24px 28px;
+    width:min(310px,88vw);
+    font-family:'Nanum Gothic',sans-serif;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    text-align:center;
+  ">
+    <div style="font-family:'Jua',sans-serif;font-size:20px;color:#5c3a00;margin-bottom:14px;">
+      🌿 홍의 세계에 오신 것을<br>환영합니다!
+    </div>
+    <div style="font-size:13px;color:#3d2a00;line-height:2;text-align:left;margin-bottom:18px;">
+      <div style="margin-bottom:6px;font-weight:700;color:#8b6914;">🕹️ 이렇게 즐기세요</div>
+      <div>▲▼◀▶ 버튼으로 홍을 <b>이동</b></div>
+      <div>🏠 오브젝트에 <b>가까이 가면</b> 소개 등장</div>
+      <div>💕 와이프 · 🐩 아들 · 🐩 딸은 <b>클릭</b></div>
+      <div>🪖 홍을 <b>클릭</b>하면 군생활 경력</div>
+      <div>☀️ 햇님을 <b>클릭</b>하면 요즘 마음가짐</div>
+      <div>🔊 우측 하단 버튼으로 <b>음악</b> 켜기</div>
+      <div>📮 좌측 하단 버튼으로 <b>방명록</b> 이동</div>
+    </div>
+    <div style="font-size:11px;color:#8b6914;margin-bottom:16px;">
+      ▼ 아래로 내려가면 더 많은 이야기가 있어요!
+    </div>
+    <div onclick="document.getElementById('intro-popup').style.display='none'" style="
+      background:linear-gradient(to right,#f5c842,#e8a820);
+      color:#2d1a00; font-family:'Jua',sans-serif;
+      font-size:15px; padding:10px 0;
+      border-radius:12px; cursor:pointer;
+      box-shadow:0 3px 8px rgba(0,0,0,0.2);
+    ">
+      🌿 입장하기
+    </div>
+  </div>
+</div>
+
 <div id="title-bar">🌿 홍의 세계 🌿</div>
 <div id="game-wrap">
 <div id="world">
@@ -89,6 +135,56 @@
   <div id="ground"><div class="vpath"></div></div>
 
   <!-- ===== 구역1: 집+가족 (300~530) ===== -->
+
+  <!-- KUSA 동아리 (집 왼쪽) -->
+  <div class="obj" id="o-kusa" style="top:550px;left:8%;">
+    <svg width="70" height="90" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
+      <!-- 국토순례 배낭 메고 걷는 캐릭터 -->
+      <!-- 그림자 -->
+      <ellipse cx="35" cy="88" rx="14" ry="4" fill="rgba(0,0,0,0.15)"/>
+      <!-- 다리 -->
+      <rect x="28" y="62" width="6" height="18" fill="#5b6e8a" rx="3"/>
+      <rect x="36" y="62" width="6" height="16" fill="#5b6e8a" rx="3"/>
+      <!-- 신발 -->
+      <rect x="26" y="76" width="9" height="5" fill="#3a3a3a" rx="2"/>
+      <rect x="35" y="74" width="9" height="5" fill="#3a3a3a" rx="2"/>
+      <!-- 몸통 -->
+      <rect x="24" y="38" width="22" height="26" fill="#e05a3a" rx="4"/>
+      <!-- 배낭 -->
+      <rect x="38" y="32" width="16" height="22" fill="#8b6914" rx="4"/>
+      <rect x="39" y="33" width="14" height="20" fill="#a07820" rx="3"/>
+      <line x1="42" y1="33" x2="42" y2="52" stroke="#8b6914" stroke-width="1.5"/>
+      <line x1="39" y1="42" x2="53" y2="42" stroke="#8b6914" stroke-width="1.5"/>
+      <!-- 배낭 끈 -->
+      <path d="M38,35 Q34,40 34,48" stroke="#8b6914" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 팔 -->
+      <rect x="17" y="40" width="8" height="12" fill="#e05a3a" rx="3"/>
+      <rect x="45" y="40" width="8" height="12" fill="#e05a3a" rx="3"/>
+      <!-- 손 -->
+      <ellipse cx="21" cy="53" rx="4" ry="4" fill="#f5c4a0"/>
+      <ellipse cx="49" cy="52" rx="4" ry="4" fill="#f5c4a0"/>
+      <!-- 지팡이 -->
+      <line x1="49" y1="52" x2="56" y2="80" stroke="#7a5230" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 목 -->
+      <rect x="31" y="30" width="8" height="10" fill="#f5c4a0" rx="2"/>
+      <!-- 머리 -->
+      <ellipse cx="35" cy="22" rx="13" ry="13" fill="#f5c4a0"/>
+      <!-- 모자 (유네스코 느낌 파란 모자) -->
+      <rect x="22" y="14" width="26" height="8" fill="#1a5fa8" rx="3"/>
+      <rect x="20" y="20" width="30" height="4" fill="#1a4a8a" rx="2"/>
+      <!-- 모자 글씨 -->
+      <text x="35" y="20" font-size="5" fill="white" text-anchor="middle" font-family="sans-serif">KUSA</text>
+      <!-- 눈 -->
+      <circle cx="30" cy="22" r="1.8" fill="#3d2a00"/>
+      <circle cx="40" cy="22" r="1.8" fill="#3d2a00"/>
+      <circle cx="30.6" cy="21.4" r="0.6" fill="white"/>
+      <circle cx="40.6" cy="21.4" r="0.6" fill="white"/>
+      <!-- 웃음 -->
+      <path d="M30,27 Q35,31 40,27" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="obj-label">🎒 KUSA</div>
+  </div>
+
   <div class="obj" id="o-house" style="top:310px;left:6%;">
     <svg width="105" height="105" viewBox="0 0 110 110">
       <rect x="15" y="55" width="80" height="55" fill="#d4956a" rx="2"/>
@@ -108,17 +204,17 @@
   </div>
   <div style="position:absolute;top:305px;right:6%;pointer-events:none;"><svg width="62" height="98" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#35a020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#3db825"/></svg></div>
 
-  <div class="obj" id="o-wife" style="top:448px;left:8%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>우수&amp;초선의 엄마<br>언제나 내 편 🥰')">
+  <div class="obj" id="o-wife" style="top:448px;left:8%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰')">
     <svg width="44" height="60" viewBox="0 0 40 56"><ellipse cx="20" cy="54" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><path d="M10,28 Q8,44 9,53 H31 Q32,44 30,28 Q25,35 20,34 Q15,35 10,28Z" fill="#ff9ec4"/><path d="M9,46 Q5,50 8,54 H32 Q35,50 31,46 Q25,50 20,50 Q15,50 9,46Z" fill="#ff7aad"/><path d="M10,30 Q4,36 6,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M30,30 Q36,36 34,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="17" y="20" width="6" height="9" fill="#f9c9a0" rx="2"/><ellipse cx="20" cy="16" rx="11" ry="12" fill="#f9c9a0"/><path d="M9,12 Q10,2 20,3 Q30,2 31,12 Q28,6 20,6 Q12,6 9,12Z" fill="#5c3317"/><path d="M9,14 Q6,22 9,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M31,14 Q34,22 31,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="16" cy="16" r="1.5" fill="#5c3317"/><circle cx="24" cy="16" r="1.5" fill="#5c3317"/><path d="M16,21 Q20,24 24,21" stroke="#e85d8a" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><ellipse cx="27" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><rect x="13" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/><rect x="22" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/></svg>
     <div class="obj-label" style="color:#ffb6c1;">💕 와이프</div>
   </div>
-  <div class="obj" id="o-wusu" style="top:462px;left:38%;" onclick="showBbl('🐩 우수 (갈색)','이름처럼 진짜 우수한 강아지 🤎<br>눈치도 빠르고 영리해서<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?')">
+  <div class="obj" id="o-wusu" style="top:462px;left:38%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?')">
     <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="18" cy="22" rx="13" ry="8" fill="#8b5a2b"/><circle cx="10" cy="19" r="5" fill="#9b6a3b"/><circle cx="18" cy="17" r="5.5" fill="#9b6a3b"/><circle cx="26" cy="19" r="5" fill="#9b6a3b"/><circle cx="30" cy="13" r="7" fill="#8b5a2b"/><circle cx="30" cy="11" r="6" fill="#9b6a3b"/><ellipse cx="35" cy="14" rx="4" ry="3" fill="#7a4a20"/><ellipse cx="36" cy="13" rx="1.5" ry="1" fill="#3d1a00"/><circle cx="31" cy="11" r="1.5" fill="#1a0a00"/><circle cx="31.5" cy="10.5" r="0.5" fill="white"/><circle cx="25" cy="10" r="4" fill="#7a4a1a"/><rect x="7" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><circle cx="5" cy="19" r="4" fill="#9b6a3b"/></svg>
-    <div class="obj-label" style="color:#c8901a;">우수 🤎</div>
+    <div class="obj-label" style="color:#c8901a;">🐩 아들</div>
   </div>
-  <div class="obj" id="o-choson" style="top:460px;right:8%;" onclick="showBbl('🐩 초선 (골드)','세상에서 제일 귀여운 초선 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾')">
+  <div class="obj" id="o-choson" style="top:460px;right:8%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾')">
     <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="20" cy="22" rx="13" ry="8" fill="#c8a035"/><circle cx="12" cy="19" r="5" fill="#d4b045"/><circle cx="20" cy="17" r="5.5" fill="#d4b045"/><circle cx="28" cy="19" r="5" fill="#d4b045"/><circle cx="8" cy="13" r="7" fill="#c8a035"/><circle cx="8" cy="11" r="6" fill="#d4b045"/><ellipse cx="3" cy="14" rx="4" ry="3" fill="#b8900a"/><ellipse cx="2" cy="13" rx="1.5" ry="1" fill="#3d2a00"/><circle cx="7" cy="11" r="1.5" fill="#1a0a00"/><circle cx="7.5" cy="10.5" r="0.5" fill="white"/><circle cx="13" cy="10" r="4" fill="#b8900a"/><rect x="7" y="27" width="4" height="5" fill="#c8a035" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#c8a035" rx="2"/><circle cx="33" cy="19" r="4" fill="#d4b045"/></svg>
-    <div class="obj-label" style="color:#c8a035;">초선 💛</div>
+    <div class="obj-label" style="color:#d4b896;">🐩 딸</div>
   </div>
   <div class="flower" style="top:530px;left:30%;"><svg width="26" height="30" viewBox="0 0 28 32"><line x1="14" y1="30" x2="14" y2="14" stroke="#2d7a15" stroke-width="2"/><circle cx="14" cy="10" r="5" fill="#ff6b9d" opacity="0.9"/><circle cx="9" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="19" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="14" cy="10" r="3" fill="#fff0f5"/></svg></div>
 
@@ -175,7 +271,7 @@
   </div>
 
   <!-- 벗우회 (중앙) -->
-  <div class="obj" id="o-beotwu" style="top:1510px;left:50%;transform:translateX(-50%);">
+  <div class="obj" id="o-beotwu" style="top:710px;left:12%;">
     <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
@@ -284,6 +380,7 @@
     <div class="sb-row"><span style="font-size:20px;line-height:1.2;">🤝</span><span>일보다는 사람이 먼저</span></div>
     <div class="sb-row"><span style="font-size:20px;line-height:1.4;">🎖️</span><span>현재의 계급과 해왔던<br>군생활이 쪽팔리게 하지 말자</span></div>
   </div>
+  </div>
 
 </div><!-- /world -->
 </div><!-- /game-wrap -->
@@ -300,15 +397,16 @@
 
 <script>
 const PROX = [
-  { id:'o-house',    title:'🏠 우리 집',              text:'가족과 함께하는 공간<br>와이프, 우수 🤎, 초선 💛과 함께<br>자연과 함께 하는 삶을 살고 있지만<br>도시에 살고 싶음 🏙️' },
-  { id:'o-tv',       title:'📺 TV',                   text:'연예 프로그램을 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!' },
+  { id:'o-kusa', title:'🎒 KUSA (유네스코 동아리)', text:'대학교 시절 KUSA 동아리<br>젊은날 잊을수 없는 추억 가득한<br>소중한 인연들 🌏<br><br>국토순례 2번 완주 🥾<br>함께 걸으며 나눈 땀과 추억<br>지금도 기억에 많이 남아' },
+  { id:'o-house',    title:'🏠 우리 집',              text:'가족과 함께하는 공간<br>와이프, 아들 🤎, 딸 💛과 함께<br>자연과 함께 하는 삶을 살고 있지만<br>도시에 살고 싶음 🏙️' },
+  { id:'o-tv',       title:'📺 TV',                   text:'연예 프로그램을 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!<br><br>롯데자이언츠 팬 ⚾<br>올해는 가을야구 가자!! 🔥' },
   { id:'o-building', title:'🏢 인사 분야',             text:'인사 분야 근무를 오래함<br>여러 제대에서 다양한<br>인사근무를 경험<br>인재선발, 운영, 복지,<br>상훈, 역사관 등? ㅎㅎ' },
-  { id:'o-dinner',   title:'🍽️ 저녁 식사',            text:'사람들과 함께하는<br>저녁 식사 자리를 즐긴다<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂' },
+  { id:'o-dinner',   title:'🍽️ 저녁 식사',            text:'사람들과 함께하는<br>저녁 식사 자리를 즐긴다<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂<br><br>사람과의 관계에서<br>행복을 느낀다 🤗' },
   { id:'o-hanmaum', title:'🔥 한마음회',  text:'인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연' },
-  { id:'o-beotwu',  title:'🔥 벗우회',    text:'부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오랜 친구들<br>말 안 해도 통하는 사이 🫂' },
+  { id:'o-beotwu',  title:'🔥 벗우회',    text:'부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂' },
   { id:'o-inmin',   title:'🔥 인민군',     text:'백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️' },
   { id:'o-howitzer', title:'🔫 포병',                  text:'전장의 신은 포병이지!! 💥<br>병 생활은 8인치 부대 FDC로 시작했고<br>K9, K55, 105미리 부대에서 근무를 했음<br>즐거웠던 백달리 생활~~ 🎖️' },
-  { id:'o-mountain', title:'🏔️ 안나푸르나',            text:'네팔 헬기 타고 안나푸르나 베이스캠프까지<br>하늘에서 바라본 설산은 정말 장관이었지<br>평생 잊을 수 없는 풍경 🚁🏔️' },
+  { id:'o-mountain', title:'🏔️ 안나푸르나',            text:'네팔 포카라에서 헬기 타고 안나푸르나 베이스캠프까지<br>하늘에서 바라본 설산은 정말 장관이었지<br>평생 잊을 수 없는 풍경 🚁🏔️' },
   { id:'o-shanghai', title:'🏙️ 광저우 타워',           text:'중국 광저우 타워<br>높이 600m<br>광저우 야경이 한눈에<br>스케일에 압도당한 순간 🌆' },
   { id:'o-sagrada',  title:'⛪ 사그라다 파밀리아',      text:'가우디의 걸작<br>아직도 짓고 있는 성당<br>스테인드글라스의 빛이<br>쏟아지는 내부는 감동 그 자체 🌈' },
   { id:'o-orange',   title:'🍊 세비야 오렌지 나무',     text:'스페인 세비야<br>거리마다 오렌지 나무가 가득<br>이국적인 분위기와<br>따뜻한 햇살이 너무 좋았어 ☀️' },
@@ -425,6 +523,17 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
 </script>
 
 <!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
+<!-- 우편함 버튼 -->
+<div onclick="location.href='guestbook.html'" style="
+  position:fixed; bottom:14px; left:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="방명록">📮</div>
+
 <div id="music-btn" onclick="toggleMusic()" style="
   position:fixed; bottom:14px; right:14px; z-index:500;
   width:44px; height:44px;
