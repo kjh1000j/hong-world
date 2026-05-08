@@ -46,6 +46,36 @@
   .ctrl-btn:active { background:#f5c842; transform:scale(0.92); }
   #hint { position:fixed; bottom:136px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.65); color:#f5c842; font-size:11px; padding:6px 16px; border-radius:20px; font-family:'Nanum Gothic',sans-serif; pointer-events:none; transition:opacity 1s; white-space:nowrap; }
   @keyframes spinSun { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* 밤 모드 */
+  body.night #sky {
+    background: linear-gradient(to bottom, #0a0a2e, #1a1a4e 60%, #2d2d1a);
+  }
+  body.night #ground {
+    background: linear-gradient(to bottom, #2d4a1a, #1e3510 30%, #162808);
+  }
+  body.night #title-bar {
+    background: linear-gradient(to right, #0a0510, #1a0a30, #0a0510);
+  }
+  /* 별 */
+  #stars { position:absolute; top:0; left:0; right:0; height:320px; pointer-events:none; display:none; }
+  body.night #stars { display:block; }
+  /* 달 */
+  #moon { position:absolute; top:25px; left:20px; pointer-events:none; display:none; z-index:40; }
+  body.night #moon { display:block; }
+  /* 모닥불 야간 글로우 강화 */
+  body.night .obj.near { filter:drop-shadow(0 0 14px #ff6b00); }
+  /* 낮/밤 토글 버튼 */
+  #daynight-btn {
+    position:fixed; bottom:70px; right:14px; z-index:500;
+    width:44px; height:44px;
+    background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,0.35);
+    -webkit-tap-highlight-color:transparent;
+  }
+
 </style>
 </head>
 <body>
@@ -95,6 +125,18 @@
   </div>
 </div>
 
+
+<!-- 방문자 카운터 -->
+<div style="
+  position:fixed; top:36px; left:50%; transform:translateX(-50%);
+  z-index:200; pointer-events:none;
+  font-family:'Nanum Gothic',sans-serif;
+">
+  <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fkjh1000j.github.io%2Fhong-world%2F&count_bg=%23f5c842&title_bg=%232d1a00&icon=&icon_color=%23f5c842&title=방문자&edge_flat=true"
+       style="height:20px;border-radius:10px;opacity:0.9;"
+       alt="방문자 카운터"/>
+</div>
+
 <div id="title-bar">🌿 홍의 세계 🌿</div>
 <div id="game-wrap">
 <div id="world">
@@ -126,8 +168,131 @@
       </svg>
       <div class="obj-label" style="color:#f5c842;">☀️ 요즘 마음가짐</div>
     </div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
     <div class="cloud" style="width:90px;height:22px;top:30px;left:-90px;animation-duration:20s;"><div style="position:absolute;width:44px;height:38px;background:white;border-radius:50%;top:-20px;left:16px;"></div><div style="position:absolute;width:30px;height:30px;background:white;border-radius:50%;top:-14px;left:42px;"></div></div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
     <div class="cloud" style="width:70px;height:18px;top:80px;left:-70px;animation-duration:28s;animation-delay:7s;"><div style="position:absolute;width:34px;height:28px;background:white;border-radius:50%;top:-15px;left:14px;"></div></div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
     <div class="cloud" style="width:110px;height:26px;top:140px;left:-110px;animation-duration:36s;animation-delay:14s;opacity:0.7;"><div style="position:absolute;width:54px;height:42px;background:white;border-radius:50%;top:-24px;left:22px;"></div><div style="position:absolute;width:36px;height:34px;background:white;border-radius:50%;top:-18px;left:56px;"></div></div>
   </div>
 
@@ -524,7 +689,22 @@ function move(dir) {
   if(dir==='d' && py<WORLD_H-120)  py+=SPEED;
   if(dir==='l' && p>5)             px=p-SPEED;
   if(dir==='r' && p<vw-60)         px=p+SPEED;
-  updatePlayer(); updateScroll(); checkProx();
+  updatePlayer(); updateScroll();
+
+  // 낮/밤 전환
+  let isNight = false;
+  function toggleDayNight() {
+    isNight = !isNight;
+    const btn = document.getElementById('daynight-btn');
+    if (isNight) {
+      document.body.classList.add('night');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('night');
+      btn.textContent = '🌙';
+    }
+  }
+ checkProx();
 }
 function sm(dir) { if(moveInt) clearInterval(moveInt); move(dir); moveInt=setInterval(()=>move(dir),55); }
 function stopMove() { if(moveInt){clearInterval(moveInt);moveInt=null;} }
@@ -540,8 +720,26 @@ world.addEventListener('click',function(e){
 });
 
 updatePlayer(); updateScroll();
+
+  // 낮/밤 전환
+  let isNight = false;
+  function toggleDayNight() {
+    isNight = !isNight;
+    const btn = document.getElementById('daynight-btn');
+    if (isNight) {
+      document.body.classList.add('night');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('night');
+      btn.textContent = '🌙';
+    }
+  }
+
 setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0';setTimeout(()=>h.remove(),1000);}},6000);
 </script>
+
+<!-- 낮/밤 전환 버튼 -->
+<div id="daynight-btn" onclick="toggleDayNight()" title="낮/밤 전환">🌙</div>
 
 <!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
 <!-- 우편함 버튼 -->
