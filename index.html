@@ -524,7 +524,7 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
 
 <!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
 <!-- 우편함 버튼 -->
-<div onclick="location.href='guestbook.html'" style="
+<div onclick="location.href='mailto:kjh1000j@naver.com?subject=홍의 세계 방명록&body=이름:%0D%0A%0D%0A메시지:%0D%0A'" style="
   position:fixed; bottom:14px; left:14px; z-index:500;
   width:44px; height:44px;
   background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
@@ -554,43 +554,51 @@ function createBGM() {
   master.connect(audioCtx.destination);
 
   // 잔잔한 자연 느낌 — 낮은 드론 + 멜로디 아르페지오
-  const notes = [261.6, 293.7, 329.6, 392.0, 440.0, 392.0, 329.6, 293.7];
-  const bpm = 72;
+  // 밝고 경쾌한 멜로디 — BPM 140
+  const bpm = 140;
   const beat = 60 / bpm;
 
-  function playNote(freq, time, dur) {
+  // 장조 아르페지오 + 리듬감 있는 베이스
+  const melody = [
+    [523.3, 0.5], [659.3, 0.5], [784.0, 0.5], [1046.5, 0.5],
+    [880.0, 0.5], [784.0, 0.5], [659.3, 0.5], [523.3, 0.5],
+    [587.3, 0.5], [698.5, 0.5], [784.0, 0.5], [880.0, 1.0],
+    [784.0, 0.5], [698.5, 0.5], [659.3, 0.5], [523.3, 1.0],
+  ];
+  const bass = [261.6, 329.6, 392.0, 329.6];
+
+  function playNote(freq, time, dur, type='triangle', vol=0.35) {
     const osc = audioCtx.createOscillator();
     const env = audioCtx.createGain();
-    osc.type = 'sine';
+    osc.type = type;
     osc.frequency.value = freq;
     env.gain.setValueAtTime(0, time);
-    env.gain.linearRampToValueAtTime(0.4, time + 0.05);
-    env.gain.exponentialRampToValueAtTime(0.01, time + dur);
+    env.gain.linearRampToValueAtTime(vol, time + 0.03);
+    env.gain.exponentialRampToValueAtTime(0.001, time + dur * beat * 0.9);
     osc.connect(env); env.connect(master);
-    osc.start(time); osc.stop(time + dur + 0.1);
+    osc.start(time); osc.stop(time + dur * beat + 0.05);
     nodes.push(osc);
   }
 
-  // 드론 (지속음)
-  const drone = audioCtx.createOscillator();
-  const droneGain = audioCtx.createGain();
-  drone.type = 'sine';
-  drone.frequency.value = 65.4;
-  droneGain.gain.value = 0.12;
-  drone.connect(droneGain); droneGain.connect(master);
-  drone.start();
-  nodes.push(drone);
-
-  // 멜로디 루프
   function scheduleLoop(startTime) {
-    notes.forEach((freq, i) => {
-      playNote(freq, startTime + i * beat, beat * 1.2);
-      playNote(freq * 2, startTime + i * beat + beat * 0.5, beat * 0.8);
+    // 멜로디
+    let t = startTime;
+    melody.forEach(([freq, dur]) => {
+      playNote(freq, t, dur, 'triangle', 0.3);
+      t += dur * beat;
     });
-    const loopDur = notes.length * beat;
+    // 베이스 (2박자마다)
+    bass.forEach((freq, i) => {
+      playNote(freq, startTime + i * beat * 4, 2, 'sine', 0.2);
+    });
+    // 리듬 타악 느낌 (노이즈 대신 짧은 고음)
+    for(let i = 0; i < 16; i++) {
+      playNote(1200, startTime + i * beat * 0.5, 0.1, 'square', 0.04);
+    }
+    const loopDur = melody.reduce((s,[,d])=>s+d,0) * beat;
     setTimeout(() => {
       if (playing) scheduleLoop(audioCtx.currentTime);
-    }, loopDur * 1000 - 200);
+    }, loopDur * 1000 - 100);
   }
 
   scheduleLoop(audioCtx.currentTime + 0.1);
