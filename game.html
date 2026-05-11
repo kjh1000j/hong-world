@@ -18,14 +18,14 @@
         /* UI Layers */
         .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; max-width: 56.25vh; left: 50%; transform: translateX(-50%); }
         .hud { 
-            top: 40px; 
+            top: 35px; 
             left: 50%; 
             transform: translateX(-50%); 
             padding: 0; 
             display: flex; 
             justify-content: center; 
             align-items: flex-start; 
-            z-index: 1000; 
+            z-index: 1001; 
             width: 100%;
         }
         .hud-inner {
@@ -34,12 +34,12 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.7); 
-            backdrop-filter: blur(12px); 
+            background: rgba(0,0,0,0.85); 
+            backdrop-filter: blur(20px); 
             border-radius: 12px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            padding: 6px 12px; 
-            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.2); 
+            padding: 8px 12px; 
+            box-shadow: 0 5px 30px rgba(0,0,0,0.7);
         }
         .score-box { font-family: monospace; background: transparent; padding: 0; border: none; }
         .score { font-size: 18px; font-weight: bold; }
@@ -74,12 +74,12 @@
         #boss-notice { position: absolute; top: 100px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; }
         #boss-progress {
             position: absolute;
-            top: 95px;
+            top: 85px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
-            z-index: 1000;
-            width: 80px;
+            z-index: 1002;
+            width: 90px;
             text-align: center;
             pointer-events: none;
         }
@@ -360,23 +360,28 @@
         });
     }
 
-    function updateHud() {
+    let lastHp = 3;
+    function updateHud(force = false) {
         document.getElementById('score-display').innerText = Math.floor(score).toLocaleString();
         document.getElementById('level-display').innerText = 'LV.' + difficulty.toFixed(1);
         
-        let heartsHtml = '';
-        for (let i = 0; i < 3; i++) {
-            heartsHtml += `<i data-lucide="heart" class="heart ${i >= player.hp ? 'lost' : ''}"></i>`;
+        if (force || lastHp !== player.hp) {
+            let heartsHtml = '';
+            for (let i = 0; i < 3; i++) {
+                heartsHtml += `<i data-lucide="heart" class="heart ${i >= player.hp ? 'lost' : ''}"></i>`;
+            }
+            document.getElementById('hearts-container').innerHTML = heartsHtml;
+            lucide.createIcons();
+            lastHp = player.hp;
         }
-        document.getElementById('hearts-container').innerHTML = heartsHtml;
-        lucide.createIcons();
 
         // Boss Arrival Progress
         const bossProgress = document.getElementById('boss-progress');
         if (gameState === 'PLAYING' && !boss) {
-            const progress = Math.min(100, (score / 5000) * 100);
+            const progress = (score / 5000) * 100;
             bossProgress.style.display = 'block';
-            bossProgress.querySelector('.progress-fill').style.width = progress + '%';
+            const fill = bossProgress.querySelector('.progress-fill');
+            if (fill) fill.style.width = Math.min(100, progress) + '%';
         } else {
             bossProgress.style.display = 'none';
         }
@@ -524,7 +529,8 @@
         // Auto Fire
         fire();
 
-        // BG: Clean Military Base Ground
+        // HUD Update (Immediate)
+        if (frameCount % 5 === 0) updateHud();
         ctx.fillStyle = '#4b533a';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
