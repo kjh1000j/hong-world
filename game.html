@@ -17,8 +17,27 @@
         
         /* UI Layers */
         .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; max-width: 56.25vh; }
-        .hud { top: 0; left: 0; padding: 40px 20px 20px 20px; display: flex; justify-content: space-between; align-items: flex-start; z-index: 10; }
-        .score-box { font-family: monospace; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px); }
+        .hud { 
+            top: 0; 
+            left: 0; 
+            padding: 0; 
+            padding-top: env(safe-area-inset-top, 45px);
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start; 
+            z-index: 10; 
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+        }
+        .hud-inner {
+            width: 100%;
+            max-width: 56.25vh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .score-box { font-family: monospace; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 12px; backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); }
         .score { font-size: 24px; font-weight: bold; }
         .level { font-size: 12px; color: #888; }
         .hearts { display: flex; gap: 5px; margin-bottom: 5px; }
@@ -61,14 +80,16 @@
     <canvas id="gameCanvas"></canvas>
 
     <div id="hud" class="ui-layer hud" style="display:none;">
-        <div class="score-box">
-            <div id="hearts-container" class="hearts"></div>
-            <div id="score-display" class="score">0</div>
-            <div id="level-display" class="level">LV.1.0</div>
-        </div>
-        <div class="controls-hud">
-            <div id="mute-btn" class="btn-icon"><i data-lucide="volume-2"></i></div>
-            <div id="reset-btn" class="btn-icon"><i data-lucide="rotate-ccw"></i></div>
+        <div class="hud-inner">
+            <div class="score-box">
+                <div id="hearts-container" class="hearts"></div>
+                <div id="score-display" class="score">0</div>
+                <div id="level-display" class="level">LV.1.0</div>
+            </div>
+            <div class="controls-hud">
+                <div id="mute-btn" class="btn-icon"><i data-lucide="volume-2"></i></div>
+                <div id="reset-btn" class="btn-icon"><i data-lucide="rotate-ccw"></i></div>
+            </div>
         </div>
     </div>
 
@@ -297,11 +318,13 @@
         if (now - lastShot < 180) return;
         lastShot = now;
         playSfx('shoot');
+        const isBook = Math.random() > 0.5;
         projectiles.push({
             x: player.x,
             y: player.y - 30,
             size: 25,
-            emoji: Math.random() > 0.5 ? '📖' : '📜',
+            emoji: isBook ? '📖' : '📜',
+            label: isBook ? '법령' : '법규',
             speed: 12
         });
     }
@@ -526,6 +549,14 @@
             ctx.textBaseline = 'middle';
             ctx.shadowBlur = 0;
             ctx.fillText(p.emoji, p.x, p.y);
+
+            // Projectile Label
+            ctx.font = 'bold 10px sans-serif';
+            ctx.fillStyle = 'white';
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.strokeText(p.label || '', p.x, p.y + 18);
+            ctx.fillText(p.label || '', p.x, p.y + 18);
             ctx.restore();
             if (p.y < -50) projectiles.splice(i, 1);
         });
