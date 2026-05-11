@@ -67,8 +67,27 @@
         .progress-track { width: 100%; height: 8px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); }
         .progress-fill { height: 100%; background: linear-gradient(to right, #ef4444, #f87171); width: 0%; box-shadow: 0 0 12px rgba(239, 68, 68, 0.6); transition: width 0.3s ease; }
         .progress-label { font-size: 10px; color: #f87171; font-weight: 900; margin-top: 4px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 2px 4px #000; }
-adow: 0 2px 4px #000; }
         @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
+
+        /* Screens */
+        .screen { position: absolute; inset: 0; background: var(--panel-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 30px; z-index: 100; pointer-events: auto; backdrop-filter: blur(10px); overflow-y: auto; }
+        .screen-inner { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; margin: auto; }
+        h1 { font-size: 32px; font-weight: 900; margin-bottom: 20px; line-height: 1.2; }
+        .highlight { color: #eab308; font-style: italic; }
+        p { color: #aaa; margin-bottom: 30px; line-height: 1.6; font-size: 15px; }
+        
+        .btn-primary { background: #eab308; color: #000; font-weight: 900; padding: 18px 40px; border-radius: 20px; border: none; font-size: 18px; cursor: pointer; transition: transform 0.1s; width: 100%; max-width: 240px; }
+        .btn-primary:active { transform: scale(0.95); }
+        
+        .btn-secondary { background: white; color: #000; font-weight: 700; padding: 15px 30px; border-radius: 15px; border: none; margin-top: 10px; cursor: pointer; text-decoration: none; display: inline-block; }
+
+        .guide-grid { display: grid; gap: 10px; margin-bottom: 30px; width: 100%; max-width: 320px; }
+        .guide-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; text-align: left; }
+        .badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin-left: 5px; text-transform: uppercase; vertical-align: middle; }
+        .bg-red { background: #ef4444; color: white; }
+        .bg-purple { background: #a855f7; color: white; }
+        
+        #boss-notice { position: absolute; top: 180px; width: 100%; text-align: center; color: #ff3b3b; font-size: 24px; font-weight: 900; text-transform: uppercase; letter-spacing: 4px; animation: blink 0.5s infinite; visibility: hidden; z-index: 1005; }
 
         .control-bar { position: absolute; bottom: 0; width: 100%; height: 80px; background: rgba(0,0,0,0.5); border-top: 1px solid #333; display: flex; align-items: center; justify-content: center; }
         .track { width: 80%; height: 6px; background: #222; border-radius: 10px; position: relative; }
