@@ -30,22 +30,22 @@
         }
         .hud-inner {
             width: 100%;
-            max-width: 300px;
+            max-width: 320px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: rgba(0,0,0,0.95); 
             backdrop-filter: blur(30px); 
             border-radius: 20px; 
-            border: 2px solid rgba(255,255,255,0.25); 
+            border: 2px solid rgba(255,255,255,0.3); 
             padding: 12px 18px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.85);
         }
         .score-box { font-family: monospace; background: transparent; padding: 0; border: none; display: flex; flex-direction: column; gap: 2px; }
-        .score { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.1; }
-        .level { font-size: 11px; color: #eab308; font-weight: 800; letter-spacing: 1px; margin-top: 2px; }
-        .hearts { display: flex; gap: 6px; margin-bottom: 6px; }
-        .heart { color: #ff3b3b; width: 22px; height: 22px; filter: drop-shadow(0 0 8px rgba(255,59,59,0.6)); }
+        .score { font-size: 28px; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .level { font-size: 11px; color: #eab308; font-weight: 900; letter-spacing: 1.5px; margin-top: 2px; text-transform: uppercase; }
+        .hearts { display: flex; gap: 8px; margin-bottom: 6px; }
+        .heart { color: #ff3b3b; width: 22px; height: 22px; filter: drop-shadow(0 0 8px rgba(255,59,59,0.7)); }
         .heart.lost { color: rgba(255,255,255,0.1); filter: none; }
         
         .controls-hud { pointer-events: auto; display: flex; gap: 6px; }
@@ -71,10 +71,10 @@
         .bg-red { background: #ef4444; }
         .bg-purple { background: #a855f7; }
         
-        #boss-notice { position: absolute; top: 140px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; z-index: 1005; }
+        #boss-notice { position: absolute; top: 180px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; z-index: 1005; }
         #boss-progress {
             position: absolute;
-            top: 85px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
@@ -725,16 +725,35 @@
 
         // Player Draw
         if (player.aura > 0) {
-            ctx.save(); ctx.shadowBlur = 25; ctx.shadowColor = 'gold'; ctx.beginPath(); ctx.arc(player.x, player.y, player.size * 0.8, 0, Math.PI*2);
-            ctx.fillStyle='rgba(255,215,0,0.3)'; ctx.fill(); ctx.restore();
+            ctx.save(); ctx.shadowBlur = 30; ctx.shadowColor = 'gold'; ctx.beginPath(); ctx.arc(player.x, player.y, player.size * 0.9, 0, Math.PI*2);
+            ctx.fillStyle='rgba(255,215,0,0.4)'; ctx.fill(); ctx.strokeStyle='white'; ctx.lineWidth=2; ctx.stroke(); ctx.restore();
         }
         if (!(player.invincible > 0 && Math.floor(player.invincible/5)%2===0)) {
-            ctx.fillStyle = player.dash > 0 ? 'gold' : '#343';
+            ctx.save();
+            // Body
+            ctx.fillStyle = player.dash > 0 ? '#facc15' : '#4d7c0f';
+            ctx.shadowBlur = 10; ctx.shadowColor = 'rgba(0,0,0,0.5)';
             ctx.beginPath(); ctx.arc(player.x, player.y, player.size/2, 0, Math.PI*2); ctx.fill();
-            ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
-            ctx.font='bold 12px sans-serif'; ctx.textAlign='center';
-            ctx.strokeStyle='rgba(0,0,0,0.8)'; ctx.lineWidth=3; ctx.strokeText('재홍', player.x, player.y + 4);
-            ctx.fillStyle='white'; ctx.fillText('재홍', player.x, player.y + 4);
+            
+            // Face
+            ctx.fillStyle = '#fef3c7';
+            ctx.beginPath(); ctx.arc(player.x, player.y + 2, player.size/3, 0, Math.PI*2); ctx.fill();
+
+            // Military Cap
+            ctx.fillStyle = '#365314';
+            ctx.beginPath(); ctx.arc(player.x, player.y - player.size/4, player.size/2.5, Math.PI, 0); ctx.fill();
+            ctx.strokeStyle = 'white'; ctx.lineWidth = 1.5; ctx.stroke();
+
+            // Eyes
+            ctx.fillStyle = 'black';
+            ctx.beginPath(); ctx.arc(player.x - 3, player.y + 1, 1.5, 0, Math.PI*2);
+            ctx.arc(player.x + 3, player.y + 1, 1.5, 0, Math.PI*2); ctx.fill();
+
+            // Name
+            ctx.font='900 13px sans-serif'; ctx.textAlign='center';
+            ctx.strokeStyle='rgba(0,0,0,1)'; ctx.lineWidth=4; ctx.strokeText('재홍', player.x, player.y + 20);
+            ctx.fillStyle='white'; ctx.fillText('재홍', player.x, player.y + 20);
+            ctx.restore();
             drawRank(ctx, player.x, player.y);
         }
 
