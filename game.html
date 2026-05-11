@@ -18,7 +18,7 @@
         /* UI Layers */
         .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; max-width: 56.25vh; left: 50%; transform: translateX(-50%); }
         .hud { 
-            top: 10px; 
+            top: 40px; 
             left: 50%; 
             transform: translateX(-50%); 
             padding: 0; 
@@ -74,7 +74,7 @@
         #boss-notice { position: absolute; top: 100px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; }
         #boss-progress {
             position: absolute;
-            top: 60px;
+            top: 95px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
@@ -711,7 +711,7 @@
             
             const barW = canvas.width - 40;
             const barX = canvas.width / 2;
-            const barY = 60;
+            const barY = 140;
             ctx.fillStyle = '#111'; ctx.fillRect(barX - barW/2, barY, barW, 20);
             ctx.fillStyle = '#ff0000'; ctx.fillRect(barX - barW/2 + 2, barY + 2, (barW - 4) * (boss.hp / boss.maxHp), 16);
             ctx.fillStyle = 'white'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('마녀 체력', barX, barY + 14);
