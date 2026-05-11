@@ -18,14 +18,14 @@
         /* UI Layers */
         .ui-layer { position: absolute; pointer-events: none; width: 100%; height: 100%; max-width: 56.25vh; left: 50%; transform: translateX(-50%); }
         .hud { 
-            top: 45px; 
+            top: 10px; 
             left: 50%; 
             transform: translateX(-50%); 
             padding: 0; 
             display: flex; 
             justify-content: center; 
             align-items: flex-start; 
-            z-index: 1001; 
+            z-index: 1003; 
             width: 100%;
         }
         .hud-inner {
@@ -34,18 +34,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.9); 
-            backdrop-filter: blur(20px); 
-            border-radius: 16px; 
-            border: 2px solid rgba(255,255,255,0.2); 
-            padding: 10px 16px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.95); 
+            backdrop-filter: blur(30px); 
+            border-radius: 20px; 
+            border: 2px solid rgba(255,255,255,0.25); 
+            padding: 12px 18px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.85);
         }
-        .score-box { font-family: monospace; background: transparent; padding: 0; border: none; display: flex; flex-direction: column; }
-        .score { font-size: 24px; font-weight: 900; color: #fff; line-height: 1; }
-        .level { font-size: 10px; color: #eab308; font-weight: 800; letter-spacing: 1px; margin-top: 2px; }
-        .hearts { display: flex; gap: 4px; margin-bottom: 4px; }
-        .heart { color: #ff3b3b; width: 18px; height: 18px; filter: drop-shadow(0 0 5px rgba(255,59,59,0.5)); }
+        .score-box { font-family: monospace; background: transparent; padding: 0; border: none; display: flex; flex-direction: column; gap: 2px; }
+        .score { font-size: 28px; font-weight: 900; color: #fff; line-height: 1.1; }
+        .level { font-size: 11px; color: #eab308; font-weight: 800; letter-spacing: 1px; margin-top: 2px; }
+        .hearts { display: flex; gap: 6px; margin-bottom: 6px; }
+        .heart { color: #ff3b3b; width: 22px; height: 22px; filter: drop-shadow(0 0 8px rgba(255,59,59,0.6)); }
         .heart.lost { color: rgba(255,255,255,0.1); filter: none; }
         
         .controls-hud { pointer-events: auto; display: flex; gap: 6px; }
@@ -71,21 +71,21 @@
         .bg-red { background: #ef4444; }
         .bg-purple { background: #a855f7; }
         
-        #boss-notice { position: absolute; top: 120px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; }
+        #boss-notice { position: absolute; top: 140px; width: 100%; text-align: center; color: #ff3b3b; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; animation: blink 0.5s infinite; visibility: hidden; z-index: 1005; }
         #boss-progress {
             position: absolute;
-            top: 10px;
+            top: 85px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
             z-index: 1002;
-            width: 100px;
+            width: 110px;
             text-align: center;
             pointer-events: none;
         }
-        .progress-track { width: 90px; height: 5px; background: rgba(0,0,0,0.6); border-radius: 3px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); margin: 0 auto; }
-        .progress-fill { height: 100%; background: #ef4444; width: 0%; box-shadow: 0 0 10px rgba(239, 68, 68, 0.8); }
-        .progress-label { font-size: 9px; color: #ef4444; font-weight: bold; margin-top: 3px; letter-spacing: 1px; text-shadow: 0 1px 2px #000; }
+        .progress-track { width: 100px; height: 6px; background: rgba(0,0,0,0.7); border-radius: 3px; overflow: hidden; border: 1.5px solid rgba(255,255,255,0.2); margin: 0 auto; }
+        .progress-fill { height: 100%; background: #ef4444; width: 0%; box-shadow: 0 0 12px rgba(239, 68, 68, 0.9); transition: width 0.3s ease; }
+        .progress-label { font-size: 10px; color: #ef4444; font-weight: 900; margin-top: 4px; letter-spacing: 1px; text-shadow: 0 2px 4px #000; }
         @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
 
         .control-bar { position: absolute; bottom: 0; width: 100%; height: 80px; background: rgba(0,0,0,0.5); border-top: 1px solid #333; display: flex; align-items: center; justify-content: center; }
