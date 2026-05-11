@@ -255,7 +255,7 @@
             speed: (2 + Math.random() * 2) * difficulty,
             category: 'enemy'
         };
-        if (type < 0.25) enemies.push({...common, emoji:'🎴', label:'가짜 고스톱', hp:2});
+        if (type < 0.25) enemies.push({...common, emoji:'📞', label:'잦은 호출', hp:2});
         else if (type < 0.5) enemies.push({...common, emoji:'😤', label:'인사 갑질', hp:3});
         else if (type < 0.75) enemies.push({...common, emoji:'🔍', label:'감찰 조사', hp:2});
         else enemies.push({...common, emoji:'💢', label:'악성 민원', hp:4});
@@ -328,7 +328,6 @@
         
         // Update knob visual
         knob.style.left = (player.targetX / canvas.width) * 100 + '%';
-        fire();
     }
 
     canvas.addEventListener('mousemove', e => handleInput(e.clientX));
@@ -419,6 +418,9 @@
         ctx.clearRect(0,0, canvas.width, canvas.height);
         frameCount++;
         difficulty = 1 + (frameCount / 5000);
+
+        // Auto Fire
+        fire();
 
         // BG Scroll
         scrollOffset = (scrollOffset + (2 * difficulty)) % 100;
@@ -537,12 +539,15 @@
             ctx.restore();
             
             ctx.fillStyle='#ffdddd'; ctx.strokeStyle='black'; ctx.lineWidth=4; ctx.font='bold 18px sans-serif'; ctx.textAlign='center';
-            ctx.strokeText('😈 열등감 마녀 인사관리관 😈', boss.x, boss.y - boss.size/2 - 25);
-            ctx.fillText('😈 열등감 마녀 인사관리관 😈', boss.x, boss.y - boss.size/2 - 25);
+            ctx.strokeText('😈 열등감 마녀 인사관리관 😈', boss.x, boss.y + boss.size/2 + 25);
+            ctx.fillText('😈 열등감 마녀 인사관리관 😈', boss.x, boss.y + boss.size/2 + 25);
             
-            const barW = 240;
-            ctx.fillStyle = '#111'; ctx.fillRect(boss.x - barW/2, boss.y - boss.size/2 - 50, barW, 14);
-            ctx.fillStyle = '#ff0000'; ctx.fillRect(boss.x - barW/2 + 2, boss.y - boss.size/2 -48, (barW-4) * (boss.hp / boss.maxHp), 10);
+            const barW = canvas.width - 40;
+            const barX = canvas.width / 2;
+            const barY = 60;
+            ctx.fillStyle = '#111'; ctx.fillRect(barX - barW/2, barY, barW, 20);
+            ctx.fillStyle = '#ff0000'; ctx.fillRect(barX - barW/2 + 2, barY + 2, (barW - 4) * (boss.hp / boss.maxHp), 16);
+            ctx.fillStyle = 'white'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('마녀 체력', barX, barY + 14);
         }
 
         // Player Draw
