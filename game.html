@@ -48,7 +48,8 @@
         .btn-icon { background: rgba(50,50,50,0.8); border: 1px solid #444; border-radius: 12px; padding: 10px; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         
         /* Screens */
-        .screen { position: absolute; inset: 0; background: var(--panel-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 30px; z-index: 100; pointer-events: auto; backdrop-filter: blur(10px); }
+        .screen { position: absolute; inset: 0; background: var(--panel-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 30px; z-index: 100; pointer-events: auto; backdrop-filter: blur(10px); overflow-y: auto; }
+        .screen-inner { width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; margin: auto; }
         h1 { font-size: 32px; font-weight: 900; margin-bottom: 10px; line-height: 1.2; }
         .highlight { color: #eab308; font-style: italic; }
         p { color: #aaa; margin-bottom: 30px; line-height: 1.5; font-size: 14px; }
@@ -97,21 +98,27 @@
 
     <!-- Start Screen -->
     <div id="start-screen" class="screen">
-        <h1>재홍 원사의<br><span class="highlight">군생활 위기 극복</span></h1>
-        <p>법전과 규정집을 날려 악성 민원과 갑질을 물리치고<br>군생활의 평화를 되찾으세요!</p>
-        
-        <div class="guide-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="guide-item enemy">
-                <div style="font-size: 24px;">👹 <span class="badge bg-red">Attack</span></div>
-                <div style="font-size: 11px; color:#ff8888; margin-top:5px;">공격해서 파괴 가능!</div>
+        <div class="screen-inner">
+            <h1>재홍 원사의<br><span class="highlight">군생활 위기 극복</span></h1>
+            <p>법전과 규정집을 날려 악성 민원과 갑질을 물리치고<br>군생활의 평화를 되찾으세요!</p>
+            
+            <div class="guide-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="guide-item enemy">
+                    <div style="font-size: 24px;">👹 <span class="badge bg-red">Attack</span></div>
+                    <div style="font-size: 11px; color:#ff8888; margin-top:5px;">공격해서 파괴 가능!</div>
+                </div>
+                <div class="guide-item obs">
+                    <div style="font-size: 24px;">⚠️ <span class="badge bg-purple">Avoid</span></div>
+                    <div style="font-size: 11px; color:#bb88ff; margin-top:5px;">무조건 피하세요!</div>
+                </div>
+                <div class="guide-item item" style="grid-column: span 2; border-color: rgba(0,255,100,0.3); background: rgba(0,255,100,0.05);">
+                    <div style="font-size: 24px;">✨ <span class="badge" style="background:#22c55e;">Item</span></div>
+                    <div style="font-size: 11px; color:#bcffce; margin-top:5px;">상여금(무적), 가족(회복)</div>
+                </div>
             </div>
-            <div class="guide-item obs">
-                <div style="font-size: 24px;">⚠️ <span class="badge bg-purple">Avoid</span></div>
-                <div style="font-size: 11px; color:#bb88ff; margin-top:5px;">무조건 피하세요!</div>
-            </div>
+    
+            <button id="start-btn" class="btn-primary">작전 개시</button>
         </div>
-
-        <button id="start-btn" class="btn-primary">작전 개시</button>
     </div>
 
     <!-- Game Over Screen -->
@@ -611,7 +618,7 @@
 
         // Boss
         if (boss) {
-            if (boss.y < 120) boss.y += 2;
+            if (boss.y < 200) boss.y += 2;
             else {
                 boss.x = (canvas.width/2) + Math.sin(frameCount * 0.02) * (canvas.width/3);
                 boss.attackTimer++;
@@ -669,7 +676,7 @@
             
             const barW = canvas.width - 40;
             const barX = canvas.width / 2;
-            const barY = 60;
+            const barY = 120; // Pushed down for HUD clearance
             ctx.fillStyle = '#111'; ctx.fillRect(barX - barW/2, barY, barW, 20);
             ctx.fillStyle = '#ff0000'; ctx.fillRect(barX - barW/2 + 2, barY + 2, (barW - 4) * (boss.hp / boss.maxHp), 16);
             ctx.fillStyle = 'white'; ctx.font = 'bold 10px sans-serif'; ctx.fillText('마녀 체력', barX, barY + 14);
@@ -701,9 +708,9 @@
     }
 
     document.getElementById('start-btn').onclick = () => { reset(); gameState = 'PLAYING'; showScreen('none'); hud.style.display = 'flex'; controlBar.style.display = 'flex'; };
-    document.getElementById('retry-btn').onclick = () => { reset(); gameState = 'PLAYING'; showScreen('none'); hud.style.display = 'flex'; controlBar.style.display = 'flex'; };
+    document.getElementById('retry-btn').onclick = () => { gameState = 'START'; showScreen('start-screen'); };
     document.getElementById('restart-btn').onclick = () => { gameState = 'START'; showScreen('start-screen'); };
-    document.getElementById('reset-btn').onclick = () => { reset(); };
+    document.getElementById('reset-btn').onclick = () => { gameState = 'START'; showScreen('start-screen'); };
     document.getElementById('mute-btn').onclick = function() {
         isMuted = !isMuted;
         this.innerHTML = isMuted ? '<i data-lucide="volume-x"></i>' : '<i data-lucide="volume-2"></i>';
