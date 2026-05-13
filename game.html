@@ -303,7 +303,7 @@ function renderHUD(){
   document.getElementById('ld').textContent='LV'+diff.toFixed(1);
   if(gameStart>0)document.getElementById('td').textContent=fmtT(Math.floor((Date.now()-gameStart)/1000));
   const bw=document.getElementById('bbw');
-  if(GS==='PLAYING'&&!boss){bw.style.display='flex';document.getElementById('bbf').style.width=Math.min(100,(score/5000)*100)+'%';}
+  if(GS==='PLAYING'&&!boss){bw.style.display='flex';document.getElementById('bbf').style.width=Math.min(100,(score/3000)*100)+'%';}
   else if(boss)bw.style.display='none';
 }
 
@@ -355,7 +355,10 @@ function drawEnt(e){
 }
 
 function calcBonus(base,sec){
-  const MAX=300,MIN=60,MAXB=5000;
+  // 90초 이하: 최대 보너스 20,000
+  // 90~300초: 비례 감소
+  // 300초 초과: 0
+  const MAX=300,MIN=90,MAXB=20000;
   const tb=sec<=MIN?MAXB:sec<MAX?Math.floor(MAXB*(MAX-sec)/(MAX-MIN)):0;
   return{final:Math.floor(base+tb),tb};
 }
@@ -419,7 +422,7 @@ function loop(){
   if(GS!=='PLAYING'&&GS!=='BOSS'){requestAnimationFrame(loop);return;}
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if(shake>0){ctx.save();ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=.88;if(shake<.1)shake=0;}
-  frame++;diff=1+frame/5000;score+=.5*diff;fire();
+  frame++;diff=1+frame/5000;score+=.08*diff;fire();
   if(frame%4===0)renderHUD();
   ctx.fillStyle='#3d4530';ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1.5;
@@ -431,7 +434,7 @@ function loop(){
   if(player.inv>0)player.inv--;if(player.aura>0)player.aura--;if(player.dash>0)player.dash--;
   const rate=Math.max(22,58-Math.floor(diff*5));
   if(frame%rate===0)spawnE();if(frame%95===0)spawnO();if(frame%580===0)spawnI();
-  if(score>=5000&&!boss){
+  if(score>=3000&&!boss){
     boss={x:canvas.width/2,y:-80,size:68,hp:200,maxHp:200,atk:0,emoji:'🧛‍♀️'};
     GS='BOSS';
     const bn=document.getElementById('bn');bn.style.visibility='visible';
