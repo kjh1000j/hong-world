@@ -239,15 +239,21 @@ const API_BASE   = 'https://api.github.com';
 
 async function gistLoad() {
     try {
-        // 올바른 Raw URL 형식: /raw/ 뒤에 파일명만
-        const r = await fetch(
-            `https://gist.githubusercontent.com/kjh1000j/${GIST_ID}/raw/${GIST_FILE}?_=${Date.now()}`,
-            { cache: 'no-store', headers: { 'Accept': 'application/json' } }
-        );
+        const r = await fetch(`${API_BASE}/gists/${GIST_ID}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Authorization': `token ${GIST_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
         if(!r.ok) throw new Error('HTTP '+r.status);
-        const text = await r.text();
-        const data = JSON.parse(text);
-        return Array.isArray(data.scores) ? data.scores : [];
+        const data = await r.json();
+        const content = data.files[GIST_FILE]?.content;
+        if(!content) return [];
+        const parsed = JSON.parse(content);
+        return Array.isArray(parsed.scores) ? parsed.scores : [];
     } catch(e) { console.error('gistLoad fail:', e); return []; }
 }
 
@@ -255,6 +261,7 @@ async function gistSave(scores) {
     try {
         const r = await fetch(`${API_BASE}/gists/${GIST_ID}`, {
             method: 'PATCH',
+            mode: 'cors',
             headers: {
                 'Authorization': `token ${GIST_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json',
@@ -727,7 +734,12 @@ canvas.addEventListener('touchstart', e=>{
 
 /* ── Buttons ── */
 function goStart(){ GS='START'; showOvl('start-ovl'); }
-function startGame(){ reset(); GS='PLAYING'; gameStartTime=Date.now(); showOvl(null); }
+function startGame(){
+    reset();
+    gameStartTime = Date.now();
+    showOvl(null);       // HUD/ctrl 먼저 표시
+    GS = 'PLAYING';      // 마지막에 상태 변경 → loop 즉시 재개
+}
 
 // onclick 대신 addEventListener로 등록 (모바일 터치 호환성)
 function bindBtn(id, fn){
