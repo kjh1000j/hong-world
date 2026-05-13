@@ -6,104 +6,110 @@
     <title>재홍 원사의 군생활 위기 극복</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; }
-        body { background:#0a0a0a; overflow:hidden; touch-action:none; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+        body { background:#0a0a0a; overflow:hidden; touch-action:none; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:white; }
         #gc { position:relative; width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; }
         canvas { display:block; }
 
-        /* ── 상단 HUD: 한 줄 얇은 바 ── */
+        /* ── HUD ── */
         #hud {
-            display: none;
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            z-index: 200;
-            pointer-events: none;
-            flex-direction: row;
-            align-items: center;
-            gap: 0;
-            height: 36px;
-            background: rgba(0,0,0,0.75);
-            border-bottom: 1px solid rgba(255,255,255,0.12);
-            padding: 0 10px;
-            white-space: nowrap;
+            display:none; position:absolute; top:0; left:50%; transform:translateX(-50%);
+            z-index:200; pointer-events:none; flex-direction:row; align-items:center;
+            height:36px; background:rgba(0,0,0,0.80); border-bottom:1px solid rgba(255,255,255,0.12);
+            padding:0 10px; white-space:nowrap; gap:0;
         }
-        /* HUD 너비를 canvas에 맞춤 – JS로 세팅 */
         .hud-hearts { display:flex; gap:3px; align-items:center; }
         .h { font-size:14px; line-height:1; }
         .h.lost { opacity:0.2; filter:grayscale(1); }
-        .hud-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 8px; }
+        .hud-sep { width:1px; height:18px; background:rgba(255,255,255,0.15); margin:0 8px; flex-shrink:0; }
         #score-display { font-size:13px; font-weight:700; color:#fff; font-family:monospace; }
         #level-display { font-size:11px; color:#eab308; font-weight:700; margin-left:6px; }
-
-        /* 마녀 게이지 – HUD 오른쪽 끝에 인라인 */
-        #boss-bar-wrap {
-            display: none;
-            align-items: center;
-            gap: 5px;
-            margin-left: auto;
-        }
+        #timer-display { font-size:11px; color:#6ee7b7; font-weight:700; margin-left:6px; font-family:monospace; }
+        #boss-bar-wrap { display:none; align-items:center; gap:5px; margin-left:auto; }
         #boss-bar-label { font-size:10px; color:#f87171; font-weight:700; white-space:nowrap; }
-        #boss-bar-track { width:70px; height:6px; background:rgba(0,0,0,0.5); border-radius:3px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); }
+        #boss-bar-track { width:65px; height:6px; background:rgba(0,0,0,0.5); border-radius:3px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); }
         #boss-bar-fill { height:100%; background:#ef4444; width:0%; transition:width 0.3s; }
-
-        /* 버튼들 (뮤트, 리셋) */
-        .hud-btns { display:flex; gap:5px; align-items:center; margin-left:auto; pointer-events:auto; }
-        #boss-bar-wrap + .hud-btns { margin-left:8px; }
-        .btn-ic { background:transparent; border:none; color:rgba(255,255,255,0.7); cursor:pointer; font-size:14px; padding:2px 4px; border-radius:5px; transition:background 0.15s; }
+        .hud-btns { display:flex; gap:4px; align-items:center; margin-left:auto; pointer-events:auto; }
+        #boss-bar-wrap ~ .hud-btns { margin-left:8px; }
+        .btn-ic { background:transparent; border:none; color:rgba(255,255,255,0.7); cursor:pointer; font-size:14px; padding:2px 4px; border-radius:5px; }
         .btn-ic:active { background:rgba(255,255,255,0.15); }
 
-        /* ── 풀스크린 오버레이 (시작/종료/승리) ── */
+        /* ── 오버레이 ── */
         .ovl {
-            position:absolute; inset:0;
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            z-index:300; pointer-events:auto;
+            position:absolute; inset:0; display:flex; flex-direction:column;
+            align-items:center; justify-content:center; z-index:300; pointer-events:auto;
         }
-        /* 반투명 카드 */
         .ovl-card {
-            background: rgba(10,10,10,0.88);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 18px;
-            padding: 28px 32px;
-            text-align: center;
-            max-width: 300px;
-            width: 85%;
-            color: white;
-            backdrop-filter: blur(6px);
+            background:rgba(10,10,10,0.92); border:1px solid rgba(255,255,255,0.15);
+            border-radius:18px; padding:20px 24px; text-align:center;
+            max-width:310px; width:88%; color:white; backdrop-filter:blur(8px);
+            max-height:92vh; overflow-y:auto;
         }
-        .ovl-card h1 { font-size:20px; font-weight:900; margin-bottom:10px; line-height:1.3; }
-        .ovl-card p  { font-size:13px; color:#aaa; margin-bottom:16px; line-height:1.5; }
-        .btn-go { background:#eab308; color:#000; font-weight:900; padding:12px 0; border-radius:12px; border:none; font-size:15px; cursor:pointer; width:100%; margin-top:4px; transition:transform 0.1s; }
-        .btn-go:active { transform:scale(0.96); }
-        .btn-sec { background:rgba(255,255,255,0.1); color:white; font-weight:700; padding:10px 0; border-radius:10px; border:1px solid rgba(255,255,255,0.15); font-size:13px; cursor:pointer; width:100%; margin-top:8px; }
-        .guide-row { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-bottom:14px; }
-        .g-item { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:8px 10px; border-radius:10px; text-align:left; font-size:12px; }
-        .g-item .ei { font-size:18px; }
-        .g-item .lbl { color:#999; margin-top:2px; font-size:11px; }
+        .ovl-card::-webkit-scrollbar { width:3px; }
+        .ovl-card::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:3px; }
+        .ovl-card h1 { font-size:18px; font-weight:900; margin-bottom:8px; line-height:1.3; }
+        .ovl-card p  { font-size:12px; color:#aaa; margin-bottom:10px; line-height:1.5; }
+        .btn-go  { background:#eab308; color:#000; font-weight:900; padding:11px 0; border-radius:11px; border:none; font-size:14px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; }
+        .btn-go:active { opacity:.85; }
+        .btn-sec { background:rgba(255,255,255,0.07); color:white; font-weight:700; padding:9px 0; border-radius:10px; border:1px solid rgba(255,255,255,0.12); font-size:12px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; }
+        .guide-row { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
+        .g-item { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:7px 9px; border-radius:9px; text-align:left; font-size:11px; }
+        .g-item .lbl { color:#999; margin-top:2px; font-size:10px; }
         .badge { font-size:9px; padding:1px 5px; border-radius:3px; font-weight:700; vertical-align:middle; margin-left:3px; }
-        .br { background:#ef4444; color:#fff; }
-        .bp { background:#a855f7; color:#fff; }
-        .bg { background:#22c55e; color:#fff; }
+        .br{background:#ef4444;color:#fff;} .bp{background:#a855f7;color:#fff;} .bg{background:#22c55e;color:#fff;}
 
-        /* 게임오버 / 승리 compact */
-        #go-score { font-size:28px; font-weight:900; font-family:monospace; color:#fff; margin:6px 0 14px; }
-        #win-card { background:rgba(234,179,8,0.15); border-color:rgba(234,179,8,0.4); }
-        #win-card h1 { color:#eab308; }
+        /* ── 점수 박스 ── */
+        .score-box { background:rgba(255,255,255,0.05); border-radius:10px; padding:10px; margin:8px 0; }
+        .score-box .lbl { font-size:10px; color:#888; margin-bottom:2px; }
+        .score-box .val { font-size:22px; font-weight:900; font-family:monospace; }
+        .score-detail { display:flex; gap:6px; margin-top:6px; font-size:10px; color:#888; justify-content:center; flex-wrap:wrap; }
+        .score-detail span { background:rgba(255,255,255,0.06); padding:2px 7px; border-radius:5px; }
+        .score-detail .hi { color:#6ee7b7; }
 
-        /* BOSS 경고 */
+        /* ── 리더보드 ── */
+        .lb-title { font-size:11px; color:#888; font-weight:700; letter-spacing:1px; text-align:left; margin-bottom:5px; margin-top:10px; }
+        .lb-list  { list-style:none; display:flex; flex-direction:column; gap:3px; }
+        .lb-row {
+            display:flex; align-items:center; gap:6px;
+            background:rgba(255,255,255,0.04); border-radius:7px;
+            padding:5px 8px; font-size:11px;
+        }
+        .lb-row.me { background:rgba(234,179,8,0.15); border:1px solid rgba(234,179,8,0.4); }
+        .lb-rank { font-size:12px; font-weight:900; min-width:20px; text-align:center; }
+        .r1{color:#FFD700;} .r2{color:#C0C0C0;} .r3{color:#CD7F32;} .rn{color:#666;}
+        .lb-nick { flex:1; font-weight:700; text-align:left; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+        .lb-sc   { font-family:monospace; font-weight:700; color:#eab308; font-size:11px; }
+        .lb-time { font-size:10px; color:#6ee7b7; min-width:34px; text-align:right; }
+
+        /* ── 닉네임 입력 ── */
+        .nick-area { background:rgba(234,179,8,0.08); border:1px solid rgba(234,179,8,0.3); border-radius:10px; padding:10px; margin:8px 0; }
+        .nick-area .nick-msg { font-size:12px; color:#eab308; font-weight:700; margin-bottom:8px; }
+        .nick-row { display:flex; gap:6px; }
+        .nick-inp {
+            flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2);
+            border-radius:8px; padding:8px 10px; color:white; font-size:13px; outline:none;
+            -webkit-user-select:text; user-select:text;
+        }
+        .nick-inp::placeholder { color:rgba(255,255,255,0.3); }
+        .nick-inp:focus { border-color:rgba(234,179,8,0.7); }
+        .nick-sub {
+            background:#eab308; color:#000; font-weight:900; border:none; border-radius:8px;
+            padding:8px 12px; font-size:12px; cursor:pointer; white-space:nowrap;
+        }
+        .nick-sub:disabled { opacity:.35; cursor:default; }
+        .sub-msg { font-size:11px; color:#6ee7b7; min-height:14px; margin-top:5px; text-align:center; }
+
+        /* ── BOSS 경고 ── */
         #boss-notice {
-            position:absolute; top:50px; width:100%; text-align:center;
-            color:#ff3b3b; font-size:18px; font-weight:900; letter-spacing:3px;
-            visibility:hidden; z-index:210; pointer-events:none;
-            animation: bn 0.5s infinite;
+            position:absolute; top:46px; width:100%; text-align:center; color:#ff3b3b;
+            font-size:17px; font-weight:900; letter-spacing:3px; visibility:hidden;
+            z-index:210; pointer-events:none; animation:bn .5s infinite;
         }
         @keyframes bn { 0%,100%{opacity:0} 50%{opacity:1} }
 
-        /* 조작 바 */
+        /* ── 조작 바 ── */
         #ctrl {
-            display:none; position:absolute; bottom:0; left:50%;
-            transform:translateX(-50%);
-            height:54px; background:rgba(0,0,0,0.45);
-            border-top:1px solid rgba(255,255,255,0.08);
+            display:none; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+            height:52px; background:rgba(0,0,0,0.42); border-top:1px solid rgba(255,255,255,0.08);
             align-items:center; justify-content:center; z-index:200;
         }
         .track { width:80%; height:5px; background:#222; border-radius:10px; position:relative; }
@@ -114,12 +120,13 @@
 <div id="gc">
     <canvas id="c"></canvas>
 
-    <!-- HUD (한 줄) -->
+    <!-- HUD -->
     <div id="hud">
         <div class="hud-hearts" id="hearts"></div>
         <div class="hud-sep"></div>
         <span id="score-display">0</span>
         <span id="level-display">LV1.0</span>
+        <span id="timer-display">0:00</span>
         <div class="hud-sep"></div>
         <div id="boss-bar-wrap">
             <span id="boss-bar-label">마녀까지</span>
@@ -137,92 +144,280 @@
     <div class="ovl" id="start-ovl">
         <div class="ovl-card">
             <h1>재홍 원사의<br><span style="color:#eab308;">군생활 위기 극복</span></h1>
-            <p>법전·규정집을 날려 악성 민원과 갑질을 물리치세요!</p>
+            <p>법전·규정집을 날려 악성 민원과 갑질을 물리치세요!<br><span style="color:#6ee7b7;">⏱ 빠른 클리어일수록 보너스 점수!</span></p>
             <div class="guide-row">
-                <div class="g-item"><span class="ei">👹</span><span class="badge br">공격</span><div class="lbl">맞히면 파괴</div></div>
-                <div class="g-item"><span class="ei">⚠️</span><span class="badge bp">회피</span><div class="lbl">절대 피하기</div></div>
-                <div class="g-item" style="grid-column:span 2;border-color:rgba(34,197,94,0.25);">
-                    <span class="ei">✨</span><span class="badge bg">아이템</span>
-                    <div class="lbl">💰상여금(무적) &nbsp; 🖼️가족(회복)</div>
+                <div class="g-item"><span style="font-size:17px;">👹</span><span class="badge br">공격</span><div class="lbl">맞히면 파괴</div></div>
+                <div class="g-item"><span style="font-size:17px;">⚠️</span><span class="badge bp">회피</span><div class="lbl">절대 피하기</div></div>
+                <div class="g-item" style="grid-column:span 2;border-color:rgba(34,197,94,0.2);">
+                    <span style="font-size:17px;">✨</span><span class="badge bg">아이템</span>
+                    <div class="lbl">💰상여금(무적) &nbsp;🖼️가족(회복)</div>
                 </div>
             </div>
             <button class="btn-go" id="start-btn">작전 개시</button>
+            <button class="btn-sec" id="start-lb-btn">🏆 명예의 전당</button>
         </div>
     </div>
 
-    <!-- 게임오버 -->
+    <!-- 게임오버 화면 -->
     <div class="ovl" id="go-ovl" style="display:none;">
         <div class="ovl-card">
             <h1 style="color:#ff4444;">MISSION FAILED</h1>
-            <div style="font-size:11px;color:#888;margin-top:4px;">최종 공헌도</div>
-            <div id="go-score">0</div>
-            <button class="btn-go" style="background:#ff4444;" id="retry-btn">재도전</button>
+            <div class="score-box">
+                <div class="lbl">최종 공헌도</div>
+                <div class="val" id="go-score">0</div>
+                <div class="score-detail" id="go-detail"></div>
+            </div>
+            <p style="color:#888;font-size:11px;margin:4px 0 10px;">보스를 클리어해야 랭킹에 등록할 수 있습니다</p>
+            <button class="btn-go" style="background:#e53e3e;" id="retry-btn">재도전</button>
             <button class="btn-sec" id="home-btn">처음으로</button>
+            <a class="btn-sec" href="https://kjh1000j.github.io/hong-world" target="_blank" rel="noopener">🏠 홍의 세계</a>
         </div>
     </div>
 
-    <!-- 승리 -->
+    <!-- 클리어(승리) 화면 -->
     <div class="ovl" id="win-ovl" style="display:none;">
-        <div class="ovl-card" id="win-card">
-            <div style="font-size:44px;margin-bottom:8px;">🏆</div>
-            <h1>위기 극복 완료!</h1>
-            <p>재홍 원사, 마녀를 물리쳤습니다!</p>
-            <a class="btn-go" href="https://kjh1000j.github.io/hong-world" target="_blank" rel="noopener" style="display:block;text-decoration:none;">🏠 홍의 세계로</a>
+        <div class="ovl-card" style="border-color:rgba(234,179,8,0.4);">
+            <div style="font-size:36px;margin-bottom:4px;">🏆</div>
+            <h1 style="color:#eab308;">위기 극복 완료!</h1>
+
+            <!-- 점수 상세 -->
+            <div class="score-box">
+                <div class="lbl">최종 공헌도</div>
+                <div class="val" id="win-score-val">0</div>
+                <div class="score-detail" id="win-score-detail"></div>
+            </div>
+
+            <!-- 순위 표시 -->
+            <div id="win-rank-msg" style="font-size:13px;color:#eab308;font-weight:700;margin:6px 0;min-height:18px;">순위 확인 중…</div>
+
+            <!-- TOP10 진입 시 닉네임 등록 -->
+            <div id="win-nick-area" class="nick-area" style="display:none;">
+                <div class="nick-msg">🎖️ TOP 10 진입! 이름을 남겨주세요</div>
+                <div class="nick-row">
+                    <input class="nick-inp" id="win-nick" type="text" maxlength="8" placeholder="닉네임 (최대 8자)" autocomplete="off">
+                    <button class="nick-sub" id="win-sub-btn">등록</button>
+                </div>
+                <div class="sub-msg" id="win-sub-msg"></div>
+            </div>
+
+            <!-- TOP10 밖일 때 메시지 -->
+            <div id="win-out-msg" style="display:none;font-size:11px;color:#888;margin:4px 0 8px;">재도전으로 TOP 10에 도전하세요!</div>
+
+            <!-- 리더보드 -->
+            <div class="lb-title">🏆 TOP 10 명예의 전당</div>
+            <ul class="lb-list" id="win-lb-list"><li style="font-size:11px;color:#555;padding:6px;text-align:center;">불러오는 중…</li></ul>
+
+            <button class="btn-go" style="margin-top:10px;" id="win-retry-btn">재도전</button>
+            <a class="btn-sec" href="https://kjh1000j.github.io/hong-world" target="_blank" rel="noopener">🏠 홍의 세계</a>
             <button class="btn-sec" id="win-home-btn">처음으로</button>
         </div>
     </div>
 
-    <!-- 조작 바 -->
+    <!-- 명예의 전당 (시작화면에서) -->
+    <div class="ovl" id="lb-ovl" style="display:none;">
+        <div class="ovl-card">
+            <h1>🏆 명예의 전당</h1>
+            <p>보스를 클리어한 역대 TOP 10</p>
+            <ul class="lb-list" id="main-lb-list"><li style="font-size:11px;color:#555;padding:6px;text-align:center;">불러오는 중…</li></ul>
+            <button class="btn-sec" id="lb-close-btn" style="margin-top:12px;">← 돌아가기</button>
+        </div>
+    </div>
+
     <div id="ctrl"><div class="track"><div class="knob" id="knob"></div></div></div>
 </div>
 
 <script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-const hud = document.getElementById('hud');
-const ctrl = document.getElementById('ctrl');
-const knob = document.getElementById('knob');
+/* ══════════════════════════════════════
+   GitHub Gist 리더보드
+══════════════════════════════════════ */
+const GIST_ID    = '5d0489eadc07c3fd2ecc114e5623c772';
+const GIST_TOKEN = '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';
+const GIST_FILE  = 'scores.json';
+const API_BASE   = 'https://api.github.com';
 
+async function gistLoad() {
+    try {
+        const r = await fetch(`${API_BASE}/gists/${GIST_ID}`, {
+            headers: { 'Authorization': `token ${GIST_TOKEN}`, 'Accept': 'application/vnd.github.v3+json' }
+        });
+        const data = await r.json();
+        const content = data.files[GIST_FILE].content;
+        return JSON.parse(content).scores || [];
+    } catch(e) { console.warn('gistLoad fail', e); return []; }
+}
+
+async function gistSave(scores) {
+    try {
+        await fetch(`${API_BASE}/gists/${GIST_ID}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `token ${GIST_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify({ scores }) } } })
+        });
+    } catch(e) { console.warn('gistSave fail', e); }
+}
+
+/* 순위 확인 (저장 없이) */
+async function getRank(sc) {
+    const scores = await gistLoad();
+    const above = scores.filter(e => e.score > sc).length;
+    return { rank: above + 1, total: scores.length };
+}
+
+/* TOP10 진입 여부 확인 + 저장 */
+async function submitScore(nick, sc, clearSec) {
+    nick = nick.trim().replace(/[<>&"]/g, '').slice(0, 8) || '무명용사';
+    let scores = await gistLoad();
+    const now = new Date();
+    const dateStr = `${now.getMonth()+1}/${now.getDate()}`;
+    scores.push({ nick, score: Math.floor(sc), time: clearSec, date: dateStr });
+    scores.sort((a, b) => b.score - a.score);
+    scores = scores.slice(0, 50);
+    await gistSave(scores);
+    const rank = scores.findIndex(e => e.nick === nick && e.score === Math.floor(sc)) + 1;
+    return { rank, scores };
+}
+
+function rankText(rank, total) {
+    if (total === 0) return '🎖️ 최초 클리어!';
+    if (rank === 1)  return '🥇 역대 1위!';
+    if (rank === 2)  return '🥈 역대 2위!';
+    if (rank === 3)  return '🥉 역대 3위!';
+    if (rank <= 10)  return `🏅 ${rank}위 / ${total+1}명`;
+    return `${rank}위 / ${total+1}명`;
+}
+
+function fmtTime(sec) {
+    const m = Math.floor(sec/60), s = sec%60;
+    return `${m}:${s.toString().padStart(2,'0')}`;
+}
+
+function renderLbList(elId, scores, myScore) {
+    const ul = document.getElementById(elId);
+    if (!scores.length) { ul.innerHTML = '<li style="font-size:11px;color:#555;padding:8px;text-align:center;">아직 기록 없음</li>'; return; }
+    ul.innerHTML = scores.slice(0,10).map((e,i) => {
+        const rc  = i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+        const med = i===0?'🥇':i===1?'🥈':i===2?'🥉':`${i+1}`;
+        const isMe = myScore && e.score === Math.floor(myScore);
+        const timeStr = e.time ? fmtTime(e.time) : '';
+        return `<li class="lb-row${isMe?' me':''}">
+            <span class="lb-rank ${rc}">${med}</span>
+            <span class="lb-nick">${e.nick}</span>
+            <span class="lb-sc">${e.score.toLocaleString()}</span>
+            <span class="lb-time">${timeStr}</span>
+        </li>`;
+    }).join('');
+}
+
+/* ══════════════════════════════════════
+   클리어 화면 처리
+══════════════════════════════════════ */
+let winFinalScore = 0, winClearSec = 0, winSubmitted = false;
+
+async function onWinScreen(finalScore, clearSec, baseScore, timeBonus) {
+    winFinalScore = finalScore; winClearSec = clearSec; winSubmitted = false;
+
+    document.getElementById('win-score-val').textContent = Math.floor(finalScore).toLocaleString();
+    document.getElementById('win-score-detail').innerHTML =
+        `<span>기본 ${Math.floor(baseScore).toLocaleString()}</span><span class="hi">⏱ 속도보너스 +${Math.floor(timeBonus).toLocaleString()}</span><span>${fmtTime(clearSec)}</span>`;
+    document.getElementById('win-rank-msg').textContent = '순위 확인 중…';
+    document.getElementById('win-nick-area').style.display = 'none';
+    document.getElementById('win-out-msg').style.display = 'none';
+    document.getElementById('win-nick').value = '';
+    document.getElementById('win-sub-btn').disabled = false;
+    document.getElementById('win-sub-msg').textContent = '';
+    document.getElementById('win-lb-list').innerHTML = '<li style="font-size:11px;color:#555;padding:6px;text-align:center;">불러오는 중…</li>';
+
+    showOvl('win-ovl');
+
+    const scores = await gistLoad();
+    const above  = scores.filter(e => e.score > finalScore).length;
+    const rank   = above + 1;
+    const total  = scores.length;
+
+    document.getElementById('win-rank-msg').textContent = rankText(rank, total);
+
+    if (rank <= 10) {
+        document.getElementById('win-nick-area').style.display = 'block';
+    } else {
+        document.getElementById('win-out-msg').style.display = 'block';
+    }
+    renderLbList('win-lb-list', scores, finalScore);
+}
+
+async function doWinSubmit() {
+    const nick = document.getElementById('win-nick').value.trim();
+    if (!nick) { document.getElementById('win-sub-msg').textContent = '닉네임을 입력하세요'; return; }
+    if (winSubmitted) { document.getElementById('win-sub-msg').textContent = '이미 등록되었습니다'; return; }
+    document.getElementById('win-sub-btn').disabled = true;
+    document.getElementById('win-sub-msg').textContent = '등록 중…';
+    winSubmitted = true;
+    try {
+        const { rank, scores } = await submitScore(nick, winFinalScore, winClearSec);
+        document.getElementById('win-sub-msg').textContent = `✅ ${rankText(rank, scores.length)} 등록 완료!`;
+        document.getElementById('win-rank-msg').textContent = rankText(rank, scores.length);
+        renderLbList('win-lb-list', scores, winFinalScore);
+    } catch(e) {
+        document.getElementById('win-sub-msg').textContent = '등록 실패. 다시 시도해주세요.';
+        document.getElementById('win-sub-btn').disabled = false;
+        winSubmitted = false;
+    }
+}
+
+async function showMainLb() {
+    showOvl('lb-ovl');
+    const scores = await gistLoad();
+    renderLbList('main-lb-list', scores, 0);
+}
+
+/* ══════════════════════════════════════
+   CANVAS / GAME
+══════════════════════════════════════ */
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+const hud    = document.getElementById('hud');
+const ctrl   = document.getElementById('ctrl');
+const knob   = document.getElementById('knob');
 let CW, CH;
-const ASPECT = 9/16;
-const PSIZE = 44;
+const ASPECT = 9/16, PSIZE = 44;
 
 function resize() {
     CW = window.innerWidth; CH = window.innerHeight;
-    let cW = CW, cH = CW / ASPECT;
-    if (cH > CH) { cH = CH; cW = CH * ASPECT; }
+    let cW = CW, cH = CW/ASPECT;
+    if (cH > CH) { cH = CH; cW = CH*ASPECT; }
     canvas.width = cW; canvas.height = cH;
-    canvas.style.width = cW + 'px'; canvas.style.height = cH + 'px';
-    // HUD / ctrl 너비 동기
-    hud.style.width = cW + 'px';
-    ctrl.style.width = cW + 'px';
+    canvas.style.width = cW+'px'; canvas.style.height = cH+'px';
+    hud.style.width = cW+'px'; ctrl.style.width = cW+'px';
 }
-window.addEventListener('resize', resize);
-resize();
+window.addEventListener('resize', resize); resize();
 
 /* ── Audio ── */
 let AC = null, muted = false;
 function sfx(type) {
     if (muted) return;
-    if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)();
-    if (AC.state === 'suspended') AC.resume();
-    const o = AC.createOscillator(), g = AC.createGain();
+    if (!AC) AC = new (window.AudioContext||window.webkitAudioContext)();
+    if (AC.state==='suspended') AC.resume();
+    const o=AC.createOscillator(), g=AC.createGain();
     o.connect(g); g.connect(AC.destination);
-    const t = AC.currentTime;
+    const t=AC.currentTime;
     ({
-        shoot:  () => { o.type='square'; o.frequency.setValueAtTime(440,t); o.frequency.exponentialRampToValueAtTime(110,t+.1); g.gain.setValueAtTime(.05,t); g.gain.exponentialRampToValueAtTime(.001,t+.1); o.start(); o.stop(t+.1); },
-        hit:    () => { o.type='sawtooth'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(55,t+.2); g.gain.setValueAtTime(.05,t); g.gain.exponentialRampToValueAtTime(.001,t+.2); o.start(); o.stop(t+.2); },
-        damage: () => { o.type='triangle'; o.frequency.setValueAtTime(110,t); o.frequency.linearRampToValueAtTime(55,t+.3); g.gain.setValueAtTime(.1,t); g.gain.linearRampToValueAtTime(.001,t+.3); o.start(); o.stop(t+.3); },
-        item:   () => { o.type='sine'; o.frequency.setValueAtTime(523,t); o.frequency.exponentialRampToValueAtTime(1046,t+.3); g.gain.setValueAtTime(.1,t); g.gain.exponentialRampToValueAtTime(.001,t+.3); o.start(); o.stop(t+.3); },
-    }[type] || (()=>{}))();
+        shoot:  ()=>{o.type='square';o.frequency.setValueAtTime(440,t);o.frequency.exponentialRampToValueAtTime(110,t+.1);g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.1);o.start();o.stop(t+.1);},
+        hit:    ()=>{o.type='sawtooth';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(55,t+.2);g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.start();o.stop(t+.2);},
+        damage: ()=>{o.type='triangle';o.frequency.setValueAtTime(110,t);o.frequency.linearRampToValueAtTime(55,t+.3);g.gain.setValueAtTime(.1,t);g.gain.linearRampToValueAtTime(.001,t+.3);o.start();o.stop(t+.3);},
+        item:   ()=>{o.type='sine';o.frequency.setValueAtTime(523,t);o.frequency.exponentialRampToValueAtTime(1046,t+.3);g.gain.setValueAtTime(.1,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.start();o.stop(t+.3);},
+    }[type]||(() => {}))();
 }
 
 /* ── State ── */
-let GS = 'START', score = 0, diff = 1, frame = 0, lastShot = 0;
+let GS='START', score=0, diff=1, frame=0, lastShot=0;
 let player, enemies, obstacles, projectiles, items, boss, scroll, shake, lastHp;
+let gameStartTime = 0; // 밀리초
 
 function reset() {
-    score=0; diff=1; frame=0; lastShot=0; scroll=0; shake=0;
+    score=0; diff=1; frame=0; lastShot=0; scroll=0; shake=0; gameStartTime=0;
     player = { x:canvas.width/2, y:canvas.height-120, size:PSIZE, hp:3, tx:canvas.width/2, inv:0, aura:0, dash:0 };
     enemies=[]; obstacles=[]; projectiles=[]; items=[]; boss=null; lastHp=3;
     renderHUD();
@@ -232,14 +427,18 @@ function reset() {
 
 /* ── HUD ── */
 function renderHUD() {
-    // 하트
     let h='';
     for(let i=0;i<3;i++) h+=`<span class="h${i>=player.hp?' lost':''}">❤️</span>`;
     document.getElementById('hearts').innerHTML = h;
-    // 점수
     document.getElementById('score-display').textContent = Math.floor(score).toLocaleString();
     document.getElementById('level-display').textContent = 'LV'+diff.toFixed(1);
-    // 마녀 게이지
+
+    // 타이머
+    if (gameStartTime > 0) {
+        const elapsed = Math.floor((Date.now()-gameStartTime)/1000);
+        document.getElementById('timer-display').textContent = fmtTime(elapsed);
+    }
+
     const bw = document.getElementById('boss-bar-wrap');
     if (GS==='PLAYING' && !boss) {
         bw.style.display='flex';
@@ -247,39 +446,30 @@ function renderHUD() {
     } else if (boss) {
         bw.style.display='none';
     }
-    if(lastHp!==player.hp) lastHp=player.hp;
+    if (lastHp !== player.hp) lastHp = player.hp;
 }
 
 /* ── Spawn ── */
-function sp(base, arr, configs) { arr.push({...base, ...configs[Math.floor(Math.random()*configs.length)]}); }
 function spawnEnemy() {
-    const sc = canvas.height/800;
-    const base = { id:Math.random(), x:30+Math.random()*(canvas.width-60), y:-50, size:40, speed:(1.8+Math.random()*1.8)*diff*sc, category:'enemy' };
-    sp(base, enemies, [
-        {emoji:'📞',label:'잦은 호출',hp:2},
-        {emoji:'😤',label:'인사 갑질',hp:3},
-        {emoji:'🔍',label:'감찰 조사',hp:2},
-        {emoji:'💢',label:'악성 민원',hp:4},
-    ]);
+    const sc=canvas.height/800;
+    const base={id:Math.random(),x:30+Math.random()*(canvas.width-60),y:-50,size:40,speed:(1.8+Math.random()*1.8)*diff*sc,category:'enemy'};
+    const cfgs=[{emoji:'📞',label:'잦은 호출',hp:2},{emoji:'😤',label:'인사 갑질',hp:3},{emoji:'🔍',label:'감찰 조사',hp:2},{emoji:'💢',label:'악성 민원',hp:4}];
+    enemies.push({...base,...cfgs[Math.floor(Math.random()*cfgs.length)]});
 }
 function spawnObs() {
-    const sc = canvas.height/800;
-    const base = { id:Math.random(), x:30+Math.random()*(canvas.width-60), y:-50, size:48, category:'obstacle' };
-    sp(base, obstacles, [
-        {emoji:'👴',label:'나때는말야',speed:2.8*diff*sc},
-        {emoji:'🚘',label:'전관예우',  speed:5.5*diff*sc},
-        {emoji:'❓',label:'원칙없는지시',speed:3.8*diff*sc},
-        {emoji:'🤝',label:'듣보잡인맥',speed:4.5*diff*sc},
-    ]);
+    const sc=canvas.height/800;
+    const base={id:Math.random(),x:30+Math.random()*(canvas.width-60),y:-50,size:48,category:'obstacle'};
+    const cfgs=[{emoji:'👴',label:'나때는말야',speed:2.8*diff*sc},{emoji:'🚘',label:'전관예우',speed:5.5*diff*sc},{emoji:'❓',label:'원칙없는지시',speed:3.8*diff*sc},{emoji:'🤝',label:'듣보잡인맥',speed:4.5*diff*sc}];
+    obstacles.push({...base,...cfgs[Math.floor(Math.random()*cfgs.length)]});
 }
 function spawnItem() {
-    const b = Math.random()<.5;
-    items.push({ id:Math.random(), x:30+Math.random()*(canvas.width-60), y:-50, size:36, speed:2.8, category:'item', type:b?'Bonus':'Family', emoji:b?'💰':'🖼️', label:b?'상여금!':'가족응원!' });
+    const b=Math.random()<.5;
+    items.push({id:Math.random(),x:30+Math.random()*(canvas.width-60),y:-50,size:36,speed:2.8,category:'item',type:b?'Bonus':'Family',emoji:b?'💰':'🖼️',label:b?'상여금!':'가족응원!'});
 }
 function fire() {
     const now=Date.now(); if(now-lastShot<180) return; lastShot=now; sfx('shoot');
     const ib=Math.random()>.5;
-    projectiles.push({ x:player.x, y:player.y-28, size:22, emoji:ib?'📖':'📜', label:ib?'법령':'법규', speed:13 });
+    projectiles.push({x:player.x,y:player.y-28,size:22,emoji:ib?'📖':'📜',label:ib?'법령':'법규',speed:13});
 }
 
 /* ── Draw ── */
@@ -290,81 +480,83 @@ function drawRank(x,y) {
     for(let i=0;i<3;i++){const o=i*9;ctx.beginPath();ctx.moveTo(-12,-2+o);ctx.lineTo(0,7+o);ctx.lineTo(12,-2+o);ctx.stroke();}
     ctx.restore();
 }
-
 function drawEntity(e) {
     ctx.save();
-    const b = Math.sin(Date.now()*.005)*4;
-    const r = (Date.now()*.001)%(Math.PI*2);
+    const b=Math.sin(Date.now()*.005)*4, r=(Date.now()*.001)%(Math.PI*2);
     const [plate,shadow,border] = e.category==='enemy'
-        ? ['rgba(220,0,0,.9)','#ff0000','#ffaaaa']
-        : e.category==='obstacle'
-        ? ['rgba(130,40,220,.9)','#c084fc','#e9d5ff']
-        : ['rgba(245,200,20,.9)','#fef08a','#fefce8'];
-
+        ?['rgba(220,0,0,.9)','#ff0000','#ffaaaa']
+        :e.category==='obstacle'
+        ?['rgba(130,40,220,.9)','#c084fc','#e9d5ff']
+        :['rgba(245,200,20,.9)','#fef08a','#fefce8'];
     ctx.shadowBlur=18; ctx.shadowColor=shadow;
-    // outer ring
     ctx.save(); ctx.shadowBlur=0; ctx.strokeStyle=border; ctx.lineWidth=1.5; ctx.setLineDash([4,4]);
     ctx.beginPath(); ctx.arc(e.x,e.y+b,e.size*.78,r,r+Math.PI*1.5); ctx.stroke(); ctx.restore();
-    // body
     ctx.fillStyle=plate; ctx.beginPath(); ctx.arc(e.x,e.y+b,e.size*.62,0,Math.PI*2); ctx.fill();
-    // emoji backing
     ctx.fillStyle='rgba(255,255,255,.88)'; ctx.beginPath(); ctx.arc(e.x,e.y+b-4,e.size*.42,0,Math.PI*2); ctx.fill();
     ctx.strokeStyle=border; ctx.lineWidth=3; ctx.stroke();
-    // emoji
     ctx.font='bold '+(e.size*.75)+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.shadowBlur=6; ctx.shadowColor='rgba(0,0,0,.4)'; ctx.fillStyle='black';
     ctx.fillText(e.emoji,e.x,e.y+b-4);
-    // label
     ctx.shadowBlur=0; ctx.font='800 12px sans-serif'; ctx.textAlign='center';
     ctx.strokeStyle='#000'; ctx.lineWidth=4; ctx.strokeText(e.label,e.x,e.y+b+30);
     ctx.fillStyle='#fff'; ctx.fillText(e.label,e.x,e.y+b+30);
     ctx.restore();
 }
 
-/* ── Loop ── */
+/* ── Screen ── */
 function showOvl(id) {
-    ['start-ovl','go-ovl','win-ovl'].forEach(s=>{ const el=document.getElementById(s); if(el) el.style.display='none'; });
+    ['start-ovl','go-ovl','win-ovl','lb-ovl'].forEach(s=>{
+        const el=document.getElementById(s); if(el) el.style.display='none';
+    });
     hud.style.display='none'; ctrl.style.display='none';
-    if(id){
-        const el=document.getElementById(id); if(el) el.style.display='flex';
-    } else {
-        hud.style.display='flex'; ctrl.style.display='flex';
-    }
+    if (id) { const el=document.getElementById(id); if(el) el.style.display='flex'; }
+    else    { hud.style.display='flex'; ctrl.style.display='flex'; }
 }
 
-function loop() {
-    if(GS!=='PLAYING'&&GS!=='BOSS'){ requestAnimationFrame(loop); return; }
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+/* ── 점수 계산 ── */
+function calcFinalScore(baseScore, clearSec) {
+    // 클리어 시간 보너스: 120초 이하 최대 3000, 300초 초과 0
+    const MAX_TIME = 300, MIN_TIME = 60, MAX_BONUS = 5000;
+    let timeBonus = 0;
+    if (clearSec <= MIN_TIME) {
+        timeBonus = MAX_BONUS;
+    } else if (clearSec < MAX_TIME) {
+        timeBonus = Math.floor(MAX_BONUS * (MAX_TIME - clearSec) / (MAX_TIME - MIN_TIME));
+    }
+    return { final: Math.floor(baseScore + timeBonus), timeBonus };
+}
 
-    if(shake>0){ ctx.save(); ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake); shake*=.88; if(shake<.1)shake=0; }
+/* ── Main Loop ── */
+function loop() {
+    if (GS!=='PLAYING' && GS!=='BOSS') { requestAnimationFrame(loop); return; }
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    if (shake>0) { ctx.save(); ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake); shake*=.88; if(shake<.1)shake=0; }
 
     frame++; diff=1+frame/5000;
     score += .5*diff;
     fire();
-    if(frame%4===0) renderHUD();
+    if (frame%4===0) renderHUD();
 
     // BG
     ctx.fillStyle='#3d4530'; ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.strokeStyle='rgba(255,255,255,.06)'; ctx.lineWidth=1.5;
     scroll=(scroll+1.8*diff);
-    for(let x=0;x<=canvas.width;x+=canvas.width/3){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke(); }
+    for(let x=0;x<=canvas.width;x+=canvas.width/3){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
     ctx.fillStyle='rgba(0,0,0,.12)';
-    for(let i=0;i<8;i++){ const y=(scroll*1.1+(i*145))%(canvas.height+100)-50; ctx.fillRect(35,y,16,8); ctx.fillRect(canvas.width-52,y,16,8); }
+    for(let i=0;i<8;i++){const y=(scroll*1.1+(i*145))%(canvas.height+100)-50;ctx.fillRect(35,y,16,8);ctx.fillRect(canvas.width-52,y,16,8);}
 
-    // Player
     player.x+=(player.tx-player.x)*.15;
     if(player.inv>0)player.inv--;
     if(player.aura>0)player.aura--;
     if(player.dash>0)player.dash--;
 
-    // Spawn
     const rate=Math.max(22,58-Math.floor(diff*5));
     if(frame%rate===0) spawnEnemy();
-    if(frame%95===0) spawnObs();
-    if(frame%580===0) spawnItem();
+    if(frame%95===0)   spawnObs();
+    if(frame%580===0)  spawnItem();
 
-    // Boss trigger at 5000
-    if(score>=5000&&!boss){
+    // Boss trigger
+    if (score>=5000 && !boss) {
         boss={x:canvas.width/2,y:-80,size:68,hp:200,maxHp:200,atk:0,emoji:'🧛‍♀️'};
         GS='BOSS';
         const bn=document.getElementById('boss-notice'); bn.style.visibility='visible';
@@ -393,13 +585,13 @@ function loop() {
             const p=projectiles[pi];
             if(Math.hypot(e.x-p.x,e.y-p.y)<e.size/2+p.size/2){
                 e.hp--; projectiles.splice(pi,1); sfx('hit');
-                if(e.hp<=0){ enemies.splice(i,1); score+=150; dead=true; break; }
+                if(e.hp<=0){enemies.splice(i,1);score+=150;dead=true;break;}
             }
         }
         if(dead) continue;
         if(player.inv===0&&Math.hypot(e.x-player.x,e.y-player.y)<e.size/2+player.size/2){
-            if(player.dash>0){ enemies.splice(i,1); score+=200; sfx('hit'); }
-            else{ player.hp--; player.inv=60; shake=12; sfx('damage'); renderHUD(); }
+            if(player.dash>0){enemies.splice(i,1);score+=200;sfx('hit');}
+            else{player.hp--;player.inv=60;shake=12;sfx('damage');renderHUD();}
             continue;
         }
         if(e.y>canvas.height+40) enemies.splice(i,1);
@@ -409,7 +601,7 @@ function loop() {
     for(let i=obstacles.length-1;i>=0;i--){
         const o=obstacles[i]; o.y+=o.speed; drawEntity(o);
         if(player.inv===0&&Math.hypot(o.x-player.x,o.y-player.y)<o.size/2+player.size/2){
-            player.hp--; player.inv=60; shake=12; sfx('damage'); renderHUD();
+            player.hp--;player.inv=60;shake=12;sfx('damage');renderHUD();
         }
         if(o.y>canvas.height+40) obstacles.splice(i,1);
     }
@@ -419,85 +611,81 @@ function loop() {
         const it=items[i]; it.y+=it.speed; drawEntity(it);
         if(Math.hypot(it.x-player.x,it.y-player.y)<it.size/2+player.size/2){
             sfx('item');
-            if(it.type==='Bonus'){ player.dash=300; player.inv=300; }
-            else{ player.aura=300; player.inv=300; player.hp=Math.min(3,player.hp+1); }
+            if(it.type==='Bonus'){player.dash=300;player.inv=300;}
+            else{player.aura=300;player.inv=300;player.hp=Math.min(3,player.hp+1);}
             items.splice(i,1); score+=500; renderHUD();
         }
         if(it.y>canvas.height+40) items.splice(i,1);
     }
 
-    // ── Boss ──
-    if(boss){
+    // Boss
+    if (boss) {
         if(boss.y<90) boss.y+=2.5;
-        else{
+        else {
             boss.x=(canvas.width/2)+Math.sin(frame*.022)*(canvas.width*.32);
             boss.atk++;
             const sc=canvas.height/800;
             if(boss.atk>48/diff){
-                boss.atk=0;
-                const t=Math.random();
+                boss.atk=0; const t=Math.random();
                 if(t<.33) obstacles.push({id:Math.random(),x:boss.x,y:boss.y,size:52,speed:5.5*diff*sc,emoji:'✂️',label:'진급누락!',category:'obstacle'});
                 else if(t<.66) obstacles.push({id:Math.random(),x:boss.x,y:boss.y,size:56,speed:7*diff*sc,emoji:'⛓️',label:'강제교류!',category:'obstacle'});
                 else for(let k=-1;k<=1;k++) obstacles.push({id:Math.random(),x:boss.x+k*80,y:boss.y+Math.abs(k)*25,size:46,speed:4.5*diff*sc,emoji:'❌',label:'히스테리!',category:'obstacle'});
             }
         }
-        // hits
         for(let pi=projectiles.length-1;pi>=0;pi--){
             const p=projectiles[pi];
             if(Math.hypot(boss.x-p.x,boss.y-p.y)<boss.size/2+p.size/2){
                 boss.hp--; projectiles.splice(pi,1); sfx('hit');
-                if(boss.hp<=0){ GS='ENDING'; showOvl('win-ovl'); return; }
+                if(boss.hp<=0){
+                    GS='ENDING';
+                    const clearSec = Math.floor((Date.now()-gameStartTime)/1000);
+                    const {final, timeBonus} = calcFinalScore(score, clearSec);
+                    onWinScreen(final, clearSec, score, timeBonus);
+                    return;
+                }
             }
         }
-
-        // Draw boss – 크기 축소, 라벨 작게
+        // Draw boss
         const pulse=Math.sin(Date.now()*.01)*14;
         ctx.save(); ctx.shadowBlur=28+pulse; ctx.shadowColor='#ff00ff';
         ctx.fillStyle='rgba(130,40,200,.28)'; ctx.beginPath(); ctx.arc(boss.x,boss.y,boss.size*.65,0,Math.PI*2); ctx.fill(); ctx.restore();
-        ctx.save();
-        ctx.fillStyle='rgba(255,255,255,.9)'; ctx.beginPath(); ctx.arc(boss.x,boss.y,boss.size*.48,0,Math.PI*2); ctx.fill();
+        ctx.save(); ctx.fillStyle='rgba(255,255,255,.9)'; ctx.beginPath(); ctx.arc(boss.x,boss.y,boss.size*.48,0,Math.PI*2); ctx.fill();
         ctx.font='bold '+boss.size+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
         ctx.fillText(boss.emoji,boss.x,boss.y); ctx.restore();
-        // 이름 라벨
         ctx.font='800 14px sans-serif'; ctx.textAlign='center';
         ctx.strokeStyle='#000'; ctx.lineWidth=4; ctx.strokeText('😈 열등감 가득한 인사 마녀 😈',boss.x,boss.y+boss.size/2+22);
         ctx.fillStyle='#ff9999'; ctx.fillText('😈 열등감 가득한 인사 마녀 😈',boss.x,boss.y+boss.size/2+22);
-        // HP bar – 마녀 바로 위에, 캔버스 상단 아님
         const bx=boss.x-55, by=boss.y-boss.size/2-16, bw=110;
         ctx.fillStyle='rgba(0,0,0,.6)'; ctx.fillRect(bx,by,bw,10);
         ctx.fillStyle='#ff3333'; ctx.fillRect(bx+1,by+1,(bw-2)*(boss.hp/boss.maxHp),8);
         ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1; ctx.strokeRect(bx,by,bw,10);
     }
 
-    // ── Player draw ──
+    // Player
     if(!(player.inv>0&&Math.floor(player.inv/5)%2===0)){
         ctx.save();
-        // shadow
         ctx.fillStyle='rgba(0,0,0,.18)'; ctx.beginPath(); ctx.ellipse(player.x,player.y+player.size/2.3,player.size/1.7,player.size/4.2,0,0,Math.PI*2); ctx.fill();
-        // aura
-        if(player.aura>0){ ctx.save(); ctx.shadowBlur=22; ctx.shadowColor='gold'; ctx.fillStyle='rgba(255,215,0,.35)'; ctx.beginPath(); ctx.arc(player.x,player.y,player.size*.88,0,Math.PI*2); ctx.fill(); ctx.restore(); }
-        // body
-        ctx.fillStyle=player.dash>0?'#facc15':'#5a8a0a';
-        ctx.shadowBlur=8; ctx.shadowColor='rgba(0,0,0,.4)';
+        if(player.aura>0){ctx.save();ctx.shadowBlur=22;ctx.shadowColor='gold';ctx.fillStyle='rgba(255,215,0,.35)';ctx.beginPath();ctx.arc(player.x,player.y,player.size*.88,0,Math.PI*2);ctx.fill();ctx.restore();}
+        ctx.fillStyle=player.dash>0?'#facc15':'#5a8a0a'; ctx.shadowBlur=8; ctx.shadowColor='rgba(0,0,0,.4)';
         ctx.beginPath(); ctx.arc(player.x,player.y,player.size/2,0,Math.PI*2); ctx.fill();
-        // shine
         ctx.fillStyle='rgba(255,255,255,.18)'; ctx.beginPath(); ctx.arc(player.x-player.size/6,player.y-player.size/6,player.size/6,0,Math.PI*2); ctx.fill();
-        // face
         ctx.fillStyle='#fef3c7'; ctx.shadowBlur=0; ctx.beginPath(); ctx.arc(player.x,player.y+1,player.size/3.6,0,Math.PI*2); ctx.fill();
-        // cap
         ctx.fillStyle='#1a2e05'; ctx.beginPath(); ctx.arc(player.x,player.y-player.size/5.5,player.size/2.4,Math.PI,0); ctx.fill();
         ctx.fillRect(player.x-player.size/2.4,player.y-player.size/5.5,player.size/1.2,1.5);
-        // eyes
         ctx.fillStyle='#222'; ctx.beginPath(); ctx.arc(player.x-3,player.y+1,1.6,0,Math.PI*2); ctx.arc(player.x+3,player.y+1,1.6,0,Math.PI*2); ctx.fill();
-        // name
         ctx.font='800 11px sans-serif'; ctx.textAlign='center';
         ctx.strokeStyle='rgba(0,0,0,.9)'; ctx.lineWidth=3.5; ctx.strokeText('재홍',player.x,player.y+22);
         ctx.fillStyle='white'; ctx.fillText('재홍',player.x,player.y+22);
-        ctx.restore();
-        drawRank(player.x,player.y);
+        ctx.restore(); drawRank(player.x,player.y);
     }
 
-    if(player.hp<=0){ GS='GAME_OVER'; document.getElementById('go-score').textContent=Math.floor(score).toLocaleString(); showOvl('go-ovl'); }
+    if(player.hp<=0){
+        GS='GAME_OVER';
+        const clearSec=Math.floor((Date.now()-gameStartTime)/1000);
+        document.getElementById('go-score').textContent=Math.floor(score).toLocaleString();
+        document.getElementById('go-detail').innerHTML=`<span>⏱ ${fmtTime(clearSec)}</span>`;
+        showOvl('go-ovl');
+    }
     if(shake>0) ctx.restore();
     requestAnimationFrame(loop);
 }
@@ -505,25 +693,31 @@ function loop() {
 /* ── Input ── */
 function inp(cx){
     if(GS!=='PLAYING'&&GS!=='BOSS') return;
-    const rect=canvas.getBoundingClientRect();
-    const sc=canvas.width/rect.width;
+    const rect=canvas.getBoundingClientRect(), sc=canvas.width/rect.width;
     let x=(cx-rect.left)*sc;
     player.tx=Math.max(PSIZE/2,Math.min(canvas.width-PSIZE/2,x));
     knob.style.left=(player.tx/canvas.width)*100+'%';
 }
-canvas.addEventListener('mousemove',e=>inp(e.clientX));
-canvas.addEventListener('mousedown',e=>inp(e.clientX));
-canvas.addEventListener('touchmove',e=>{e.preventDefault();inp(e.touches[0].clientX);},{passive:false});
-canvas.addEventListener('touchstart',e=>inp(e.touches[0].clientX),{passive:false});
+canvas.addEventListener('mousemove', e=>inp(e.clientX));
+canvas.addEventListener('mousedown', e=>inp(e.clientX));
+canvas.addEventListener('touchmove', e=>{e.preventDefault();inp(e.touches[0].clientX);},{passive:false});
+canvas.addEventListener('touchstart', e=>inp(e.touches[0].clientX),{passive:false});
 
 /* ── Buttons ── */
 function goStart(){ GS='START'; showOvl('start-ovl'); }
-document.getElementById('start-btn').onclick = ()=>{ reset(); GS='PLAYING'; showOvl(null); };
-document.getElementById('retry-btn').onclick = ()=>{ reset(); GS='PLAYING'; showOvl(null); };
-document.getElementById('home-btn').onclick  = goStart;
+function startGame(){ reset(); GS='PLAYING'; gameStartTime=Date.now(); showOvl(null); }
+
+document.getElementById('start-btn').onclick    = startGame;
+document.getElementById('start-lb-btn').onclick = showMainLb;
+document.getElementById('retry-btn').onclick    = startGame;
+document.getElementById('home-btn').onclick     = goStart;
+document.getElementById('win-retry-btn').onclick= startGame;
 document.getElementById('win-home-btn').onclick = goStart;
-document.getElementById('reset-btn').onclick = goStart;
-document.getElementById('mute-btn').onclick  = function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; };
+document.getElementById('reset-btn').onclick    = goStart;
+document.getElementById('lb-close-btn').onclick = ()=>showOvl('start-ovl');
+document.getElementById('mute-btn').onclick     = function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; };
+document.getElementById('win-sub-btn').onclick  = doWinSubmit;
+document.getElementById('win-nick').addEventListener('keydown', e=>{ if(e.key==='Enter') doWinSubmit(); });
 
 loop();
 </script>
