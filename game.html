@@ -239,27 +239,32 @@ const API_BASE   = 'https://api.github.com';
 
 async function gistLoad() {
     try {
+        // 올바른 Raw URL 형식: /raw/ 뒤에 파일명만
         const r = await fetch(
-            `https://gist.githubusercontent.com/kjh1000j/${GIST_ID}/raw/${GIST_FILE}?t=${Date.now()}`,
-            { cache: 'no-store' }
+            `https://gist.githubusercontent.com/kjh1000j/${GIST_ID}/raw/${GIST_FILE}?_=${Date.now()}`,
+            { cache: 'no-store', headers: { 'Accept': 'application/json' } }
         );
-        const data = await r.json();
-        return data.scores || [];
-    } catch(e) { console.warn('gistLoad fail', e); return []; }
+        if(!r.ok) throw new Error('HTTP '+r.status);
+        const text = await r.text();
+        const data = JSON.parse(text);
+        return Array.isArray(data.scores) ? data.scores : [];
+    } catch(e) { console.error('gistLoad fail:', e); return []; }
 }
 
 async function gistSave(scores) {
     try {
-        await fetch(`${API_BASE}/gists/${GIST_ID}`, {
+        const r = await fetch(`${API_BASE}/gists/${GIST_ID}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `token ${GIST_TOKEN}`,
                 'Accept': 'application/vnd.github.v3+json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify({ scores }) } } })
+            body: JSON.stringify({ files: { [GIST_FILE]: { content: JSON.stringify({ scores }, null, 2) } } })
         });
-    } catch(e) { console.warn('gistSave fail', e); }
+        if(!r.ok) throw new Error('Save HTTP '+r.status);
+        return true;
+    } catch(e) { console.error('gistSave fail:', e); return false; }
 }
 
 /* 순위 확인 (저장 없이) */
@@ -709,23 +714,39 @@ function inp(cx){
 }
 canvas.addEventListener('mousemove', e=>inp(e.clientX));
 canvas.addEventListener('mousedown', e=>inp(e.clientX));
-canvas.addEventListener('touchmove', e=>{e.preventDefault();inp(e.touches[0].clientX);},{passive:false});
-canvas.addEventListener('touchstart', e=>inp(e.touches[0].clientX),{passive:false});
+// touchmove/touchstart는 게임 중일 때만 처리, 오버레이 표시 중엔 무시
+canvas.addEventListener('touchmove', e=>{
+    if(GS!=='PLAYING'&&GS!=='BOSS') return;
+    e.preventDefault();
+    inp(e.touches[0].clientX);
+},{passive:false});
+canvas.addEventListener('touchstart', e=>{
+    if(GS!=='PLAYING'&&GS!=='BOSS') return;
+    inp(e.touches[0].clientX);
+},{passive:false});
 
 /* ── Buttons ── */
 function goStart(){ GS='START'; showOvl('start-ovl'); }
 function startGame(){ reset(); GS='PLAYING'; gameStartTime=Date.now(); showOvl(null); }
 
-document.getElementById('start-btn').onclick    = startGame;
-document.getElementById('start-lb-btn').onclick = showMainLb;
-document.getElementById('retry-btn').onclick    = startGame;
-document.getElementById('home-btn').onclick     = goStart;
-document.getElementById('win-retry-btn').onclick= startGame;
-document.getElementById('win-home-btn').onclick = goStart;
-document.getElementById('reset-btn').onclick    = goStart;
-document.getElementById('lb-close-btn').onclick = ()=>showOvl('start-ovl');
-document.getElementById('mute-btn').onclick     = function(){ muted=!muted; this.textContent=muted?'🔇':'🔊'; };
-document.getElementById('win-sub-btn').onclick  = doWinSubmit;
+// onclick 대신 addEventListener로 등록 (모바일 터치 호환성)
+function bindBtn(id, fn){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('click', fn);
+    el.addEventListener('touchend', e=>{ e.preventDefault(); e.stopPropagation(); fn(); });
+}
+
+bindBtn('start-btn',    startGame);
+bindBtn('start-lb-btn', showMainLb);
+bindBtn('retry-btn',    startGame);
+bindBtn('home-btn',     goStart);
+bindBtn('win-retry-btn',startGame);
+bindBtn('win-home-btn', goStart);
+bindBtn('reset-btn',    goStart);
+bindBtn('lb-close-btn', ()=>showOvl('start-ovl'));
+bindBtn('mute-btn',     function(){ muted=!muted; document.getElementById('mute-btn').textContent=muted?'🔇':'🔊'; });
+bindBtn('win-sub-btn',  doWinSubmit);
 document.getElementById('win-nick').addEventListener('keydown', e=>{ if(e.key==='Enter') doWinSubmit(); });
 
 loop();
