@@ -22,7 +22,7 @@
   .flower { position:absolute; pointer-events:none; }
   #player { position:absolute; z-index:80; cursor:pointer; display:flex; flex-direction:column; align-items:center; }
   #player svg { width:52px; height:70px; }
-  #player-name { font-size:11px; color:#fff; text-shadow:0 1px 3px #000; margin-top:1px; }
+  #player-name { font-size:11px; color:#fff; text-shadow:0 1px 4px #000, 0 0 8px #000; margin-top:1px; font-family:'Nanum Gothic',sans-serif; }
   /* 말풍선 */
   #bbl, #career-bbl, #sun-bbl { position:fixed; z-index:500; left:50%; transform:translateX(-50%); display:none; animation:popIn 0.18s ease; font-family:'Nanum Gothic',sans-serif; }
   @keyframes popIn { from{transform:translateX(-50%) scale(0.85);opacity:0} to{transform:translateX(-50%) scale(1);opacity:1} }
@@ -123,6 +123,74 @@
     animation: ballBounce 0.6s ease;
   }
 
+
+  /* 에너지바 */
+  #energy-wrap {
+    position:fixed; top:56px; left:50%; transform:translateX(-50%);
+    z-index:200; display:flex; flex-direction:column; align-items:center;
+    pointer-events:none;
+  }
+  #energy-label {
+    font-size:10px; color:#f5c842; font-family:'Nanum Gothic',sans-serif;
+    margin-bottom:2px; text-shadow:0 1px 3px #000;
+  }
+  #energy-bar-wrap {
+    width:120px; height:10px;
+    background:rgba(0,0,0,0.4); border-radius:6px;
+    border:1px solid #f5c842; overflow:hidden;
+  }
+  #energy-bar {
+    height:100%; width:0%; border-radius:6px;
+    background:linear-gradient(to right,#ff6b00,#f5c842);
+    transition:width 0.4s ease;
+  }
+
+  /* 클리어 팝업 */
+  #clear-popup {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,0.85); z-index:1000;
+    display:none; align-items:center; justify-content:center;
+    flex-direction:column;
+  }
+  #clear-popup.show { display:flex; animation:popIn 0.3s ease; }
+  #clear-box {
+    background:linear-gradient(135deg,#fffdf0,#fff8e0);
+    border:3px solid #f5c842; border-radius:20px;
+    padding:30px 28px; width:min(300px,86vw);
+    text-align:center;
+    box-shadow:0 8px 32px rgba(245,200,66,0.5);
+  }
+  #clear-box .clear-title {
+    font-family:'Jua',sans-serif; font-size:22px; color:#5c3a00;
+    margin-bottom:10px;
+  }
+  #clear-box .clear-msg {
+    font-size:13px; color:#3d2a00; line-height:1.8;
+    font-family:'Nanum Gothic',sans-serif; margin-bottom:20px;
+  }
+  #clear-close {
+    background:linear-gradient(to right,#f5c842,#e8a820);
+    border:none; border-radius:12px; padding:10px 30px;
+    font-family:'Jua',sans-serif; font-size:15px;
+    color:#2d1a00; cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  }
+
+  /* 레벨별 홍 색상 변화 */
+  #player.lv2 svg rect[fill="#4a7fc1"],
+  #player.lv2 svg rect[fill="#4a7fc1"] { fill:#e05a3a !important; }
+  #player.lv3 svg rect[fill="#4a7fc1"] { fill:#8b3a8b !important; }
+
+  /* 별 효과 */
+  @keyframes starFloat {
+    0%   { transform:translateY(0) scale(1); opacity:1; }
+    100% { transform:translateY(-40px) scale(0); opacity:0; }
+  }
+  .star-effect {
+    position:fixed; font-size:20px; pointer-events:none; z-index:400;
+    animation:starFloat 0.8s ease forwards;
+  }
+
   @keyframes spinSun { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
   /* 밤 모드 */
@@ -187,6 +255,8 @@
       <div>🌙 우측 버튼으로 <b>낮/밤</b> 전환</div>
       <div>🔊 우측 버튼으로 <b>음악</b> 켜기</div>
       <div>📮 좌측 버튼으로 <b>방명록</b> 이메일</div>
+      <div>🎮 좌측 버튼으로 <b>게임</b> 이동</div>
+      <div>📖 말풍선 읽을수록 <b>에너지</b> 충전<br>&nbsp;&nbsp;&nbsp;🪖→🔫→🥾 레벨업!</div>
     </div>
     <div style="font-size:11px;color:#8b6914;margin-bottom:16px;">
       ▼ 아래로 내려가면 더 많은 이야기가 있어요!
@@ -203,6 +273,29 @@
   </div>
 </div>
 
+
+
+<!-- 에너지바 -->
+<div id="energy-wrap">
+  <div id="energy-label">📖 홍의 이야기 0 / 14</div>
+  <div id="energy-bar-wrap"><div id="energy-bar"></div></div>
+</div>
+
+<!-- 클리어 팝업 -->
+<div id="clear-popup">
+  <div id="clear-box">
+    <div class="clear-title">🎉 홍의 세계 클리어!</div>
+    <div class="clear-msg">
+      홍의 모든 이야기를 읽었어요!<br>
+      홍을 이렇게 잘 알아봐줘서<br>
+      진심으로 감사해요 🙏<br><br>
+      <span style="font-size:20px;">🌿⭐🌿</span>
+    </div>
+    <button id="clear-close" onclick="document.getElementById('clear-popup').style.display='none'">
+      닫기
+    </button>
+  </div>
+</div>
 
 <div id="title-bar">
   🌿 홍의 세계 🌿
@@ -444,11 +537,11 @@
   </div>
   <div style="position:absolute;top:305px;right:6%;pointer-events:none;"><svg width="62" height="98" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#35a020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#3db825"/></svg></div>
 
-  <div class="obj" id="o-wife" style="top:448px;left:19%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰')">
+  <div class="obj" id="o-wife" style="top:448px;left:19%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰','o-wife')">
     <svg width="44" height="60" viewBox="0 0 40 56"><ellipse cx="20" cy="54" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><path d="M10,28 Q8,44 9,53 H31 Q32,44 30,28 Q25,35 20,34 Q15,35 10,28Z" fill="#ff9ec4"/><path d="M9,46 Q5,50 8,54 H32 Q35,50 31,46 Q25,50 20,50 Q15,50 9,46Z" fill="#ff7aad"/><path d="M10,30 Q4,36 6,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M30,30 Q36,36 34,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="17" y="20" width="6" height="9" fill="#f9c9a0" rx="2"/><ellipse cx="20" cy="16" rx="11" ry="12" fill="#f9c9a0"/><path d="M9,12 Q10,2 20,3 Q30,2 31,12 Q28,6 20,6 Q12,6 9,12Z" fill="#5c3317"/><path d="M9,14 Q6,22 9,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M31,14 Q34,22 31,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="16" cy="16" r="1.5" fill="#5c3317"/><circle cx="24" cy="16" r="1.5" fill="#5c3317"/><path d="M16,21 Q20,24 24,21" stroke="#e85d8a" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><ellipse cx="27" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><rect x="13" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/><rect x="22" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/></svg>
     <div class="obj-label" style="color:#ffb6c1;">💕 와이프</div>
   </div>
-  <div class="obj" id="o-wusu" style="top:392px;left:38%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?')">
+  <div class="obj" id="o-wusu" style="top:392px;left:38%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?','o-wusu')">
     <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="18" cy="22" rx="13" ry="8" fill="#8b5a2b"/><circle cx="10" cy="19" r="5" fill="#9b6a3b"/><circle cx="18" cy="17" r="5.5" fill="#9b6a3b"/><circle cx="26" cy="19" r="5" fill="#9b6a3b"/><circle cx="30" cy="13" r="7" fill="#8b5a2b"/><circle cx="30" cy="11" r="6" fill="#9b6a3b"/><ellipse cx="35" cy="14" rx="4" ry="3" fill="#7a4a20"/><ellipse cx="36" cy="13" rx="1.5" ry="1" fill="#3d1a00"/><circle cx="31" cy="11" r="1.5" fill="#1a0a00"/><circle cx="31.5" cy="10.5" r="0.5" fill="white"/><circle cx="25" cy="10" r="4" fill="#7a4a1a"/><rect x="7" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><circle cx="5" cy="19" r="4" fill="#9b6a3b"/></svg>
     <div class="obj-label" style="color:#c8901a;">🐩 아들</div>
   </div>
@@ -456,16 +549,17 @@
   <!-- 축구공 (딸 옆) -->
   <div id="choson-ball" style="position:absolute;top:452px;right:38%;font-size:26px;pointer-events:none;">⚽</div>
 
-  <div class="obj" id="o-choson" style="top:460px;right:22%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾')">
+  <div class="obj" id="o-choson" style="top:460px;right:22%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾','o-choson')">
     <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="20" cy="22" rx="13" ry="8" fill="#c8a035"/><circle cx="12" cy="19" r="5" fill="#d4b045"/><circle cx="20" cy="17" r="5.5" fill="#d4b045"/><circle cx="28" cy="19" r="5" fill="#d4b045"/><circle cx="8" cy="13" r="7" fill="#c8a035"/><circle cx="8" cy="11" r="6" fill="#d4b045"/><ellipse cx="3" cy="14" rx="4" ry="3" fill="#b8900a"/><ellipse cx="2" cy="13" rx="1.5" ry="1" fill="#3d2a00"/><circle cx="7" cy="11" r="1.5" fill="#1a0a00"/><circle cx="7.5" cy="10.5" r="0.5" fill="white"/><circle cx="13" cy="10" r="4" fill="#b8900a"/><rect x="7" y="27" width="4" height="5" fill="#c8a035" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#c8a035" rx="2"/><circle cx="33" cy="19" r="4" fill="#d4b045"/></svg>
     <div class="obj-label" style="color:#d4b896;">🐩 딸</div>
   </div>
   <div class="flower" style="top:530px;left:30%;"><svg width="26" height="30" viewBox="0 0 28 32"><line x1="14" y1="30" x2="14" y2="14" stroke="#2d7a15" stroke-width="2"/><circle cx="14" cy="10" r="5" fill="#ff6b9d" opacity="0.9"/><circle cx="9" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="19" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="14" cy="10" r="3" fill="#fff0f5"/></svg></div>
 
   <!-- ===== 구역2: 홍+TV (610~720) ===== -->
-  <div id="player" style="top:630px;left:calc(50% - 26px);cursor:pointer;z-index:80;" >
+  <div id="player" style="top:640px;left:calc(50% - 26px);cursor:pointer;z-index:80;" >
     <svg viewBox="0 0 44 62" style="pointer-events:none;"><ellipse cx="22" cy="60" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><rect x="13" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="24" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="12" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="23" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="11" y="25" width="22" height="20" fill="#4a7fc1" rx="4"/><path d="M18,25 L22,30 L26,25" fill="#3a6fa8"/><rect x="5" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><rect x="32" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><ellipse cx="8" cy="40" rx="4" ry="4" fill="#f5c4a0"/><ellipse cx="36" cy="40" rx="4" ry="4" fill="#f5c4a0"/><rect x="18" y="19" width="8" height="8" fill="#f5c4a0" rx="2"/><ellipse cx="22" cy="13" rx="12" ry="12" fill="#f5c4a0"/><path d="M10,10 Q11,2 22,2 Q33,2 34,10 Q30,5 22,5 Q14,5 10,10Z" fill="#3d2a00"/><path d="M10,12 Q8,17 10,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M34,12 Q36,17 34,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="17" cy="13" r="1.8" fill="#3d2a00"/><circle cx="27" cy="13" r="1.8" fill="#3d2a00"/><circle cx="17.6" cy="12.4" r="0.6" fill="white"/><circle cx="27.6" cy="12.4" r="0.6" fill="white"/><path d="M18,18 Q22,21 26,18" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
     <div id="player-name">홍 👆</div>
+
   </div>
   <div class="obj" id="o-tv" style="top:622px;right:8%;">
     <svg width="72" height="60" viewBox="0 0 65 55"><rect x="27" y="46" width="11" height="6" fill="#555"/><rect x="20" y="50" width="25" height="4" fill="#444" rx="2"/><rect x="3" y="3" width="59" height="44" fill="#222" rx="5"/><rect x="6" y="6" width="53" height="37" fill="#111" rx="3"/><rect x="8" y="8" width="49" height="33" fill="#1a3a6a" rx="2"/><rect x="10" y="10" width="45" height="20" fill="#2a5a9a" rx="1"/><ellipse cx="22" cy="20" rx="8" ry="9" fill="#f5c4a0" opacity="0.9"/><ellipse cx="43" cy="20" rx="8" ry="9" fill="#f9b0c0" opacity="0.9"/><text x="32" y="36" font-size="8" fill="#f5c842" text-anchor="middle">😂</text></svg>
@@ -487,7 +581,7 @@
   <!-- ===== 모임 모닥불 3개 (1050~1150) ===== -->
 
   <!-- 한마음회 (왼쪽) -->
-  <div class="obj" id="o-hanmaum" style="top:1040px;left:8%;" onclick="firePop(this); showBbl('🔥 한마음회','인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연')">
+  <div class="obj" id="o-hanmaum" style="top:1040px;left:8%;" onclick="firePop(this); showBbl('🔥 한마음회','인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연','o-hanmaum')">
     <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <!-- 장작 -->
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
@@ -515,7 +609,7 @@
   </div>
 
   <!-- 벗우회 (중앙) -->
-  <div class="obj" id="o-beotwu" style="top:710px;left:12%;" onclick="firePop(this); showBbl('🔥 벗우회','부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂')">
+  <div class="obj" id="o-beotwu" style="top:710px;left:12%;" onclick="firePop(this); showBbl('🔥 벗우회','부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂','o-beotwu')">
     <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
@@ -540,7 +634,7 @@
   </div>
 
   <!-- 인민군 (오른쪽) -->
-  <div class="obj" id="o-inmin" style="top:740px;right:8%;" onclick="firePop(this); showBbl('🔥 인민군','백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️')">
+  <div class="obj" id="o-inmin" style="top:740px;right:8%;" onclick="firePop(this); showBbl('🔥 인민군','백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️','o-inmin')">
     <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
@@ -647,6 +741,13 @@
   </div>
   </div>
 
+
+  <!-- 레벨업 아이템 (홍 왼쪽 일렬) -->
+  <div id="lv-items" style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:81;pointer-events:none;">
+    <div id="lv-helmet" style="display:none;font-size:22px;">🪖</div>
+    <div id="lv-gun"    style="display:none;font-size:22px;">🔫</div>
+    <div id="lv-boots"  style="display:none;font-size:20px;">🥾</div>
+  </div>
 </div><!-- /world -->
 </div><!-- /game-wrap -->
 
@@ -667,7 +768,7 @@
 const PROX = [
   { id:'o-kusa', title:'🎒 KUSA (유네스코 동아리)', text:'대학교 시절 KUSA 동아리<br>젊은날 잊을수 없는 추억 가득한<br>소중한 인연들 🌏<br><br>국토순례 2번 완주 🥾<br>함께 걸으며 나눈 땀과 추억<br>지금도 기억에 많이 남아' },
   { id:'o-house',    title:'🏠 우리 집',              text:'가족과 함께하는 공간<br>와이프, 아들 🤎, 딸 💛과 함께<br>자연과 함께 하는 삶을 살고 있지만<br>도시에 살고 싶음 🏙️' },
-  { id:'o-tv',       title:'📺 TV',                   text:'연프를 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!<br><br>롯데자이언츠 팬 ⚾<br>가을야구 가즈아!! 🔥' },
+  { id:'o-tv',       title:'📺 TV',                   text:'연예 프로그램을 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!<br><br>롯데자이언츠 팬 ⚾<br>가을야구 가즈아!! 🔥' },
   { id:'o-building', title:'🏢 인사업무',             text:'인사 분야 근무를 오래함<br>여러 제대에서 다양한<br>인사근무를 경험<br>인재선발, 운영, 복지,<br>상훈, 역사관 등? ㅎㅎ' },
   { id:'o-dinner',   title:'🍽️ 저녁 식사',            text:'사람들과 함께하는<br>저녁 식사 자리를 좋아함<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂<br><br>사람과의 관계에서<br>행복을 느낀다 🤗' },
   
@@ -687,7 +788,7 @@ const bbl = document.getElementById('bbl');
 const careerBbl = document.getElementById('career-bbl');
 const sunBbl = document.getElementById('sun-bbl');
 
-let py = 630, px = -1, worldOff = 0, moveInt = null, nearId = null;
+let py = 640, px = -1, worldOff = 0, moveInt = null, nearId = null;
 const SPEED = 9, WORLD_H = 1850, PROX_D = 110;
 
 function getPx() { if(px===-1) px=window.innerWidth/2-26; return px; }
@@ -702,11 +803,18 @@ function updateScroll() {
 function updatePlayer() {
   playerEl.style.top = py+'px';
   playerEl.style.left = getPx()+'px';
+  // 레벨업 아이템 위치 — worldOff 반영
+  const lvi = document.getElementById('lv-items');
+  if(lvi) {
+    lvi.style.top  = (py + worldOff + 3) + 'px';
+    lvi.style.left = (getPx() - 42) + 'px';
+  }
 }
 
 function bblTop() { return Math.floor(wrap.getBoundingClientRect().top + wrap.offsetHeight*0.25); }
 
-function showBbl(title, text) {
+function showBbl(title, text, id) {
+  if(id) addEnergy(id);
   closeAll(false);
   document.getElementById('bbl-t').innerHTML = title;
   document.getElementById('bbl-c').innerHTML = text;
@@ -714,11 +822,13 @@ function showBbl(title, text) {
   bbl.style.display = 'block';
 }
 function showCareerBbl() {
+  addEnergy('career');
   closeAll(false);
   careerBbl.style.top = bblTop()+'px';
   careerBbl.style.display = 'block';
 }
 function showSunBbl() {
+  addEnergy('sun');
   closeAll(false);
   sunBbl.style.top = bblTop()+'px';
   sunBbl.style.display = 'block';
@@ -757,6 +867,7 @@ function checkProx() {
     nearId = found.id;
     document.getElementById(nearId)?.classList.add('near');
     showBbl(found.title, found.text);
+    addEnergy(found.id);
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
@@ -847,11 +958,16 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
       const now = Date.now();
       if (now - lastTap < 350) {
         showCareerBbl();
+        lastTap = 0;
       } else {
         doJump();
+        lastTap = now;
       }
-      lastTap = now;
     }, {passive: true});
+    playerClickEl.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      showCareerBbl();
+    });
     playerClickEl.addEventListener('click', function(e) {
       e.stopPropagation();
     });
@@ -906,12 +1022,86 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
     el.classList.add('fire-popping');
     setTimeout(() => el.classList.remove('fire-popping'), 500);
   }
+
+  
+  
+  // ===== 에너지바 시스템 =====
+  const TOTAL_ITEMS = 19;
+  const readSet = new Set();
+
+  function addEnergy(id) {
+    try {
+    if (!id || readSet.has(id)) return;
+    readSet.add(id);
+    const cnt = readSet.size;
+    const pct = Math.round(cnt / TOTAL_ITEMS * 100);
+
+    const bar = document.getElementById('energy-bar');
+    const label = document.getElementById('energy-label');
+    if (bar) bar.style.width = pct + '%';
+    if (label) label.textContent = '📖 홍의 이야기 ' + cnt + ' / 19';
+
+    // 별 이펙트
+    const star = document.createElement('div');
+    star.textContent = '⭐';
+    star.style.cssText = 'position:fixed;font-size:20px;pointer-events:none;z-index:400;left:' + (Math.random()*60+20) + '%;top:80px;animation:starFloat 0.8s ease forwards;';
+    document.body.appendChild(star);
+    setTimeout(() => star.remove(), 800);
+
+    // 레벨업 아이템 장착
+    levelUp(cnt);
+
+    // 클리어
+    if (cnt >= 19) {
+      setTimeout(() => {
+        const popup = document.getElementById('clear-popup');
+        if (popup) popup.style.display = 'flex';
+      }, 600);
+    }
+    } catch(e) { console.log('energy err',e); }
+  }
+
+  function levelUp(cnt) {
+    const hel   = document.getElementById('lv-helmet');
+    const gun   = document.getElementById('lv-gun');
+    const boots = document.getElementById('lv-boots');
+    if(hel)   hel.style.display   = cnt >= 6  ? 'block' : 'none';
+    if(gun)   gun.style.display   = cnt >= 12 ? 'block' : 'none';
+    if(boots) boots.style.display = cnt >= 17 ? 'block' : 'none';
+    // 선글라스 — SVG 오버레이
+
+  }
+
+  
+
+  // 클릭/모닥불/햇님
+  ['o-wife','o-wusu','o-choson','o-hanmaum','o-beotwu','o-inmin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => addEnergy(id));
+  });
+  const _sunEl2 = document.getElementById('o-sun');
+  if (_sunEl2) _sunEl2.addEventListener('click', () => addEnergy('sun'));
+
+  // 홍 탭 → career 에너지
+  const _playerEl2 = document.getElementById('player');
+  if (_playerEl2) _playerEl2.addEventListener('click', () => addEnergy('career'));
 </script>
 
 <!-- 낮/밤 전환 버튼 -->
 <div id="daynight-btn" onclick="toggleDayNight()" title="낮/밤 전환">🌙</div>
 
 <!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
+<!-- 게임 버튼 -->
+<div onclick="location.href='https://kjh1000j.github.io/hong-world/game.html'" style="
+  position:fixed; bottom:68px; left:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(100,180,245,0.92); border:2px solid #2a7ab8; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="게임">🎮</div>
+
 <!-- 우편함 버튼 -->
 <div onclick="location.href='mailto:kjh1000j@naver.com?subject=홍의 세계 방명록&body=이름:%0D%0A%0D%0A메시지:%0D%0A'" style="
   position:fixed; bottom:14px; left:14px; z-index:500;
