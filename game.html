@@ -148,9 +148,9 @@
             <div class="guide-row">
                 <div class="g-item"><span style="font-size:17px;">👹</span><span class="badge br">공격</span><div class="lbl">맞히면 파괴</div></div>
                 <div class="g-item"><span style="font-size:17px;">⚠️</span><span class="badge bp">회피</span><div class="lbl">절대 피하기</div></div>
-                <div class="g-item" style="grid-column:span 2;border-color:rgba(34,197,94,0.2);">
-                    <span style="font-size:17px;">✨</span><span class="badge bg">아이템</span>
-                    <div class="lbl">💰상여금(무적) &nbsp;🖼️가족(회복)</div>
+                <div class="g-item" style="grid-column:span 2;border-color:rgba(234,179,8,0.5);background:rgba(234,179,8,0.12);">
+                    <span style="font-size:17px;">✨</span><span class="badge" style="background:#eab308;color:#000;">아이템</span>
+                    <div class="lbl" style="color:#fde68a;">💰상여금(무적) &nbsp;🖼️가족(회복)</div>
                 </div>
             </div>
             <button class="btn-go" id="start-btn">작전 개시</button>
@@ -453,13 +453,13 @@ function renderHUD() {
 function spawnEnemy() {
     const sc=canvas.height/800;
     const base={id:Math.random(),x:30+Math.random()*(canvas.width-60),y:-50,size:40,speed:(1.8+Math.random()*1.8)*diff*sc,category:'enemy'};
-    const cfgs=[{emoji:'📞',label:'잦은 호출',hp:2},{emoji:'😤',label:'인사 갑질',hp:3},{emoji:'🔍',label:'감찰 조사',hp:2},{emoji:'💢',label:'악성 민원',hp:4}];
+    const cfgs=[{emoji:'🗣️',label:'거짓정보공개',hp:2},{emoji:'😤',label:'인사 갑질',hp:3},{emoji:'🔍',label:'감찰 조사',hp:2},{emoji:'💢',label:'악성 민원',hp:4}];
     enemies.push({...base,...cfgs[Math.floor(Math.random()*cfgs.length)]});
 }
 function spawnObs() {
     const sc=canvas.height/800;
     const base={id:Math.random(),x:30+Math.random()*(canvas.width-60),y:-50,size:48,category:'obstacle'};
-    const cfgs=[{emoji:'👴',label:'나때는말야',speed:2.8*diff*sc},{emoji:'🚘',label:'전관예우',speed:5.5*diff*sc},{emoji:'❓',label:'원칙없는지시',speed:3.8*diff*sc},{emoji:'🤝',label:'듣보잡인맥',speed:4.5*diff*sc}];
+    const cfgs=[{emoji:'🤫',label:'뒷다마',speed:2.8*diff*sc},{emoji:'🃏',label:'짜고치는고스톱',speed:5.5*diff*sc},{emoji:'🚫',label:'인사상담거절',speed:3.8*diff*sc},{emoji:'🤝',label:'듣보잡인맥',speed:4.5*diff*sc}];
     obstacles.push({...base,...cfgs[Math.floor(Math.random()*cfgs.length)]});
 }
 function spawnItem() {
@@ -468,8 +468,9 @@ function spawnItem() {
 }
 function fire() {
     const now=Date.now(); if(now-lastShot<180) return; lastShot=now; sfx('shoot');
-    const ib=Math.random()>.5;
-    projectiles.push({x:player.x,y:player.y-28,size:22,emoji:ib?'📖':'📜',label:ib?'법령':'법규',speed:13});
+    const labels=['법령','규정','예규','훈령','지침'];
+    const label=labels[Math.floor(Math.random()*labels.length)];
+    projectiles.push({x:player.x,y:player.y-28,size:22,label,speed:13});
 }
 
 /* ── Draw ── */
@@ -567,12 +568,16 @@ function loop() {
     for(let i=projectiles.length-1;i>=0;i--){
         const p=projectiles[i]; p.y-=p.speed;
         ctx.save();
-        ctx.shadowBlur=15; ctx.shadowColor='#4ade80';
-        ctx.fillStyle='rgba(255,255,255,.88)'; ctx.beginPath(); ctx.arc(p.x,p.y,p.size*.45,0,Math.PI*2); ctx.fill();
-        ctx.font='bold '+p.size+'px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.shadowBlur=0;
-        ctx.fillText(p.emoji,p.x,p.y);
-        ctx.font='700 9px sans-serif'; ctx.fillStyle='white'; ctx.strokeStyle='black'; ctx.lineWidth=2;
-        ctx.strokeText(p.label,p.x,p.y+16); ctx.fillText(p.label,p.x,p.y+16);
+        // 발광 배경 원
+        ctx.shadowBlur=18; ctx.shadowColor='#4ade80';
+        ctx.fillStyle='rgba(0,200,100,0.85)';
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.size*.75,0,Math.PI*2); ctx.fill();
+        // 텍스트
+        ctx.shadowBlur=0;
+        ctx.font='900 13px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.strokeStyle='rgba(0,0,0,0.8)'; ctx.lineWidth=3;
+        ctx.strokeText(p.label,p.x,p.y);
+        ctx.fillStyle='#ffffff'; ctx.fillText(p.label,p.x,p.y);
         ctx.restore();
         if(p.y<-40) projectiles.splice(i,1);
     }
