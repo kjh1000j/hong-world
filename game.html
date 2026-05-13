@@ -6,9 +6,9 @@
     <title>재홍 원사의 군생활 위기 극복</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; -webkit-user-select:none; user-select:none; }
-        body { background:#0a0a0a; overflow:hidden; touch-action:none; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:white; }
+        body { background:#0a0a0a; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:white; }
         #gc { position:relative; width:100vw; height:100vh; display:flex; align-items:center; justify-content:center; }
-        canvas { display:block; }
+        canvas { display:block; touch-action:none; }
 
         /* ── HUD ── */
         #hud {
@@ -38,19 +38,21 @@
             position:absolute; inset:0; display:flex; flex-direction:column;
             align-items:center; justify-content:center; z-index:300; pointer-events:auto;
         }
+        .ovl { touch-action:auto !important; }
         .ovl-card {
             background:rgba(10,10,10,0.92); border:1px solid rgba(255,255,255,0.15);
             border-radius:18px; padding:20px 24px; text-align:center;
             max-width:310px; width:88%; color:white; backdrop-filter:blur(8px);
             max-height:92vh; overflow-y:auto;
+            touch-action:pan-y; -webkit-overflow-scrolling:touch;
         }
         .ovl-card::-webkit-scrollbar { width:3px; }
         .ovl-card::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.15); border-radius:3px; }
         .ovl-card h1 { font-size:18px; font-weight:900; margin-bottom:8px; line-height:1.3; }
         .ovl-card p  { font-size:12px; color:#aaa; margin-bottom:10px; line-height:1.5; }
-        .btn-go  { background:#eab308; color:#000; font-weight:900; padding:11px 0; border-radius:11px; border:none; font-size:14px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; }
+        .btn-go  { background:#eab308; color:#000; font-weight:900; padding:11px 0; border-radius:11px; border:none; font-size:14px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; pointer-events:auto; touch-action:manipulation; }
         .btn-go:active { opacity:.85; }
-        .btn-sec { background:rgba(255,255,255,0.07); color:white; font-weight:700; padding:9px 0; border-radius:10px; border:1px solid rgba(255,255,255,0.12); font-size:12px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; }
+        .btn-sec { background:rgba(255,255,255,0.07); color:white; font-weight:700; padding:9px 0; border-radius:10px; border:1px solid rgba(255,255,255,0.12); font-size:12px; cursor:pointer; width:100%; margin-top:6px; display:block; text-decoration:none; text-align:center; pointer-events:auto; touch-action:manipulation; }
         .guide-row { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:12px; }
         .g-item { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); padding:7px 9px; border-radius:9px; text-align:left; font-size:11px; }
         .g-item .lbl { color:#999; margin-top:2px; font-size:10px; }
@@ -273,11 +275,13 @@ async function submitScore(nick, sc, clearSec) {
     let scores = await gistLoad();
     const now = new Date();
     const dateStr = `${now.getMonth()+1}/${now.getDate()}`;
-    scores.push({ nick, score: Math.floor(sc), time: clearSec, date: dateStr });
+    const entry = { nick, score: Math.floor(sc), time: clearSec, date: dateStr };
+    scores.push(entry);
     scores.sort((a, b) => b.score - a.score);
     scores = scores.slice(0, 50);
+    // 방금 추가한 항목의 정확한 인덱스 (같은 점수 중 가장 앞)
+    const rank = scores.findIndex(e => e === entry) + 1;
     await gistSave(scores);
-    const rank = scores.findIndex(e => e.nick === nick && e.score === Math.floor(sc)) + 1;
     return { rank, scores };
 }
 
