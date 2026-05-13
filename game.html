@@ -382,12 +382,12 @@ async function onWin(final,sec,base,tb){
 }
 
 async function doSubmit(){
-  if(winSubmitted)return;
+  if(winSubmitted){document.getElementById('sub-msg').textContent='이미 등록되었습니다';return;}
   const nick=document.getElementById('win-nick').value.trim().replace(/[<>&"]/g,'').slice(0,8);
   if(!nick){document.getElementById('sub-msg').textContent='닉네임을 입력하세요';return;}
+  winSubmitted=true; // 즉시 잠금 - 중복 방지
   document.getElementById('btn-sub').disabled=true;
   document.getElementById('sub-msg').textContent='등록 중…';
-  winSubmitted=true;
   const scores=await lbLoad();
   const now=new Date();
   const entry={nick,score:Math.floor(winScore),time:winSec,date:(now.getMonth()+1)+'/'+(now.getDate())};
@@ -403,7 +403,7 @@ async function doSubmit(){
   }else{
     document.getElementById('sub-msg').textContent='❌ 저장 실패. 다시 시도해주세요.';
     document.getElementById('btn-sub').disabled=false;
-    winSubmitted=false;
+    winSubmitted=false; // 실패 시에만 다시 허용
   }
 }
 
