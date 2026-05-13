@@ -193,30 +193,29 @@ canvas{display:block;touch-action:none;}
 <div id="ctrl"><div class="trk"><div class="knb" id="knob"></div></div></div>
 </div>
 
-<script src="token.js"></script>
 <script>
-/* ══ GIST ══ */
-const GID='5d0489eadc07c3fd2ecc114e5623c772';
-const GTOK=window.GIST_TOKEN||'';
-const GFILE='scores.json';
+/* ══ JSONBin ══ */
+const BIN_ID  = '6a048a28250b1311c344fd90';
+const BIN_KEY = '$2a$10$DlaP9Oji1Udpuy2/B2oG9eXLkqUm3PwFcvJeTcCfx.qLpukOQqaXa';
+const BIN_URL = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
 
 async function lbLoad(){
   try{
-    const r=await fetch('https://api.github.com/gists/'+GID,{
-      headers:{'Authorization':'token '+GTOK,'Accept':'application/vnd.github.v3+json'}
+    const r=await fetch(BIN_URL+'/latest',{
+      headers:{'X-Master-Key':BIN_KEY,'X-Bin-Meta':'false'}
     });
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
-    return JSON.parse(d.files[GFILE].content).scores||[];
+    return Array.isArray(d.scores)?d.scores:[];
   }catch(e){console.error('lbLoad',e);return[];}
 }
 
 async function lbSave(scores){
   try{
-    const r=await fetch('https://api.github.com/gists/'+GID,{
-      method:'PATCH',
-      headers:{'Authorization':'token '+GTOK,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-      body:JSON.stringify({files:{[GFILE]:{content:JSON.stringify({scores},null,2)}}})
+    const r=await fetch(BIN_URL,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':BIN_KEY},
+      body:JSON.stringify({scores})
     });
     if(!r.ok)throw new Error(r.status);
     return true;
