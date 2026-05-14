@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -12,9 +13,9 @@ canvas{display:block;touch-action:none;}
 
 /* HUD */
 #hud{display:none;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:50;
-  flex-direction:row;align-items:center;height:36px;
-  background:rgba(0,0,0,.8);border-bottom:1px solid rgba(255,255,255,.12);
-  padding:0 10px;white-space:nowrap;pointer-events:none;}
+flex-direction:row;align-items:center;height:36px;
+background:rgba(0,0,0,.8);border-bottom:1px solid rgba(255,255,255,.12);
+padding:0 10px;white-space:nowrap;pointer-events:none;}
 .hud-hearts{display:flex;gap:3px;align-items:center;}
 .h{font-size:14px;line-height:1;}
 .h.lost{opacity:.2;filter:grayscale(1);}
@@ -30,24 +31,24 @@ canvas{display:block;touch-action:none;}
 
 /* 오버레이 */
 .ovl{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:500;pointer-events:auto;}
+align-items:center;justify-content:center;z-index:500;pointer-events:auto;}
 .card{background:rgba(12,12,12,.95);border:1px solid rgba(255,255,255,.15);
-  border-radius:18px;padding:20px 22px;text-align:center;
-  max-width:305px;width:88%;backdrop-filter:blur(8px);
-  max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+border-radius:18px;padding:20px 22px;text-align:center;
+max-width:305px;width:88%;backdrop-filter:blur(8px);
+max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .card h1{font-size:18px;font-weight:900;margin-bottom:7px;line-height:1.3;}
 .card p{font-size:12px;color:#aaa;margin-bottom:10px;line-height:1.5;}
 
 .btn-y{display:block;width:100%;margin-top:7px;padding:12px 0;
-  background:#eab308;color:#000;font-weight:900;font-size:14px;
-  border:none;border-radius:11px;cursor:pointer;text-decoration:none;text-align:center;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;outline:none;}
+background:#eab308;color:#000;font-weight:900;font-size:14px;
+border:none;border-radius:11px;cursor:pointer;text-decoration:none;text-align:center;
+touch-action:manipulation;-webkit-tap-highlight-color:transparent;outline:none;}
 .btn-y:active{opacity:.8;}
 .btn-g{display:block;width:100%;margin-top:7px;padding:10px 0;
-  background:rgba(255,255,255,.07);color:#fff;font-weight:700;font-size:12px;
-  border:1px solid rgba(255,255,255,.13);border-radius:10px;cursor:pointer;
-  text-decoration:none;text-align:center;
-  touch-action:manipulation;-webkit-tap-highlight-color:transparent;outline:none;}
+background:rgba(255,255,255,.07);color:#fff;font-weight:700;font-size:12px;
+border:1px solid rgba(255,255,255,.13);border-radius:10px;cursor:pointer;
+text-decoration:none;text-align:center;
+touch-action:manipulation;-webkit-tap-highlight-color:transparent;outline:none;}
 .btn-g:active{background:rgba(255,255,255,.14);}
 
 .grow{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
@@ -77,27 +78,28 @@ canvas{display:block;touch-action:none;}
 .nm{font-size:12px;color:#eab308;font-weight:700;margin-bottom:7px;}
 .nr{display:flex;gap:6px;}
 .ni{flex:1;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
-  border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none;
-  -webkit-user-select:text;user-select:text;touch-action:manipulation;}
+border-radius:8px;padding:8px 10px;color:#fff;font-size:13px;outline:none;
+-webkit-user-select:text;user-select:text;touch-action:manipulation;}
 .ni::placeholder{color:rgba(255,255,255,.3);}
 .ni:focus{border-color:rgba(234,179,8,.7);}
 .ns{background:#eab308;color:#000;font-weight:900;border:none;border-radius:8px;
-  padding:8px 12px;font-size:12px;cursor:pointer;white-space:nowrap;touch-action:manipulation;}
+padding:8px 12px;font-size:12px;cursor:pointer;white-space:nowrap;touch-action:manipulation;}
 .ns:disabled{opacity:.35;cursor:default;}
 .sm{font-size:11px;color:#6ee7b7;min-height:14px;margin-top:5px;text-align:center;}
 
 #bn{position:absolute;top:46px;width:100%;text-align:center;color:#ff3b3b;
-  font-size:17px;font-weight:900;letter-spacing:3px;visibility:hidden;z-index:600;
-  pointer-events:none;animation:blink .5s infinite;}
+font-size:17px;font-weight:900;letter-spacing:3px;visibility:hidden;z-index:600;
+pointer-events:none;animation:blink .5s infinite;}
 @keyframes blink{0%,100%{opacity:0}50%{opacity:1}}
 
 #ctrl{display:none;position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  height:52px;background:rgba(0,0,0,.42);border-top:1px solid rgba(255,255,255,.08);
-  align-items:center;justify-content:center;z-index:50;}
+height:52px;background:rgba(0,0,0,.42);border-top:1px solid rgba(255,255,255,.08);
+align-items:center;justify-content:center;z-index:50;}
 .trk{width:80%;height:5px;background:#222;border-radius:10px;position:relative;}
 .knb{position:absolute;top:-8px;width:18px;height:18px;background:#eab308;
-  border-radius:50%;left:50%;transform:translateX(-50%);}
+border-radius:50%;left:50%;transform:translateX(-50%);}
 </style>
+
 </head>
 <body>
 <div id="gc">
@@ -119,6 +121,7 @@ canvas{display:block;touch-action:none;}
 <div id="bn">⚠ BOSS INCOMING ⚠</div>
 
 <!-- 시작 -->
+
 <div class="ovl" id="ovl-start">
   <div class="card">
     <h1>재홍 원사의<br><span style="color:#eab308;">군생활 위기 극복</span></h1>
@@ -137,6 +140,7 @@ canvas{display:block;touch-action:none;}
 </div>
 
 <!-- 게임오버 -->
+
 <div class="ovl" id="ovl-go" style="display:none;">
   <div class="card">
     <h1 style="color:#ff4444;">MISSION FAILED</h1>
@@ -153,6 +157,7 @@ canvas{display:block;touch-action:none;}
 </div>
 
 <!-- 클리어 -->
+
 <div class="ovl" id="ovl-win" style="display:none;">
   <div class="card" style="border-color:rgba(234,179,8,.4);">
     <div style="font-size:36px;margin-bottom:4px;">🏆</div>
@@ -181,6 +186,7 @@ canvas{display:block;touch-action:none;}
 </div>
 
 <!-- 명예의 전당 -->
+
 <div class="ovl" id="ovl-lb" style="display:none;">
   <div class="card">
     <h1>🏆 명예의 전당</h1>
@@ -206,8 +212,9 @@ async function lbLoad(){
     });
     if(!r.ok)throw new Error(r.status);
     const d=await r.json();
-    return Array.isArray(d.scores)?d.scores:[];
-  }catch(e){console.error('lbLoad',e);return[];}
+    const scores=Array.isArray(d.scores)?d.scores:[];
+    return{ok:true,scores};
+  }catch(e){console.error('lbLoad',e);return{ok:false,scores:[]};}
 }
 
 async function lbSave(scores){
@@ -377,7 +384,7 @@ async function onWin(final,sec,base,tb){
   document.getElementById('btn-sub').disabled=false;
   document.getElementById('sub-msg').textContent='';
   document.getElementById('win-lb').innerHTML='<li style="font-size:11px;color:#555;padding:6px;text-align:center;">불러오는 중…</li>';
-  const scores=await lbLoad();
+  const {ok, scores}=await lbLoad();
   const rank=scores.filter(e=>e.score>final).length+1;
   document.getElementById('win-rank').textContent=rankTxt(rank,scores.length);
   document.getElementById(rank<=10?'win-na':'win-out').style.display='block';
@@ -391,7 +398,13 @@ async function doSubmit(){
   winSubmitted=true; // 즉시 잠금 - 중복 방지
   document.getElementById('btn-sub').disabled=true;
   document.getElementById('sub-msg').textContent='등록 중…';
-  const scores=await lbLoad();
+  const {ok, scores}=await lbLoad();
+  if(!ok){
+    document.getElementById('sub-msg').textContent='❌ 서버 연결 실패. 다시 시도해주세요.';
+    document.getElementById('btn-sub').disabled=false;
+    winSubmitted=false;
+    return;
+  }
   const now=new Date();
   const entry={nick,score:Math.floor(winScore),time:winSec,date:(now.getMonth()+1)+'/'+(now.getDate())};
   scores.push(entry);
@@ -412,7 +425,7 @@ async function doSubmit(){
 
 async function showMainLb(){
   showOvl('ovl-lb');
-  const scores=await lbLoad();
+  const {scores}=await lbLoad();
   renderLb('main-lb',scores,0);
 }
 
@@ -593,5 +606,6 @@ document.getElementById('win-nick').addEventListener('keydown',e=>{if(e.key==='E
 
 loop();
 </script>
+
 </body>
 </html>
