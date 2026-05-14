@@ -411,15 +411,15 @@ async function doSubmit(){
   scores.sort((a,b)=>b.score-a.score);
   const trimmed=scores.slice(0,50);
   const rank=trimmed.indexOf(entry)+1;
-  const ok=await lbSave(trimmed);
-  if(ok){
+  const saved=await lbSave(trimmed);
+  if(saved){
     document.getElementById('sub-msg').textContent='✅ '+rankTxt(rank,trimmed.length)+' 등록 완료!';
     document.getElementById('win-rank').textContent=rankTxt(rank,trimmed.length);
     renderLb('win-lb',trimmed,winScore);
   }else{
     document.getElementById('sub-msg').textContent='❌ 저장 실패. 다시 시도해주세요.';
     document.getElementById('btn-sub').disabled=false;
-    winSubmitted=false; // 실패 시에만 다시 허용
+    winSubmitted=false;
   }
 }
 
