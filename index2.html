@@ -905,6 +905,10 @@ function checkProx() {
     showBbl(found.title, found.text);
     addEnergy(found.id);
     if(found.id==='o-house') showImgPopup('house.jpg');
+    else if(found.id==='o-mountain') showImgPopup('annapurna.jpg');
+    else if(found.id==='o-building') showImgPopup('personnel.jpg');
+    else if(found.id==='o-sagrada') showImgPopup('sagrada.jpg');
+    else if(found.id==='o-eggtart') showImgPopup('belem.jpg');
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
