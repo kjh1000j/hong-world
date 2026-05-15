@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>홍의 세계</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#1a0a00; font-family:'Jua',sans-serif; overflow:hidden; width:100vw; height:100vh; display:flex; flex-direction:column; touch-action:none; }
+  #title-bar { width:100%; text-align:center; background:linear-gradient(to right,#2d1a00,#5c3a00,#2d1a00); color:#f5c842; padding:8px 0; font-size:13px; letter-spacing:2px; border-bottom:2px solid #f5c842; flex-shrink:0; z-index:100; }
+  #game-wrap { flex:1; width:100%; position:relative; overflow:hidden; }
+  #world { position:absolute; top:0; left:0; width:100%; height:1850px; }
+  #sky { position:absolute; top:0; left:0; right:0; height:320px; background:linear-gradient(to bottom,#87ceeb,#b8e4f7 60%,#d4f0c0); }
+  .cloud { position:absolute; background:white; border-radius:50px; opacity:0.85; animation:cloudMove linear infinite; }
+  @keyframes cloudMove { from{transform:translateX(-160px)} to{transform:translateX(110vw)} }
+  #ground { position:absolute; top:290px; left:0; right:0; bottom:0; background:linear-gradient(to bottom,#5a9e3a,#4a8a2a 30%,#3d7a22); }
+  .vpath { position:absolute; top:0; left:50%; transform:translateX(-50%); width:55px; height:100%; opacity:0.6; background:linear-gradient(to bottom,#c8a96a,#d4b878); }
+  .obj { position:absolute; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:filter 0.2s; }
+  .obj:active, .obj.near { filter:drop-shadow(0 0 10px #f5c842); }
+  .obj-label { font-size:12px; color:#fff; text-shadow:0 1px 3px #000; margin-top:3px; font-family:'Nanum Gothic',sans-serif; white-space:nowrap; }
+  .flower { position:absolute; pointer-events:none; }
+  #player { position:absolute; z-index:80; cursor:pointer; display:flex; flex-direction:column; align-items:center; }
+  #player svg { width:52px; height:70px; }
+  #player-name { font-size:11px; color:#fff; text-shadow:0 1px 4px #000, 0 0 8px #000; margin-top:1px; font-family:'Nanum Gothic',sans-serif; }
+  /* 말풍선 */
+  #bbl, #career-bbl, #sun-bbl { position:fixed; z-index:500; left:50%; transform:translateX(-50%); display:none; animation:popIn 0.18s ease; font-family:'Nanum Gothic',sans-serif; }
+  @keyframes popIn { from{transform:translateX(-50%) scale(0.85);opacity:0} to{transform:translateX(-50%) scale(1);opacity:1} }
+  #bbl { background:white; border:2px solid #8b6914; border-radius:14px; padding:14px 18px; width:min(270px,82vw); font-size:13px; line-height:1.85; color:#2d1a00; box-shadow:0 6px 22px rgba(0,0,0,0.32); overflow:hidden; }
+  #career-bbl { background:linear-gradient(135deg,#fffdf0,#fff8e0); border:2px solid #8b6914; border-radius:14px; padding:14px 18px; width:min(285px,84vw); font-size:12px; line-height:1.85; color:#2d1a00; box-shadow:0 6px 22px rgba(0,0,0,0.35); }
+  #sun-bbl { background:linear-gradient(135deg,#fffde7,#fff9c4); border:2px solid #f5c842; border-radius:14px; padding:14px 18px; width:min(268px,82vw); font-size:13px; line-height:1.85; color:#3d2a00; box-shadow:0 6px 22px rgba(245,200,66,0.4); }
+  .bbl-title { font-family:'Jua',sans-serif; font-size:14px; color:#8b6914; display:block; margin-bottom:7px; border-bottom:1px solid #e8d5a0; padding-bottom:4px; }
+  .bbl-x { position:absolute; top:6px; right:11px; font-size:17px; color:#aaa; cursor:pointer; }
+  .cb-title { font-family:'Jua',sans-serif; font-size:14px; color:#5c3a00; display:block; margin-bottom:8px; border-bottom:2px solid #f5c842; padding-bottom:5px; }
+  .sb-title { font-family:'Jua',sans-serif; font-size:14px; color:#b8860b; display:block; margin-bottom:8px; border-bottom:2px solid #f5c842; padding-bottom:5px; }
+  .career-row { display:flex; gap:8px; align-items:flex-start; padding:4px 0; border-bottom:1px dashed #e8d5a0; }
+  .career-row:last-of-type { border-bottom:none; }
+  .career-yr { font-weight:700; color:#8b6914; min-width:46px; font-size:11px; padding-top:1px; }
+  .career-dt { color:#3d2a00; font-size:12px; }
+  .sb-row { display:flex; gap:10px; align-items:flex-start; padding:6px 0; border-bottom:1px dashed #f5c842; }
+  .sb-row:last-child { border-bottom:none; }
+  /* 컨트롤 */
+  #controls {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    z-index:500; touch-action:none;
+  }
+  
+  
+  .ctrl-btn:active { background:#f5c842; transform:scale(0.92); }
+  #hint { position:fixed; bottom:136px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.65); color:#f5c842; font-size:11px; padding:6px 16px; border-radius:20px; font-family:'Nanum Gothic',sans-serif; pointer-events:none; transition:opacity 1s; white-space:nowrap; }
+
+
+  /* 홍 점프 */
+  @keyframes jump {
+    0%   { transform: translateY(0); }
+    30%  { transform: translateY(-40px); }
+    50%  { transform: translateY(-55px); }
+    70%  { transform: translateY(-40px); }
+    100% { transform: translateY(0); }
+  }
+  #player.jumping {
+    animation: jump 0.5s ease;
+    will-change: transform;
+    z-index: 90;
+  }
+
+  /* 와이프 흔들기 */
+  @keyframes wiggle {
+    0%   { transform: rotate(0deg); }
+    20%  { transform: rotate(-12deg); }
+    40%  { transform: rotate(12deg); }
+    60%  { transform: rotate(-8deg); }
+    80%  { transform: rotate(8deg); }
+    100% { transform: rotate(0deg); }
+  }
+  #o-wife.wiggling { animation: wiggle 0.6s ease; transform-origin: bottom center; }
+
+  /* 아들 통통 */
+  @keyframes bounce {
+    0%   { transform: translateY(0) scale(1); }
+    25%  { transform: translateY(-20px) scale(0.95); }
+    50%  { transform: translateY(-28px) scale(0.9); }
+    75%  { transform: translateY(-20px) scale(0.95); }
+    100% { transform: translateY(0) scale(1); }
+  }
+  #o-wusu.bouncing { animation: bounce 0.5s ease; }
+
+  /* 딸 빙글 */
+  @keyframes spin {
+    0%   { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.15); }
+    100% { transform: rotate(360deg) scale(1); }
+  }
+  #o-choson.spinning { animation: spin 0.6s ease; }
+
+  /* 햇님 커졌다 작아지기 */
+  @keyframes sunPop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.3); }
+    70%  { transform: scale(0.9); }
+    100% { transform: scale(1); }
+  }
+  .sun-popping { animation: sunPop 0.5s ease; }
+
+
+  /* 모닥불 클릭 효과 */
+  @keyframes firePop {
+    0%   { transform: scale(1); }
+    25%  { transform: scale(1.2) translateY(-8px); }
+    50%  { transform: scale(0.9) translateY(-12px); }
+    75%  { transform: scale(1.15) translateY(-5px); }
+    100% { transform: scale(1) translateY(0); }
+  }
+  .fire-popping { animation: firePop 0.5s ease; }
+
+
+  /* 공 튀기기 */
+  @keyframes ballBounce {
+    0%   { transform: translateY(0) rotate(0deg); }
+    25%  { transform: translateY(-30px) rotate(90deg); }
+    50%  { transform: translateY(-45px) rotate(180deg); }
+    75%  { transform: translateY(-30px) rotate(270deg); }
+    100% { transform: translateY(0) rotate(360deg); }
+  }
+  #choson-ball.bouncing {
+    animation: ballBounce 0.6s ease;
+  }
+
+
+  /* 에너지바 */
+  #energy-wrap {
+    position:fixed; top:68px; left:50%; transform:translateX(-50%);
+    z-index:200; display:flex; flex-direction:column; align-items:center;
+    pointer-events:none;
+  }
+  #energy-label {
+    font-size:10px; color:#f5c842; font-family:'Nanum Gothic',sans-serif;
+    margin-bottom:2px; text-shadow:0 1px 3px #000;
+  }
+  #energy-bar-wrap {
+    width:120px; height:10px;
+    background:rgba(0,0,0,0.4); border-radius:6px;
+    border:1px solid #f5c842; overflow:hidden;
+  }
+  #energy-bar {
+    height:100%; width:0%; border-radius:6px;
+    background:linear-gradient(to right,#ff6b00,#f5c842);
+    transition:width 0.4s ease;
+  }
+
+  /* 클리어 팝업 */
+  #clear-popup {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(0,0,0,0.85); z-index:1000;
+    display:none; align-items:center; justify-content:center;
+    flex-direction:column;
+  }
+  #clear-popup.show { display:flex; animation:popIn 0.3s ease; }
+  #clear-box {
+    background:linear-gradient(135deg,#fffdf0,#fff8e0);
+    border:3px solid #f5c842; border-radius:20px;
+    padding:30px 28px; width:min(300px,86vw);
+    text-align:center;
+    box-shadow:0 8px 32px rgba(245,200,66,0.5);
+  }
+  #clear-box .clear-title {
+    font-family:'Jua',sans-serif; font-size:22px; color:#5c3a00;
+    margin-bottom:10px;
+  }
+  #clear-box .clear-msg {
+    font-size:13px; color:#3d2a00; line-height:1.8;
+    font-family:'Nanum Gothic',sans-serif; margin-bottom:20px;
+  }
+  #clear-close {
+    background:linear-gradient(to right,#f5c842,#e8a820);
+    border:none; border-radius:12px; padding:10px 30px;
+    font-family:'Jua',sans-serif; font-size:15px;
+    color:#2d1a00; cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  }
+
+  /* 레벨별 홍 색상 변화 */
+  #player.lv2 svg rect[fill="#4a7fc1"],
+  #player.lv2 svg rect[fill="#4a7fc1"] { fill:#e05a3a !important; }
+  #player.lv3 svg rect[fill="#4a7fc1"] { fill:#8b3a8b !important; }
+
+  /* 별 효과 */
+  @keyframes starFloat {
+    0%   { transform:translateY(0) scale(1); opacity:1; }
+    100% { transform:translateY(-40px) scale(0); opacity:0; }
+  }
+  .star-effect {
+    position:fixed; font-size:20px; pointer-events:none; z-index:400;
+    animation:starFloat 0.8s ease forwards;
+  }
+
+
+  /* 조이스틱 */
+  #joystick-wrap {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    z-index:500; touch-action:none; user-select:none;
+  }
+  #joystick-base {
+    width:110px; height:110px; border-radius:50%;
+    background:rgba(245,200,66,0.35); border:3px solid rgba(245,200,66,0.7);
+    position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  }
+  #joystick-knob {
+    width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(135deg,#f5c842,#e8a820);
+    border:2px solid #8b6914;
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+    transition:transform 0.05s;
+  }
+  /* JUMP 버튼 */
+  #jump-btn {
+    position:fixed; bottom:20px; right:80px; z-index:500;
+    width:54px; height:54px; border-radius:50%;
+    background:linear-gradient(135deg,#ff9c3a,#e8701a);
+    border:2px solid #8b4a0a;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Jua',sans-serif; font-size:13px; color:white;
+    cursor:pointer; touch-action:none;
+    box-shadow:0 4px 12px rgba(0,0,0,0.35);
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  @keyframes spinSun { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+  /* 밤 모드 */
+  body.night #sky {
+    background: linear-gradient(to bottom, #0a0a2e, #1a1a4e 60%, #2d2d1a);
+  }
+  body.night #ground {
+    background: linear-gradient(to bottom, #2d4a1a, #1e3510 30%, #162808);
+  }
+  body.night #title-bar {
+    background: linear-gradient(to right, #0a0510, #1a0a30, #0a0510);
+  }
+  /* 별 */
+  #stars { position:absolute; top:0; left:0; right:0; height:320px; pointer-events:none; display:none; }
+  body.night #stars { display:block; }
+  /* 달 */
+  #moon { position:absolute; top:25px; left:20px; pointer-events:none; display:none; z-index:40; }
+  body.night #moon { display:block; }
+  /* 모닥불 야간 글로우 강화 */
+  body.night .obj.near { filter:drop-shadow(0 0 14px #ff6b00); }
+  /* 낮/밤 토글 버튼 */
+  #daynight-btn {
+    position:fixed; bottom:70px; right:14px; z-index:500;
+    width:44px; height:44px;
+    background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px; cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,0.35);
+    -webkit-tap-highlight-color:transparent;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- 입장 안내 팝업 -->
+<div id="intro-popup" style="
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.75);
+  z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+">
+  <div style="
+    background:linear-gradient(135deg,#fffdf0,#fff8e0);
+    border:3px solid #f5c842;
+    border-radius:20px;
+    padding:24px 28px;
+    width:min(310px,88vw);
+    font-family:'Nanum Gothic',sans-serif;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+    text-align:center;
+  ">
+    <div style="font-family:'Jua',sans-serif;font-size:20px;color:#5c3a00;margin-bottom:14px;">
+      🌿 홍의 세계에 오신 것을<br>환영합니다!
+    </div>
+    <div style="font-size:13px;color:#3d2a00;line-height:2;text-align:left;margin-bottom:18px;">
+      <div style="margin-bottom:6px;font-weight:700;color:#8b6914;">🕹️ 이렇게 즐기세요</div>
+      <div>🕹️ 조이스틱으로 홍을 <b>이동</b></div>
+      <div>🏠 오브젝트에 <b>가까이 가면</b> 소개 등장</div>
+      <div>💕 와이프 · 🐩 아들 · 🐩 딸<br>&nbsp;&nbsp;&nbsp;☀️ 햇님 · 🔥 모닥불은 <b>클릭</b>하세요</div>
+      <div>🪖 홍 <b>한번탭</b> 점프 · <b>두번탭</b> 경력</div>
+      <div>🌙 우측 버튼으로 <b>낮/밤</b> 전환</div>
+      <div>🔊 우측 버튼으로 <b>음악</b> 켜기</div>
+      <div>📮 좌측 버튼으로 <b>방명록</b> 이메일</div>
+      <div>🎮 좌측 버튼으로 <b>게임</b> 이동</div>
+      <div>📖 말풍선 읽을수록 <b>에너지</b> 충전<br>&nbsp;&nbsp;&nbsp;🪖→🔫→🥾 레벨업!</div>
+    </div>
+    <div style="font-size:11px;color:#8b6914;margin-bottom:16px;">
+      ▼ 아래로 내려가면 더 많은 이야기가 있어요!
+    </div>
+    <div onclick="document.getElementById('intro-popup').style.display='none'" style="
+      background:linear-gradient(to right,#f5c842,#e8a820);
+      color:#2d1a00; font-family:'Jua',sans-serif;
+      font-size:15px; padding:10px 0;
+      border-radius:12px; cursor:pointer;
+      box-shadow:0 3px 8px rgba(0,0,0,0.2);
+    ">
+      🌿 입장하기
+    </div>
+  </div>
+</div>
+
+
+
+<!-- 에너지바 -->
+<div id="energy-wrap">
+  <div id="energy-label">📖 홍의 이야기 0 / 14</div>
+  <div id="energy-bar-wrap"><div id="energy-bar"></div></div>
+</div>
+
+<!-- 클리어 팝업 -->
+<div id="clear-popup">
+  <div id="clear-box">
+    <div class="clear-title">🎉 홍의 세계 클리어!</div>
+    <div class="clear-msg">
+      홍의 모든 이야기를 읽었어요!<br>
+      홍을 이렇게 잘 알아봐줘서<br>
+      진심으로 감사해요 🙏<br><br>
+      <span style="font-size:20px;">🌿⭐🌿</span>
+    </div>
+    <button id="clear-close" onclick="document.getElementById('clear-popup').style.display='none'">
+      닫기
+    </button>
+  </div>
+</div>
+
+<div id="title-bar">
+  🌿 홍의 세계 🌿
+  <div style="font-size:10px;color:#d4b060;margin-top:3px;font-family:'Nanum Gothic',sans-serif;">
+    <img src="https://visitor-badge.laobi.icu/badge?page_id=kjh1000j.hong-world&left_color=%232d1a00&right_color=%23f5c842&left_text=%EB%B0%A9%EB%AC%B8%EC%9E%90"
+         style="height:18px;vertical-align:middle;border-radius:8px;"
+         alt="방문자 카운터"
+         onerror="this.parentElement.innerHTML='👀 방문해주셔서 감사해요!'"/>
+  </div>
+</div>
+<div id="game-wrap">
+<div id="world">
+
+  <!-- 하늘 -->
+  <div id="sky">
+    <!-- 햇님 -->
+    <div class="obj" id="o-sun" style="top:55px;right:16px;z-index:50;" onclick="showSunBbl()">
+      <svg width="70" height="70" viewBox="0 0 64 64">
+        <g style="transform-origin:32px 32px;animation:spinSun 8s linear infinite;">
+          <line x1="32" y1="4"  x2="32" y2="13" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+          <line x1="32" y1="51" x2="32" y2="60" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+          <line x1="4"  y1="32" x2="13" y2="32" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+          <line x1="51" y1="32" x2="60" y2="32" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
+          <line x1="11" y1="11" x2="17" y2="17" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="47" y1="47" x2="53" y2="53" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="53" y1="11" x2="47" y2="17" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="11" y1="53" x2="17" y2="47" stroke="#f5c842" stroke-width="2.5" stroke-linecap="round"/>
+        </g>
+        <circle cx="32" cy="32" r="17" fill="#fde94a"/>
+        <circle cx="32" cy="32" r="15" fill="#fef08a"/>
+        <ellipse cx="26" cy="29" rx="2.5" ry="3" fill="#5c3a00"/>
+        <ellipse cx="38" cy="29" rx="2.5" ry="3" fill="#5c3a00"/>
+        <circle cx="26.8" cy="28" r="0.9" fill="white"/>
+        <circle cx="38.8" cy="28" r="0.9" fill="white"/>
+        <path d="M24,36 Q32,43 40,36" stroke="#c07830" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <ellipse cx="22" cy="34" rx="3.5" ry="2.2" fill="#ffb347" opacity="0.55"/>
+        <ellipse cx="42" cy="34" rx="3.5" ry="2.2" fill="#ffb347" opacity="0.55"/>
+      </svg>
+      <div class="obj-label" style="color:#f5c842;">☀️ 요즘 마음가짐</div>
+    </div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
+    <div class="cloud" style="width:90px;height:22px;top:30px;left:-90px;animation-duration:20s;"><div style="position:absolute;width:44px;height:38px;background:white;border-radius:50%;top:-20px;left:16px;"></div><div style="position:absolute;width:30px;height:30px;background:white;border-radius:50%;top:-14px;left:42px;"></div></div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
+    <div class="cloud" style="width:70px;height:18px;top:80px;left:-70px;animation-duration:28s;animation-delay:7s;"><div style="position:absolute;width:34px;height:28px;background:white;border-radius:50%;top:-15px;left:14px;"></div></div>
+
+    <!-- 별 (밤 모드) -->
+    <div id="stars">
+      <svg width="100%" height="320" viewBox="0 0 400 320" preserveAspectRatio="xMidYMid slice">
+        <!-- 별들 -->
+        <circle cx="30"  cy="20"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="80"  cy="45"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="130" cy="15"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/></circle>
+        <circle cx="180" cy="35"  r="1.5" fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="220" cy="10"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.2s" repeatCount="indefinite"/></circle>
+        <circle cx="270" cy="50"  r="2"   fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.9s" repeatCount="indefinite"/></circle>
+        <circle cx="320" cy="25"  r="1.5" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.3s" repeatCount="indefinite"/></circle>
+        <circle cx="370" cy="40"  r="1"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.4;0.9" dur="1.7s" repeatCount="indefinite"/></circle>
+        <circle cx="50"  cy="70"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+        <circle cx="100" cy="90"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.0s" repeatCount="indefinite"/></circle>
+        <circle cx="160" cy="75"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+        <circle cx="240" cy="85"  r="2"   fill="white" opacity="0.9"><animate attributeName="opacity" values="0.9;0.3;0.9" dur="2.6s" repeatCount="indefinite"/></circle>
+        <circle cx="300" cy="65"  r="1"   fill="white" opacity="0.6"><animate attributeName="opacity" values="0.6;0.2;0.6" dur="1.8s" repeatCount="indefinite"/></circle>
+        <circle cx="350" cy="80"  r="1.5" fill="white" opacity="0.8"><animate attributeName="opacity" values="0.8;0.4;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
+        <circle cx="390" cy="60"  r="1"   fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.2;0.7" dur="1.9s" repeatCount="indefinite"/></circle>
+        <!-- 큰 별 반짝임 -->
+        <polygon points="60,30 62,26 64,30 68,30 65,33 66,37 62,35 58,37 59,33 56,30" fill="#f5c842" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="3s" repeatCount="indefinite"/></polygon>
+        <polygon points="340,20 342,16 344,20 348,20 345,23 346,27 342,25 338,27 339,23 336,20" fill="white" opacity="0.7"><animate attributeName="opacity" values="0.7;0.1;0.7" dur="2.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+    </div>
+    <!-- 달 -->
+    <div id="moon">
+      <svg width="55" height="55" viewBox="0 0 55 55">
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.95"/>
+        <circle cx="27" cy="27" r="20" fill="#fdf0b0"/>
+        <circle cx="20" cy="20" r="4" fill="#e8d890" opacity="0.4"/>
+        <circle cx="32" cy="32" r="3" fill="#e8d890" opacity="0.3"/>
+        <circle cx="28" cy="16" r="2" fill="#e8d890" opacity="0.35"/>
+        <!-- 달빛 -->
+        <circle cx="27" cy="27" r="22" fill="#f5e8a0" opacity="0.15">
+          <animate attributeName="r" values="22;25;22" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.15;0.05;0.15" dur="3s" repeatCount="indefinite"/>
+        </circle>
+      </svg>
+    </div>
+
+    <div class="cloud" style="width:110px;height:26px;top:140px;left:-110px;animation-duration:36s;animation-delay:14s;opacity:0.7;"><div style="position:absolute;width:54px;height:42px;background:white;border-radius:50%;top:-24px;left:22px;"></div><div style="position:absolute;width:36px;height:34px;background:white;border-radius:50%;top:-18px;left:56px;"></div></div>
+  </div>
+
+  <!-- 땅 -->
+  <div id="ground"><div class="vpath"></div></div>
+
+  <!-- ===== 구역1: 집+가족 (300~530) ===== -->
+
+  <!-- KUSA 동아리 (집 왼쪽) -->
+  <div class="obj" id="o-kusa" style="top:550px;left:8%;">
+    <svg width="70" height="90" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
+      <!-- 국토순례 배낭 메고 걷는 캐릭터 -->
+      <!-- 그림자 -->
+      <ellipse cx="35" cy="88" rx="14" ry="4" fill="rgba(0,0,0,0.15)"/>
+      <!-- 다리 -->
+      <rect x="28" y="62" width="6" height="18" fill="#5b6e8a" rx="3"/>
+      <rect x="36" y="62" width="6" height="16" fill="#5b6e8a" rx="3"/>
+      <!-- 신발 -->
+      <rect x="26" y="76" width="9" height="5" fill="#3a3a3a" rx="2"/>
+      <rect x="35" y="74" width="9" height="5" fill="#3a3a3a" rx="2"/>
+      <!-- 몸통 -->
+      <rect x="24" y="38" width="22" height="26" fill="#e05a3a" rx="4"/>
+      <!-- 배낭 -->
+      <rect x="38" y="32" width="16" height="22" fill="#8b6914" rx="4"/>
+      <rect x="39" y="33" width="14" height="20" fill="#a07820" rx="3"/>
+      <line x1="42" y1="33" x2="42" y2="52" stroke="#8b6914" stroke-width="1.5"/>
+      <line x1="39" y1="42" x2="53" y2="42" stroke="#8b6914" stroke-width="1.5"/>
+      <!-- 배낭 끈 -->
+      <path d="M38,35 Q34,40 34,48" stroke="#8b6914" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 팔 -->
+      <rect x="17" y="40" width="8" height="12" fill="#e05a3a" rx="3"/>
+      <rect x="45" y="40" width="8" height="12" fill="#e05a3a" rx="3"/>
+      <!-- 손 -->
+      <ellipse cx="21" cy="53" rx="4" ry="4" fill="#f5c4a0"/>
+      <ellipse cx="49" cy="52" rx="4" ry="4" fill="#f5c4a0"/>
+      <!-- 지팡이 -->
+      <line x1="49" y1="52" x2="56" y2="80" stroke="#7a5230" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- 목 -->
+      <rect x="31" y="30" width="8" height="10" fill="#f5c4a0" rx="2"/>
+      <!-- 머리 -->
+      <ellipse cx="35" cy="22" rx="13" ry="13" fill="#f5c4a0"/>
+      <!-- 모자 (유네스코 느낌 파란 모자) -->
+      <rect x="22" y="14" width="26" height="8" fill="#1a5fa8" rx="3"/>
+      <rect x="20" y="20" width="30" height="4" fill="#1a4a8a" rx="2"/>
+      <!-- 모자 글씨 -->
+      <text x="35" y="20" font-size="5" fill="white" text-anchor="middle" font-family="sans-serif">KUSA</text>
+      <!-- 눈 -->
+      <circle cx="30" cy="22" r="1.8" fill="#3d2a00"/>
+      <circle cx="40" cy="22" r="1.8" fill="#3d2a00"/>
+      <circle cx="30.6" cy="21.4" r="0.6" fill="white"/>
+      <circle cx="40.6" cy="21.4" r="0.6" fill="white"/>
+      <!-- 웃음 -->
+      <path d="M30,27 Q35,31 40,27" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="obj-label">🎒 KUSA</div>
+  </div>
+
+  <div class="obj" id="o-house" style="top:310px;left:6%;">
+    <svg width="105" height="105" viewBox="0 0 110 110">
+      <rect x="15" y="55" width="80" height="55" fill="#d4956a" rx="2"/>
+      <rect x="43" y="75" width="24" height="35" fill="#8b5e3c" rx="3"/>
+      <circle cx="61" cy="93" r="2.5" fill="#f5c842"/>
+      <rect x="20" y="65" width="22" height="18" fill="#87ceeb" rx="2" stroke="#8b5e3c" stroke-width="1.5"/>
+      <line x1="31" y1="65" x2="31" y2="83" stroke="#8b5e3c" stroke-width="1"/>
+      <line x1="20" y1="74" x2="42" y2="74" stroke="#8b5e3c" stroke-width="1"/>
+      <rect x="68" y="65" width="22" height="18" fill="#87ceeb" rx="2" stroke="#8b5e3c" stroke-width="1.5"/>
+      <line x1="79" y1="65" x2="79" y2="83" stroke="#8b5e3c" stroke-width="1"/>
+      <line x1="68" y1="74" x2="90" y2="74" stroke="#8b5e3c" stroke-width="1"/>
+      <polygon points="5,58 55,10 105,58" fill="#8b3a22"/>
+      <rect x="70" y="22" width="12" height="22" fill="#7a3018"/>
+      <ellipse cx="76" cy="18" rx="5" ry="4" fill="white" opacity="0.6"><animate attributeName="cy" values="18;12;18" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.5s" repeatCount="indefinite"/></ellipse>
+    </svg>
+    <div class="obj-label">🏠 우리 집</div>
+  </div>
+  <div style="position:absolute;top:305px;right:6%;pointer-events:none;"><svg width="62" height="98" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#35a020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#3db825"/></svg></div>
+
+  <div class="obj" id="o-wife" style="top:448px;left:19%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰','o-wife')">
+    <svg width="44" height="60" viewBox="0 0 40 56"><ellipse cx="20" cy="54" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><path d="M10,28 Q8,44 9,53 H31 Q32,44 30,28 Q25,35 20,34 Q15,35 10,28Z" fill="#ff9ec4"/><path d="M9,46 Q5,50 8,54 H32 Q35,50 31,46 Q25,50 20,50 Q15,50 9,46Z" fill="#ff7aad"/><path d="M10,30 Q4,36 6,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M30,30 Q36,36 34,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="17" y="20" width="6" height="9" fill="#f9c9a0" rx="2"/><ellipse cx="20" cy="16" rx="11" ry="12" fill="#f9c9a0"/><path d="M9,12 Q10,2 20,3 Q30,2 31,12 Q28,6 20,6 Q12,6 9,12Z" fill="#5c3317"/><path d="M9,14 Q6,22 9,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M31,14 Q34,22 31,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="16" cy="16" r="1.5" fill="#5c3317"/><circle cx="24" cy="16" r="1.5" fill="#5c3317"/><path d="M16,21 Q20,24 24,21" stroke="#e85d8a" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><ellipse cx="27" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><rect x="13" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/><rect x="22" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/></svg>
+    <div class="obj-label" style="color:#ffb6c1;">💕 와이프</div>
+  </div>
+  <div class="obj" id="o-wusu" style="top:392px;left:38%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?','o-wusu')">
+    <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="18" cy="22" rx="13" ry="8" fill="#8b5a2b"/><circle cx="10" cy="19" r="5" fill="#9b6a3b"/><circle cx="18" cy="17" r="5.5" fill="#9b6a3b"/><circle cx="26" cy="19" r="5" fill="#9b6a3b"/><circle cx="30" cy="13" r="7" fill="#8b5a2b"/><circle cx="30" cy="11" r="6" fill="#9b6a3b"/><ellipse cx="35" cy="14" rx="4" ry="3" fill="#7a4a20"/><ellipse cx="36" cy="13" rx="1.5" ry="1" fill="#3d1a00"/><circle cx="31" cy="11" r="1.5" fill="#1a0a00"/><circle cx="31.5" cy="10.5" r="0.5" fill="white"/><circle cx="25" cy="10" r="4" fill="#7a4a1a"/><rect x="7" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><circle cx="5" cy="19" r="4" fill="#9b6a3b"/></svg>
+    <div class="obj-label" style="color:#c8901a;">🐩 아들</div>
+  </div>
+
+  <!-- 축구공 (딸 옆) -->
+  <div id="choson-ball" style="position:absolute;top:452px;right:38%;font-size:26px;pointer-events:none;">⚽</div>
+
+  <div class="obj" id="o-choson" style="top:460px;right:22%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾','o-choson')">
+    <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="20" cy="22" rx="13" ry="8" fill="#c8a035"/><circle cx="12" cy="19" r="5" fill="#d4b045"/><circle cx="20" cy="17" r="5.5" fill="#d4b045"/><circle cx="28" cy="19" r="5" fill="#d4b045"/><circle cx="8" cy="13" r="7" fill="#c8a035"/><circle cx="8" cy="11" r="6" fill="#d4b045"/><ellipse cx="3" cy="14" rx="4" ry="3" fill="#b8900a"/><ellipse cx="2" cy="13" rx="1.5" ry="1" fill="#3d2a00"/><circle cx="7" cy="11" r="1.5" fill="#1a0a00"/><circle cx="7.5" cy="10.5" r="0.5" fill="white"/><circle cx="13" cy="10" r="4" fill="#b8900a"/><rect x="7" y="27" width="4" height="5" fill="#c8a035" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#c8a035" rx="2"/><circle cx="33" cy="19" r="4" fill="#d4b045"/></svg>
+    <div class="obj-label" style="color:#d4b896;">🐩 딸</div>
+  </div>
+  <div class="flower" style="top:530px;left:30%;"><svg width="26" height="30" viewBox="0 0 28 32"><line x1="14" y1="30" x2="14" y2="14" stroke="#2d7a15" stroke-width="2"/><circle cx="14" cy="10" r="5" fill="#ff6b9d" opacity="0.9"/><circle cx="9" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="19" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="14" cy="10" r="3" fill="#fff0f5"/></svg></div>
+
+  <!-- ===== 구역2: 홍+TV (610~720) ===== -->
+  <div id="player" style="top:640px;left:calc(50% - 26px);cursor:pointer;z-index:80;" >
+    <svg viewBox="0 0 44 62" style="pointer-events:none;"><ellipse cx="22" cy="60" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><rect x="13" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="24" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="12" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="23" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="11" y="25" width="22" height="20" fill="#4a7fc1" rx="4"/><path d="M18,25 L22,30 L26,25" fill="#3a6fa8"/><rect x="5" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><rect x="32" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><ellipse cx="8" cy="40" rx="4" ry="4" fill="#f5c4a0"/><ellipse cx="36" cy="40" rx="4" ry="4" fill="#f5c4a0"/><rect x="18" y="19" width="8" height="8" fill="#f5c4a0" rx="2"/><ellipse cx="22" cy="13" rx="12" ry="12" fill="#f5c4a0"/><path d="M10,10 Q11,2 22,2 Q33,2 34,10 Q30,5 22,5 Q14,5 10,10Z" fill="#3d2a00"/><path d="M10,12 Q8,17 10,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M34,12 Q36,17 34,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="17" cy="13" r="1.8" fill="#3d2a00"/><circle cx="27" cy="13" r="1.8" fill="#3d2a00"/><circle cx="17.6" cy="12.4" r="0.6" fill="white"/><circle cx="27.6" cy="12.4" r="0.6" fill="white"/><path d="M18,18 Q22,21 26,18" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+    <div id="player-name">홍 👆</div>
+
+  </div>
+  <div class="obj" id="o-tv" style="top:622px;right:8%;">
+    <svg width="72" height="60" viewBox="0 0 65 55"><rect x="27" y="46" width="11" height="6" fill="#555"/><rect x="20" y="50" width="25" height="4" fill="#444" rx="2"/><rect x="3" y="3" width="59" height="44" fill="#222" rx="5"/><rect x="6" y="6" width="53" height="37" fill="#111" rx="3"/><rect x="8" y="8" width="49" height="33" fill="#1a3a6a" rx="2"/><rect x="10" y="10" width="45" height="20" fill="#2a5a9a" rx="1"/><ellipse cx="22" cy="20" rx="8" ry="9" fill="#f5c4a0" opacity="0.9"/><ellipse cx="43" cy="20" rx="8" ry="9" fill="#f9b0c0" opacity="0.9"/><text x="32" y="36" font-size="8" fill="#f5c842" text-anchor="middle">😂</text></svg>
+    <div class="obj-label">📺 TV</div>
+  </div>
+  <div class="flower" style="top:730px;left:8%;"><svg width="24" height="28" viewBox="0 0 24 28"><line x1="12" y1="26" x2="12" y2="12" stroke="#2d7a15" stroke-width="2"/><circle cx="12" cy="9" r="5" fill="#ffcc00" opacity="0.9"/><circle cx="7" cy="12" r="3.5" fill="#ffd633" opacity="0.8"/><circle cx="17" cy="12" r="3.5" fill="#ffd633" opacity="0.8"/><circle cx="12" cy="9" r="2.5" fill="#fff8dc"/></svg></div>
+
+  <!-- ===== 구역3: 빌딩+밥상 (800~950) ===== -->
+  <div class="obj" id="o-building" style="top:815px;left:6%;">
+    <svg width="78" height="115" viewBox="0 0 80 120"><rect x="8" y="20" width="64" height="100" fill="#b0bec5" rx="3"/><rect x="52" y="20" width="20" height="100" fill="#90a4ae" rx="2"/><rect x="5" y="14" width="70" height="10" fill="#78909c" rx="2"/><rect x="28" y="5" width="6" height="12" fill="#607d8b"/><rect x="14" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="46" y="30" width="10" height="12" fill="#b0d4e8" rx="1" opacity="0.7"/><rect x="14" y="50" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="50" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="14" y="70" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="30" y="70" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="14" y="90" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="90" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="28" y="100" width="24" height="20" fill="#5d4037" rx="2"/><rect x="10" y="108" width="16" height="8" fill="#1565c0" rx="1"/><text x="18" y="115" font-size="5" fill="white" text-anchor="middle">인사</text></svg>
+    <div class="obj-label">🏢 인사업무</div>
+  </div>
+  <div class="obj" id="o-dinner" style="top:960px;right:8%;">
+    <svg width="78" height="62" viewBox="0 0 70 55"><rect x="10" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="55" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="18" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><rect x="48" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><ellipse cx="35" cy="27" rx="30" ry="10" fill="#c8813a"/><ellipse cx="35" cy="25" rx="28" ry="8" fill="#d4956a"/><ellipse cx="22" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="22" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="48" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="48" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="35" cy="20" rx="6" ry="4" fill="#c8513a" opacity="0.8"/></svg>
+    <div class="obj-label">🍽️ 저녁 식사</div>
+  </div>
+
+
+  <!-- ===== 모임 모닥불 3개 (1050~1150) ===== -->
+
+  <!-- 한마음회 (왼쪽) -->
+  <div class="obj" id="o-hanmaum" style="top:1040px;left:8%;" onclick="firePop(this); showBbl('🔥 한마음회','인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연','o-hanmaum')">
+    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+      <!-- 장작 -->
+      <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="15" y1="68" x2="55" y2="68" stroke="#5a3210" stroke-width="4" stroke-linecap="round"/>
+      <!-- 불꽃 -->
+      <ellipse cx="35" cy="38" rx="10" ry="14" fill="#ff6b00" opacity="0.9">
+        <animate attributeName="ry" values="14;18;13;16;14" dur="1.2s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="35" rx="7" ry="11" fill="#ff9c00" opacity="0.9">
+        <animate attributeName="ry" values="11;15;10;13;11" dur="1s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="32" rx="4" ry="8" fill="#ffcc00" opacity="0.85">
+        <animate attributeName="ry" values="8;11;7;10;8" dur="0.9s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="30" rx="2" ry="5" fill="#fff5a0" opacity="0.8">
+        <animate attributeName="ry" values="5;8;4;7;5" dur="0.8s" repeatCount="indefinite"/>
+      </ellipse>
+      <!-- 불빛 -->
+      <ellipse cx="35" cy="60" rx="18" ry="5" fill="#ff6b00" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.35;0.15;0.3;0.2" dur="1.2s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>
+    <div class="obj-label">🔥 한마음회</div>
+  </div>
+
+  <!-- 벗우회 (중앙) -->
+  <div class="obj" id="o-beotwu" style="top:710px;left:12%;" onclick="firePop(this); showBbl('🔥 벗우회','부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂','o-beotwu')">
+    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="15" y1="68" x2="55" y2="68" stroke="#5a3210" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="35" cy="38" rx="10" ry="14" fill="#ff4500" opacity="0.9">
+        <animate attributeName="ry" values="14;17;12;16;14" dur="1.1s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="35" rx="7" ry="11" fill="#ff7c00" opacity="0.9">
+        <animate attributeName="ry" values="11;14;9;13;11" dur="0.95s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="32" rx="4" ry="8" fill="#ffaa00" opacity="0.85">
+        <animate attributeName="ry" values="8;12;7;10;8" dur="0.85s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="30" rx="2" ry="5" fill="#fff5a0" opacity="0.8">
+        <animate attributeName="ry" values="5;7;4;6;5" dur="0.75s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="60" rx="18" ry="5" fill="#ff4500" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.35;0.15;0.3;0.2" dur="1.1s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>
+    <div class="obj-label">🔥 벗우회</div>
+  </div>
+
+  <!-- 인민군 (오른쪽) -->
+  <div class="obj" id="o-inmin" style="top:740px;right:8%;" onclick="firePop(this); showBbl('🔥 인민군','백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️','o-inmin')">
+    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+      <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
+      <line x1="15" y1="68" x2="55" y2="68" stroke="#5a3210" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="35" cy="38" rx="10" ry="14" fill="#ff3d00" opacity="0.9">
+        <animate attributeName="ry" values="14;19;12;17;14" dur="1.3s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="35" rx="7" ry="11" fill="#ff6d00" opacity="0.9">
+        <animate attributeName="ry" values="11;16;9;14;11" dur="1.05s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="32" rx="4" ry="8" fill="#ffb300" opacity="0.85">
+        <animate attributeName="ry" values="8;12;6;10;8" dur="0.9s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="30" rx="2" ry="5" fill="#fff5a0" opacity="0.8">
+        <animate attributeName="ry" values="5;8;4;7;5" dur="0.8s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="35" cy="60" rx="18" ry="5" fill="#ff3d00" opacity="0.2">
+        <animate attributeName="opacity" values="0.2;0.38;0.15;0.32;0.2" dur="1.3s" repeatCount="indefinite"/>
+      </ellipse>
+    </svg>
+    <div class="obj-label">🔥 인민군</div>
+  </div>
+
+  <!-- ===== 구역4: 자주포 (1060) ===== -->
+  <div class="obj" id="o-howitzer" style="top:1150px;left:11%;">
+    <svg width="135" height="84" viewBox="0 0 130 80"><rect x="10" y="30" width="90" height="32" fill="#556b2f" rx="4"/><rect x="30" y="18" width="50" height="24" fill="#4a5e28" rx="4"/><rect x="72" y="24" width="50" height="8" fill="#3d5020" rx="3"/><rect x="118" y="23" width="6" height="10" fill="#2d3e18" rx="1"/><rect x="8" y="58" width="94" height="14" fill="#333" rx="7"/><circle cx="18" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="36" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="54" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="72" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="90" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><line x1="30" y1="38" x2="100" y2="38" stroke="#3d5020" stroke-width="1" opacity="0.5"/></svg>
+    <div class="obj-label">🔫 포병</div>
+  </div>
+  <div style="position:absolute;top:1145px;right:6%;pointer-events:none;"><svg width="58" height="95" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#2da020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#35b828"/></svg></div>
+
+
+  <!-- 여행지 배너 -->
+  <div style="position:absolute;top:1270px;left:0;right:0;pointer-events:none;">
+    <!-- 배너 배경 -->
+    <div style="
+      margin:0 10px;
+      background:linear-gradient(135deg,rgba(26,90,138,0.7),rgba(45,26,0,0.7));
+      border:2px solid rgba(245,200,66,0.6);
+      border-radius:14px;
+      padding:12px 20px;
+      text-align:center;
+    ">
+      <div style="font-family:'Jua',sans-serif;font-size:16px;color:#f5c842;letter-spacing:2px;">
+        ✈️ 내가 가본 추억의 여행지들
+      </div>
+      <div style="font-family:'Nanum Gothic',sans-serif;font-size:11px;color:#d4b060;margin-top:4px;">
+        평생 잊을 수 없는 소중한 기억들 🌍
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 구역5: 안나푸르나 (1180) ===== -->
+  <div class="obj" id="o-mountain" style="top:1330px;left:16%;">
+    <svg width="160" height="130" viewBox="0 0 160 130"><polygon points="60,130 0,60 120,60" fill="#b0c4d8" opacity="0.6"/><polygon points="130,130 70,45 190,45" fill="#8faaba" opacity="0.5"/><polygon points="80,130 10,50 150,50" fill="#c8d8e8"/><polygon points="80,130 30,60 130,60" fill="#d8e8f4"/><polygon points="80,8 40,55 120,55" fill="white"/><polygon points="80,8 50,48 110,48" fill="#f0f8ff"/><polygon points="80,8 80,45 110,48" fill="#ddeeff" opacity="0.7"/><polygon points="30,80 5,55 55,55" fill="#b8ccd8"/><polygon points="30,60 18,50 42,50" fill="white" opacity="0.9"/><polygon points="135,85 110,58 160,58" fill="#b0c4d4"/><polygon points="135,60 120,50 150,50" fill="white" opacity="0.85"/><ellipse cx="25" cy="42" rx="18" ry="7" fill="white" opacity="0.7"/><ellipse cx="140" cy="38" rx="16" ry="6" fill="white" opacity="0.6"/></svg>
+    <div class="obj-label">🏔️ 안나푸르나</div>
+  </div>
+  <!-- 눈꽃 장식 -->
+  <div style="position:absolute;top:1520px;right:14%;pointer-events:none;"><svg width="28" height="28" viewBox="0 0 30 30"><line x1="15" y1="2" x2="15" y2="28" stroke="white" stroke-width="2" opacity="0.6"/><line x1="2" y1="15" x2="28" y2="15" stroke="white" stroke-width="2" opacity="0.6"/><line x1="6" y1="6" x2="24" y2="24" stroke="white" stroke-width="2" opacity="0.6"/><line x1="24" y1="6" x2="6" y2="24" stroke="white" stroke-width="2" opacity="0.6"/><circle cx="15" cy="15" r="3" fill="white" opacity="0.8"/></svg></div>
+
+  <!-- ===== 구역6: 상하이 (1390) ===== -->
+  <div class="obj" id="o-shanghai" style="top:1450px;right:8%;">
+    <svg width="70" height="140" viewBox="0 0 70 140"><path d="M28,140 Q25,100 27,60 Q29,30 35,5 Q41,30 43,60 Q45,100 42,140Z" fill="#4a6fa8"/><path d="M35,5 Q41,30 43,60 Q45,100 42,140 L28,140 Q25,100 27,60 Q29,30 35,5Z" fill="#5a80b8" opacity="0.6"/><line x1="28" y1="110" x2="42" y2="110" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="85" x2="43" y2="85" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="60" x2="43" y2="60" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="28" y1="38" x2="42" y2="38" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><rect x="33" y="2" width="4" height="8" fill="#c8c8c8" rx="1"/><circle cx="35" cy="2" r="2" fill="#f5c842"/><path d="M30,140 Q28,100 29,60 Q30,30 35,8" stroke="#87ceeb" stroke-width="1.5" fill="none" opacity="0.4"/><ellipse cx="15" cy="50" rx="14" ry="6" fill="white" opacity="0.6"/></svg>
+    <div class="obj-label">🏙️ 광저우 타워</div>
+  </div>
+  <!-- 황푸강 -->
+  <div style="position:absolute;top:1520px;left:0;right:0;pointer-events:none;"><svg width="100%" height="35" viewBox="0 0 400 35" preserveAspectRatio="none"><path d="M0,18 Q50,5 100,18 Q150,31 200,18 Q250,5 300,18 Q350,31 400,18 L400,35 L0,35Z" fill="#1a5a8a" opacity="0.45"/></svg></div>
+
+  <!-- ===== 구역7: 스페인·포르투갈 (1600~1820) ===== -->
+  <div class="obj" id="o-sagrada" style="top:1490px;left:4%;">
+    <svg width="100" height="150" viewBox="0 0 100 150"><polygon points="50,2 44,18 56,18" fill="#b89858"/><rect x="44" y="10" width="12" height="100" fill="#c8a878" rx="2"/><polygon points="31,22 26,36 36,36" fill="#b89858"/><rect x="26" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="69,22 64,36 74,36" fill="#b89858"/><rect x="64" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="14,43 10,55 18,55" fill="#c4a878"/><rect x="10" y="50" width="8" height="60" fill="#d4b888" rx="2"/><polygon points="86,43 82,55 90,55" fill="#c4a878"/><rect x="82" y="50" width="8" height="60" fill="#d4b888" rx="2"/><rect x="8" y="105" width="84" height="45" fill="#c8a878" rx="3"/><ellipse cx="25" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><ellipse cx="50" cy="118" rx="7" ry="10" fill="#f5c842" opacity="0.5"/><ellipse cx="75" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><path d="M42,150 L42,132 Q50,125 58,132 L58,150Z" fill="#8b6914"/><circle cx="50" cy="2" r="2.5" fill="#f5c842"/></svg>
+    <div class="obj-label">⛪ 사그라다 파밀리아</div>
+  </div>
+  <div class="obj" id="o-orange" style="top:1650px;right:10%;">
+    <svg width="85" height="110" viewBox="0 0 85 110"><rect x="38" y="65" width="9" height="45" fill="#7a5230" rx="3"/><ellipse cx="42" cy="45" rx="32" ry="30" fill="#2d7a15"/><ellipse cx="42" cy="40" rx="26" ry="25" fill="#35901a"/><ellipse cx="42" cy="35" rx="20" ry="20" fill="#3da020"/><circle cx="28" cy="50" r="7" fill="#ff7c00"/><circle cx="28" cy="50" r="5.5" fill="#ff9020"/><circle cx="55" cy="48" r="7" fill="#ff7c00"/><circle cx="55" cy="48" r="5.5" fill="#ff9020"/><circle cx="38" cy="58" r="7" fill="#ff7c00"/><circle cx="38" cy="58" r="5.5" fill="#ff9020"/><circle cx="18" cy="40" r="6" fill="#ff7c00"/><circle cx="18" cy="40" r="4.5" fill="#ff9020"/><circle cx="62" cy="38" r="6" fill="#ff7c00"/><circle cx="62" cy="38" r="4.5" fill="#ff9020"/></svg>
+    <div class="obj-label">🍊 세비야 오렌지 나무</div>
+  </div>
+  <div class="flower" style="top:1780px;left:40%;"><svg width="24" height="28" viewBox="0 0 24 28"><line x1="12" y1="26" x2="12" y2="12" stroke="#2d7a15" stroke-width="2"/><circle cx="12" cy="9" r="5" fill="#a855f7" opacity="0.9"/><circle cx="7" cy="12" r="3.5" fill="#c084fc" opacity="0.8"/><circle cx="17" cy="12" r="3.5" fill="#c084fc" opacity="0.8"/><circle cx="12" cy="9" r="2.5" fill="#faf5ff"/></svg></div>
+  <div class="obj" id="o-eggtart" style="top:1700px;left:10%;">
+    <svg width="110" height="110" viewBox="0 0 110 110"><rect x="5" y="20" width="100" height="65" fill="#f5e8c8" rx="3"/><rect x="12" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M12,30 Q19,24 26,30" fill="#c8a878"/><rect x="48" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M48,30 Q55,24 62,30" fill="#c8a878"/><rect x="84" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M84,30 Q91,24 98,30" fill="#c8a878"/><rect x="44" y="58" width="22" height="27" fill="#8b6914" rx="2"/><path d="M44,58 Q55,50 66,58" fill="#a07820"/><rect x="2" y="14" width="106" height="10" fill="#c8813a" rx="2"/><rect x="0" y="12" width="110" height="5" fill="#d4956a" rx="1"/><rect x="52" y="2" width="6" height="14" fill="#c8a878" rx="1"/><rect x="46" y="6" width="18" height="4" fill="#c8a878" rx="1"/><ellipse cx="28" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="55" cy="98" rx="14" ry="6" fill="#d4956a"/><ellipse cx="82" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="28" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="55" cy="94" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="82" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="28" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="55" cy="94" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="82" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/></svg>
+    <div class="obj-label">🥧 벨렝 수녀원</div>
+  </div>
+  <div style="position:absolute;top:1700px;right:5%;pointer-events:none;"><svg width="55" height="90" viewBox="0 0 50 90"><rect x="21" y="60" width="8" height="30" fill="#5a3820"/><polygon points="25,5 47,62 3,62" fill="#1e6b10"/><polygon points="25,18 45,59 5,59" fill="#258a15"/><polygon points="25,30 43,57 7,57" fill="#2da01a"/></svg></div>
+
+  <!-- ===== 말풍선 ===== -->
+  <div id="bbl">
+    <span class="bbl-x" onclick="closeAll()">✕</span>
+    <span class="bbl-title" id="bbl-t"></span>
+    <span id="bbl-c"></span>
+  </div>
+  <div id="career-bbl">
+    <span class="bbl-x" onclick="closeAll()">✕</span>
+    <span class="cb-title">📋 홍의 군생활 경력</span>
+    <div class="career-row"><span class="career-yr">'03년</span><span class="career-dt">입대 (병) · 철원</span></div>
+    <div class="career-row"><span class="career-yr">'05년</span><span class="career-dt">임관 (하사) · 철원, 포천</span></div>
+    <div class="career-row"><span class="career-yr">'17년</span><span class="career-dt">근무지 이동 · 계룡</span></div>
+    <div class="career-row"><span class="career-yr">'21년</span><span class="career-dt">근무지 이동 · 원주, 횡성</span></div>
+    <div class="career-row"><span class="career-yr">'26년</span><span class="career-dt">근무지 이동 · 화천<br><span style="color:#8b6914;font-size:11px;">현 계급: 원사</span></span></div>
+  </div>
+  <div id="sun-bbl">
+    <span class="bbl-x" onclick="closeAll()">✕</span>
+    <span class="sb-title">☀️ 요즘 나의 마음가짐</span>
+    <div class="sb-row"><span style="font-size:20px;line-height:1.2;">🤝</span><span>일보다는 사람이 먼저</span></div>
+    <div class="sb-row"><span style="font-size:20px;line-height:1.4;">🎖️</span><span>현재의 계급과 해왔던<br>군생활이 쪽팔리게 하지 말자</span></div>
+  </div>
+  </div>
+
+
+  <!-- 레벨업 아이템 (홍 왼쪽 일렬) -->
+  <div id="lv-items" style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:81;pointer-events:none;">
+    <div id="lv-helmet" style="display:none;font-size:22px;">🪖</div>
+    <div id="lv-gun"    style="display:none;font-size:22px;">🔫</div>
+    <div id="lv-boots"  style="display:none;font-size:20px;">🥾</div>
+  </div>
+</div><!-- /world -->
+</div><!-- /game-wrap -->
+
+    <div class="ctrl-btn" onmousedown="sm('u')" onmouseup="stopMove()" ontouchstart="sm('u')" ontouchend="stopMove()">▲</div>
+  </div>
+  <div class="ctrl-row">
+    <div class="ctrl-btn" onmousedown="sm('l')" onmouseup="stopMove()" ontouchstart="sm('l')" ontouchend="stopMove()">◀</div>
+    <div class="ctrl-btn" onmousedown="sm('d')" onmouseup="stopMove()" ontouchstart="sm('d')" ontouchend="stopMove()">▼</div>
+    <div class="ctrl-btn" onmousedown="sm('r')" onmouseup="stopMove()" ontouchstart="sm('r')" ontouchend="stopMove()">▶</div>
+  </div>
+</div>
+<div id="hint">▲▼◀▶ 이동 | 홍 클릭→경력 | 가까이 가면 소개가 나와요!</div>
+
+<script>
+const PROX = [
+  { id:'o-kusa', title:'🎒 KUSA (유네스코 동아리)', text:'대학교 시절 KUSA 동아리<br>젊은날 잊을수 없는 추억 가득한<br>소중한 인연들 🌏<br><br>국토순례 2번 완주 🥾<br>함께 걸으며 나눈 땀과 추억<br>지금도 기억에 많이 남아' },
+  { id:'o-house',    title:'🏠 우리 집',              text:'가족과 함께하는 공간<br>와이프, 아들 🤎, 딸 💛과 함께<br>자연과 함께 하는 삶을 살고 있지만<br>도시에 살고 싶음 🏙️' },
+  { id:'o-tv',       title:'📺 TV',                   text:'연예 프로그램을 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!<br><br>롯데자이언츠 팬 ⚾<br>가을야구 가즈아!! 🔥' },
+  { id:'o-building', title:'🏢 인사업무',             text:'인사 분야 근무를 오래함<br>여러 제대에서 다양한<br>인사근무를 경험<br>인재선발, 운영, 복지,<br>상훈, 역사관 등? ㅎㅎ' },
+  { id:'o-dinner',   title:'🍽️ 저녁 식사',            text:'사람들과 함께하는<br>저녁 식사 자리를 좋아함<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂<br><br>사람과의 관계에서<br>행복을 느낀다 🤗' },
+  
+  
+  { id:'o-howitzer', title:'🔫 포병',                  text:'전장의 신은 포병이지!! 💥<br>병 생활은 8인치 부대 FDC로 시작했고<br>K9, K55, 105미리 부대에서 근무를 했음<br>즐거웠던 백달리 생활~~ 🎖️' },
+  { id:'o-mountain', title:'🏔️ 안나푸르나',            text:'네팔 포카라에서 헬기 타고 안나푸르나 베이스캠프까지<br>하늘에서 바라본 설산은 정말 장관이었지<br>평생 잊을 수 없는 풍경 🚁🏔️' },
+  { id:'o-shanghai', title:'🏙️ 광저우 타워',           text:'중국 광저우 타워<br>높이 600m<br>광저우 야경이 한눈에<br>스케일에 압도당한 순간 🌆' },
+  { id:'o-sagrada',  title:'⛪ 사그라다 파밀리아',      text:'가우디의 걸작<br>아직도 짓고 있는 성당<br>스테인드글라스의 빛이<br>쏟아지는 내부는 감동 그 자체 🌈' },
+  { id:'o-orange',   title:'🍊 세비야 오렌지 나무',     text:'스페인 세비야<br>거리마다 오렌지 나무가 가득<br>이국적인 분위기와<br>따뜻한 햇살이 너무 좋았어 ☀️' },
+  { id:'o-eggtart',  title:'🥧 벨렝 수녀원 에그타르트', text:'포르투갈 리스본 벨렝 수녀원<br>파스텔 드 나타의 원조<br>수녀원 앞 그 가게에서 먹은<br>에그타르트는 세상에서 제일 맛있었어 😋' },
+];
+
+const world = document.getElementById('world');
+const playerEl = document.getElementById('player');
+const wrap = document.getElementById('game-wrap');
+const bbl = document.getElementById('bbl');
+const careerBbl = document.getElementById('career-bbl');
+const sunBbl = document.getElementById('sun-bbl');
+
+let py = 640, px = -1, worldOff = 0, moveInt = null, nearId = null;
+const SPEED = 6, WORLD_H = 1850, PROX_D = 110;
+
+function getPx() { if(px===-1) px=window.innerWidth/2-26; return px; }
+
+function updateScroll() {
+  const wh = wrap.offsetHeight;
+  let off = Math.max(0, Math.min(WORLD_H-wh, py - wh/2 + 35));
+  worldOff = -off;
+  world.style.top = worldOff+'px';
+}
+
+function updatePlayer() {
+  playerEl.style.top = py+'px';
+  playerEl.style.left = getPx()+'px';
+  // 레벨업 아이템 위치 — worldOff 반영
+  const lvi = document.getElementById('lv-items');
+  if(lvi) {
+    lvi.style.top  = (py + worldOff + 3) + 'px';
+    lvi.style.left = (getPx() - 42) + 'px';
+  }
+}
+
+function bblTop() { return Math.floor(wrap.getBoundingClientRect().top + wrap.offsetHeight*0.25); }
+
+let bblTimer = null;
+function showBbl(title, text, id) {
+  if(id) addEnergy(id);
+  if(bblTimer) clearTimeout(bblTimer);
+  closeAll(false);
+  document.getElementById('bbl-t').innerHTML = title;
+  document.getElementById('bbl-c').innerHTML = text;
+  bbl.style.top = bblTop()+'px';
+  bbl.style.display = 'block';
+  bblTimer = setTimeout(() => closeAll(false), 3000);
+}
+function showCareerBbl() {
+  addEnergy('career');
+  closeAll(false);
+  careerBbl.style.top = bblTop()+'px';
+  careerBbl.style.display = 'block';
+}
+function showSunBbl() {
+  addEnergy('sun');
+  closeAll(false);
+  sunBbl.style.top = bblTop()+'px';
+  sunBbl.style.display = 'block';
+}
+function closeAll(clearNear=true) {
+  bbl.style.display = 'none';
+  careerBbl.style.display = 'none';
+  sunBbl.style.display = 'none';
+  if(clearNear && nearId) {
+    document.getElementById(nearId)?.classList.remove('near');
+    nearId = null;
+  }
+}
+
+function checkProx() {
+  const vw = window.innerWidth;
+  const pcx = getPx()+26, pcy = py+35;
+  let found = null;
+  for(const obj of PROX) {
+    const el = document.getElementById(obj.id);
+    if(!el) continue;
+    const eTop = parseInt(el.style.top)||0;
+    let eLeft;
+    if(el.style.left && el.style.left !== '') {
+      eLeft = el.style.left.includes('%') ? vw*parseFloat(el.style.left)/100 : parseFloat(el.style.left);
+    } else {
+      const r = el.style.right||'0';
+      const rVal = r.includes('%') ? vw*parseFloat(r)/100 : parseFloat(r);
+      eLeft = vw - rVal - el.offsetWidth;
+    }
+    const d = Math.sqrt((pcx-eLeft-el.offsetWidth/2)**2 + (pcy-eTop-el.offsetHeight/2)**2);
+    if(d < PROX_D) { found=obj; break; }
+  }
+  if(found && found.id!==nearId) {
+    if(nearId) document.getElementById(nearId)?.classList.remove('near');
+    nearId = found.id;
+    document.getElementById(nearId)?.classList.add('near');
+    showBbl(found.title, found.text);
+    addEnergy(found.id);
+    if(found.id==='o-house') showImgPopup('house.jpg');
+    else closeImgPopup();
+  } else if(!found && nearId) {
+    document.getElementById(nearId)?.classList.remove('near');
+    nearId = null;
+    closeAll(false);
+  }
+}
+
+function move(dir) {
+  const vw = window.innerWidth, p = getPx();
+  if(dir==='u' && py>310)          py-=SPEED;
+  if(dir==='d' && py<WORLD_H-120)  py+=SPEED;
+  if(dir==='l' && p>5)             px=p-SPEED;
+  if(dir==='r' && p<vw-60)         px=p+SPEED;
+  updatePlayer(); updateScroll(); checkProx();
+
+
+
+  // 낮/밤 전환
+  let isNight = false;
+  function toggleDayNight() {
+    isNight = !isNight;
+    const btn = document.getElementById('daynight-btn');
+    if (isNight) {
+      document.body.classList.add('night');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('night');
+      btn.textContent = '🌙';
+    }
+  }
+ checkProx();
+}
+function sm(dir) { if(moveInt) clearInterval(moveInt); move(dir); moveInt=setInterval(()=>move(dir),55); }
+function stopMove() { if(moveInt){clearInterval(moveInt);moveInt=null;} }
+
+const KM={ArrowUp:'u',ArrowDown:'d',ArrowLeft:'l',ArrowRight:'r'};
+const held={};
+
+document.addEventListener('keyup',e=>{held[e.key]=false;const a=Object.keys(held).find(k=>held[k]&&KM[k]);if(a)sm(KM[a]);else stopMove();});
+
+world.addEventListener('click',function(e){
+  if(e.target.closest('#player')||e.target.closest('.obj')||e.target.closest('#bbl')||e.target.closest('#career-bbl')||e.target.closest('#sun-bbl')) return;
+  closeAll();
+});
+
+updatePlayer(); updateScroll();
+  // 낮/밤 전환
+  let isNight = false;
+  function toggleDayNight() {
+    isNight = !isNight;
+    const btn = document.getElementById('daynight-btn');
+    if (isNight) {
+      document.body.classList.add('night');
+      btn.textContent = '☀️';
+    } else {
+      document.body.classList.remove('night');
+      btn.textContent = '🌙';
+    }
+  }
+
+setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0';setTimeout(()=>h.remove(),1000);}},6000);
+
+  
+  
+  // ===== 캐릭터 애니메이션 (addEventListener) =====
+  let isJumping = false;
+
+  function doJump() {
+    if (isJumping) return;
+    isJumping = true;
+    playerEl.classList.add('jumping');
+    setTimeout(() => { playerEl.classList.remove('jumping'); isJumping = false; }, 500);
+  }
+
+  // 스페이스바 점프
+  document.addEventListener('keydown', function(e) {
+    if (e.code === 'Space') { e.preventDefault(); doJump(); return; }
+    const d = KM[e.key];
+    if (d && !held[e.key]) { held[e.key]=true; sm(d); }
+  });
+
+  // 홍 클릭 → 점프
+  const playerClickEl = document.getElementById('player');
+  if(playerClickEl) {
+    let lastTap = 0;
+    playerClickEl.addEventListener('touchstart', function(e) {
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastTap < 350) {
+        showCareerBbl();
+        addEnergy('career');
+        lastTap = 0;
+      } else {
+        doJump();
+        lastTap = now;
+      }
+    }, {passive: true});
+    playerClickEl.addEventListener('dblclick', function(e) {
+      e.stopPropagation();
+      showCareerBbl();
+      addEnergy('career');
+    });
+    playerClickEl.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+
+  // 와이프 클릭 → 흔들기
+  const wifeEl = document.getElementById('o-wife');
+  if(wifeEl) wifeEl.addEventListener('click', function() {
+    showImgPopup('familly.JPG');
+    this.classList.remove('wiggling'); void this.offsetWidth; this.classList.add('wiggling');
+    setTimeout(() => this.classList.remove('wiggling'), 600);
+  });
+
+  // 아들 클릭 → 통통
+  const wusuEl = document.getElementById('o-wusu');
+  if(wusuEl) wusuEl.addEventListener('click', function() {
+    this.classList.remove('bouncing'); void this.offsetWidth; this.classList.add('bouncing');
+    setTimeout(() => this.classList.remove('bouncing'), 500);
+  });
+
+  // 딸 클릭 → 빙글
+  const chosonEl = document.getElementById('o-choson');
+  if(chosonEl) chosonEl.addEventListener('click', function() {
+    // 딸 빙글
+    this.classList.remove('spinning'); void this.offsetWidth; this.classList.add('spinning');
+    setTimeout(() => this.classList.remove('spinning'), 600);
+    // 공 튀기기
+    const ball = document.getElementById('choson-ball');
+    if (ball) {
+      ball.classList.remove('bouncing'); void ball.offsetWidth;
+      ball.classList.add('bouncing');
+      setTimeout(() => ball.classList.remove('bouncing'), 600);
+    }
+  });
+
+  // 햇님 클릭 → 팝
+  const sunEl = document.getElementById('o-sun');
+  if (sunEl) {
+    sunEl.addEventListener('click', function() {
+      const svg = this.querySelector('svg');
+      if (svg) {
+        svg.classList.remove('sun-popping'); void svg.offsetWidth;
+        svg.classList.add('sun-popping');
+        setTimeout(() => svg.classList.remove('sun-popping'), 500);
+      }
+    });
+  }
+
+  // 모닥불 팝 효과
+  function firePop(el) {
+    el.classList.remove('fire-popping');
+    void el.offsetWidth;
+    el.classList.add('fire-popping');
+    setTimeout(() => el.classList.remove('fire-popping'), 500);
+  }
+
+  
+  
+  // ===== 에너지바 시스템 =====
+  const TOTAL_ITEMS = 19;
+  const readSet = new Set();
+
+  function addEnergy(id) {
+    try {
+    if (!id || readSet.has(id)) return;
+    readSet.add(id);
+    const cnt = readSet.size;
+    const pct = Math.round(cnt / TOTAL_ITEMS * 100);
+
+    const bar = document.getElementById('energy-bar');
+    const label = document.getElementById('energy-label');
+    if (bar) bar.style.width = pct + '%';
+    if (label) label.textContent = '📖 홍의 이야기 ' + cnt + ' / 19';
+
+    // 별 이펙트
+    const star = document.createElement('div');
+    star.textContent = '⭐';
+    star.style.cssText = 'position:fixed;font-size:20px;pointer-events:none;z-index:400;left:' + (Math.random()*60+20) + '%;top:80px;animation:starFloat 0.8s ease forwards;';
+    document.body.appendChild(star);
+    setTimeout(() => star.remove(), 800);
+
+    // 레벨업 아이템 장착
+    levelUp(cnt);
+
+    // 클리어
+    if (cnt >= 19) {
+      setTimeout(() => {
+        const popup = document.getElementById('clear-popup');
+        if (popup) popup.style.display = 'flex';
+      }, 600);
+    }
+    } catch(e) { console.log('energy err',e); }
+  }
+
+  function levelUp(cnt) {
+    const hel   = document.getElementById('lv-helmet');
+    const gun   = document.getElementById('lv-gun');
+    const boots = document.getElementById('lv-boots');
+    if(hel)   hel.style.display   = cnt >= 6  ? 'block' : 'none';
+    if(gun)   gun.style.display   = cnt >= 12 ? 'block' : 'none';
+    if(boots) boots.style.display = cnt >= 17 ? 'block' : 'none';
+    // 선글라스 — SVG 오버레이
+
+  }
+
+  
+
+  // 클릭/모닥불/햇님
+  ['o-wife','o-wusu','o-choson','o-hanmaum','o-beotwu','o-inmin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', () => addEnergy(id));
+  });
+  const _sunEl2 = document.getElementById('o-sun');
+  if (_sunEl2) _sunEl2.addEventListener('click', () => addEnergy('sun'));
+
+  // 홍 탭 → career 에너지
+  const _playerEl2 = document.getElementById('player');
+  // career 에너지는 더블탭에서만
+
+  // ===== 조이스틱 =====
+  function initJoystick() {
+    const base  = document.getElementById('joystick-base');
+    const knob  = document.getElementById('joystick-knob');
+    if(!base || !knob) return;
+
+    const R = 32; // 최대 이동 반경
+    let active = false, tid = null;
+    let cx = 0, cy = 0;
+
+    function getCenter() {
+      const r = base.getBoundingClientRect();
+      return { x: r.left + r.width/2, y: r.top + r.height/2 };
+    }
+
+    function moveKnob(tx, ty) {
+      const c = getCenter();
+      let dx = tx - c.x, dy = ty - c.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if(dist > R) { dx = dx/dist*R; dy = dy/dist*R; }
+      knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      cx = dx; cy = dy;
+    }
+
+    function resetKnob() {
+      knob.style.transform = 'translate(-50%,-50%)';
+      cx = 0; cy = 0;
+      stopMove();
+    }
+
+    let frameCount = 0;
+    function tick() {
+      if(!active) return;
+      frameCount++;
+      if(frameCount % 2 === 0) {  // 2프레임마다 한번 이동
+        const threshold = 8;
+        const ax = Math.abs(cx), ay = Math.abs(cy);
+        if(ax < threshold && ay < threshold) { stopMove(); }
+        else if(ax > ay) { cx > 0 ? sm('r') : sm('l'); }
+        else             { cy > 0 ? sm('d') : sm('u'); }
+      }
+      tid = requestAnimationFrame(tick);
+    }
+
+    base.addEventListener('touchstart', e => {
+      e.preventDefault();
+      active = true;
+      moveKnob(e.touches[0].clientX, e.touches[0].clientY);
+      cancelAnimationFrame(tid);
+      tid = requestAnimationFrame(tick);
+    }, {passive:false});
+
+    base.addEventListener('touchmove', e => {
+      e.preventDefault();
+      moveKnob(e.touches[0].clientX, e.touches[0].clientY);
+    }, {passive:false});
+
+    base.addEventListener('touchend', () => {
+      active = false;
+      cancelAnimationFrame(tid);
+      resetKnob();
+    });
+
+    // 마우스 지원 (PC)
+    base.addEventListener('mousedown', e => {
+      active = true;
+      moveKnob(e.clientX, e.clientY);
+      cancelAnimationFrame(tid);
+      tid = requestAnimationFrame(tick);
+      const up = () => { active=false; cancelAnimationFrame(tid); resetKnob(); document.removeEventListener('mouseup',up); document.removeEventListener('mousemove',mv); };
+      const mv = e => moveKnob(e.clientX, e.clientY);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('mousemove', mv);
+    });
+
+
+  }
+  window.addEventListener('load', initJoystick);
+  // ===== 이미지 팝업 =====
+  let imgTimer = null;
+  function showImgPopup(src) {
+    const popup = document.getElementById('img-popup');
+    const bg    = document.getElementById('img-popup-bg');
+    const img   = document.getElementById('img-popup-src');
+    if(!popup || !img) return;
+    img.src = src;
+    popup.style.display = 'block';
+    bg.style.display    = 'block';
+    if(imgTimer) clearTimeout(imgTimer);
+    imgTimer = setTimeout(closeImgPopup, 3000);
+  }
+  function closeImgPopup() {
+    document.getElementById('img-popup').style.display = 'none';
+    document.getElementById('img-popup-bg').style.display = 'none';
+    if(imgTimer) clearTimeout(imgTimer);
+  }
+</script>
+
+<!-- 낮/밤 전환 버튼 -->
+<div id="daynight-btn" onclick="toggleDayNight()" title="낮/밤 전환">🌙</div>
+
+<!-- 조이스틱 -->
+<div id="joystick-wrap">
+  <div id="joystick-base">
+    <div id="joystick-knob"></div>
+  </div>
+</div>
+<!-- JUMP 버튼 -->
+<div id="jump-btn" ontouchstart="doJump()" onclick="doJump()">JUMP</div>
+
+<!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
+<!-- 게임 버튼 -->
+<div onclick="location.href='https://kjh1000j.github.io/hong-world/game.html'" style="
+  position:fixed; bottom:68px; left:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(100,180,245,0.92); border:2px solid #2a7ab8; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="게임">🎮</div>
+
+<!-- 우편함 버튼 -->
+<div onclick="location.href='mailto:kjh1000j@naver.com?subject=홍의 세계 방명록&body=이름:%0D%0A%0D%0A메시지:%0D%0A'" style="
+  position:fixed; bottom:14px; left:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="방명록">📮</div>
+
+<div id="music-btn" onclick="toggleMusic()" style="
+  position:fixed; bottom:14px; right:14px; z-index:500;
+  width:44px; height:44px;
+  background:rgba(245,200,66,0.88); border:2px solid #8b6914; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  -webkit-tap-highlight-color:transparent;
+" title="배경음악 켜기/끄기">🔇</div>
+
+<script>
+let audioCtx = null, playing = false, nodes = [];
+
+function createBGM() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const master = audioCtx.createGain();
+  master.gain.value = 0.18;
+  master.connect(audioCtx.destination);
+
+  // 잔잔한 자연 느낌 — 낮은 드론 + 멜로디 아르페지오
+  // 밝고 경쾌한 멜로디 — BPM 140
+  const bpm = 140;
+  const beat = 60 / bpm;
+
+  // 장조 아르페지오 + 리듬감 있는 베이스
+  const melody = [
+    [523.3, 0.5], [659.3, 0.5], [784.0, 0.5], [1046.5, 0.5],
+    [880.0, 0.5], [784.0, 0.5], [659.3, 0.5], [523.3, 0.5],
+    [587.3, 0.5], [698.5, 0.5], [784.0, 0.5], [880.0, 1.0],
+    [784.0, 0.5], [698.5, 0.5], [659.3, 0.5], [523.3, 1.0],
+  ];
+  const bass = [261.6, 329.6, 392.0, 329.6];
+
+  function playNote(freq, time, dur, type='triangle', vol=0.35) {
+    const osc = audioCtx.createOscillator();
+    const env = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    env.gain.setValueAtTime(0, time);
+    env.gain.linearRampToValueAtTime(vol, time + 0.03);
+    env.gain.exponentialRampToValueAtTime(0.001, time + dur * beat * 0.9);
+    osc.connect(env); env.connect(master);
+    osc.start(time); osc.stop(time + dur * beat + 0.05);
+    nodes.push(osc);
+  }
+
+  function scheduleLoop(startTime) {
+    // 멜로디
+    let t = startTime;
+    melody.forEach(([freq, dur]) => {
+      playNote(freq, t, dur, 'triangle', 0.3);
+      t += dur * beat;
+    });
+    // 베이스 (2박자마다)
+    bass.forEach((freq, i) => {
+      playNote(freq, startTime + i * beat * 4, 2, 'sine', 0.2);
+    });
+    // 리듬 타악 느낌 (노이즈 대신 짧은 고음)
+    for(let i = 0; i < 16; i++) {
+      playNote(1200, startTime + i * beat * 0.5, 0.1, 'square', 0.04);
+    }
+    const loopDur = melody.reduce((s,[,d])=>s+d,0) * beat;
+    setTimeout(() => {
+      if (playing) scheduleLoop(audioCtx.currentTime);
+    }, loopDur * 1000 - 100);
+  }
+
+  scheduleLoop(audioCtx.currentTime + 0.1);
+}
+
+function toggleMusic() {
+  const btn = document.getElementById('music-btn');
+  if (playing) {
+    nodes.forEach(n => { try { n.stop(); } catch(e){} });
+    nodes = [];
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+    playing = false;
+    btn.textContent = '🔇';
+  } else {
+    createBGM();
+    playing = true;
+    btn.textContent = '🔊';
+  }
+}
+</script>
+
+
+<!-- 이미지 팝업 -->
+<div id="img-popup" style="
+  display:none; position:fixed; z-index:600;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  background:white; border:3px solid #f5c842;
+  border-radius:16px; padding:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  max-width:min(280px,88vw);
+">
+  <img id="img-popup-src" src="" style="width:100%;border-radius:10px;display:block;" onload="this.style.display='block'" onerror="document.getElementById('img-popup').innerHTML+='<p style=color:red>로드실패:'+this.src+'</p>'">
+  <div onclick="closeImgPopup()" style="
+    text-align:center; margin-top:8px;
+    font-family:'Nanum Gothic',sans-serif;
+    font-size:12px; color:#8b6914; cursor:pointer;
+  ">✕ 닫기</div>
+</div>
+<div id="img-popup-bg" onclick="closeImgPopup()" style="
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.4); z-index:599;
+"></div>
+
+</body>
+</html>
