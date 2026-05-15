@@ -905,7 +905,6 @@ function checkProx() {
     showBbl(found.title, found.text);
     addEnergy(found.id);
     if(found.id==='o-house') showImgPopup('house.jpg');
-    else closeImgPopup();
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
@@ -1016,7 +1015,7 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
   // 와이프 클릭 → 흔들기
   const wifeEl = document.getElementById('o-wife');
   if(wifeEl) wifeEl.addEventListener('click', function() {
-    showImgPopup('familly.JPG');
+    showImgPopup('familly.jpg');
     this.classList.remove('wiggling'); void this.offsetWidth; this.classList.add('wiggling');
     setTimeout(() => this.classList.remove('wiggling'), 600);
   });
@@ -1356,9 +1355,9 @@ function toggleMusic() {
   background:white; border:3px solid #f5c842;
   border-radius:16px; padding:10px;
   box-shadow:0 8px 32px rgba(0,0,0,0.5);
-  max-width:min(280px,88vw);
+  width:min(280px,88vw);
 ">
-  <img id="img-popup-src" src="" style="width:100%;border-radius:10px;display:block;">
+  <img id="img-popup-src" src="" style="width:260px;max-width:100%;height:180px;object-fit:cover;border-radius:10px;display:block;">
   <div onclick="closeImgPopup()" style="
     text-align:center; margin-top:8px;
     font-family:'Nanum Gothic',sans-serif;
