@@ -1127,84 +1127,7 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
   const _playerEl2 = document.getElementById('player');
   // career 에너지는 더블탭에서만
 
-  // ===== 조이스틱 =====
-  function initJoystick() {
-    const base  = document.getElementById('joystick-base');
-    const knob  = document.getElementById('joystick-knob');
-    if(!base || !knob) return;
 
-    const R = 32; // 최대 이동 반경
-    let active = false, tid = null;
-    let cx = 0, cy = 0;
-
-    function getCenter() {
-      const r = base.getBoundingClientRect();
-      return { x: r.left + r.width/2, y: r.top + r.height/2 };
-    }
-
-    function moveKnob(tx, ty) {
-      const c = getCenter();
-      let dx = tx - c.x, dy = ty - c.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if(dist > R) { dx = dx/dist*R; dy = dy/dist*R; }
-      knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-      cx = dx; cy = dy;
-    }
-
-    function resetKnob() {
-      knob.style.transform = 'translate(-50%,-50%)';
-      cx = 0; cy = 0;
-      stopMove();
-    }
-
-    let frameCount = 0;
-    function tick() {
-      if(!active) return;
-      frameCount++;
-      if(frameCount % 2 === 0) {  // 2프레임마다 한번 이동
-        const threshold = 8;
-        const ax = Math.abs(cx), ay = Math.abs(cy);
-        if(ax < threshold && ay < threshold) { stopMove(); }
-        else if(ax > ay) { cx > 0 ? sm('r') : sm('l'); }
-        else             { cy > 0 ? sm('d') : sm('u'); }
-      }
-      tid = requestAnimationFrame(tick);
-    }
-
-    base.addEventListener('touchstart', e => {
-      e.preventDefault();
-      active = true;
-      moveKnob(e.touches[0].clientX, e.touches[0].clientY);
-      cancelAnimationFrame(tid);
-      tid = requestAnimationFrame(tick);
-    }, {passive:false});
-
-    base.addEventListener('touchmove', e => {
-      e.preventDefault();
-      moveKnob(e.touches[0].clientX, e.touches[0].clientY);
-    }, {passive:false});
-
-    base.addEventListener('touchend', () => {
-      active = false;
-      cancelAnimationFrame(tid);
-      resetKnob();
-    });
-
-    // 마우스 지원 (PC)
-    base.addEventListener('mousedown', e => {
-      active = true;
-      moveKnob(e.clientX, e.clientY);
-      cancelAnimationFrame(tid);
-      tid = requestAnimationFrame(tick);
-      const up = () => { active=false; cancelAnimationFrame(tid); resetKnob(); document.removeEventListener('mouseup',up); document.removeEventListener('mousemove',mv); };
-      const mv = e => moveKnob(e.clientX, e.clientY);
-      document.addEventListener('mouseup', up);
-      document.addEventListener('mousemove', mv);
-    });
-
-
-  }
-  window.addEventListener('load', initJoystick);
   // ===== 이미지 팝업 =====
   let imgTimer = null;
   function showImgPopup(src) {
@@ -1223,6 +1146,85 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
     document.getElementById('img-popup-bg').style.display = 'none';
     if(imgTimer) clearTimeout(imgTimer);
   }
+
+  // ===== 조이스틱 =====
+  document.addEventListener('DOMContentLoaded', function() {
+    const base = document.getElementById('joystick-base');
+    const knob = document.getElementById('joystick-knob');
+    if (!base || !knob) { console.log('joystick elements not found'); return; }
+
+    const MAX_R = 30;
+    let active = false, rafId = null, cx = 0, cy = 0, fc = 0;
+
+    function center() {
+      const r = base.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    function setKnob(tx, ty) {
+      const c = center();
+      let dx = tx - c.x, dy = ty - c.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > MAX_R) { dx = dx / dist * MAX_R; dy = dy / dist * MAX_R; }
+      knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      cx = dx; cy = dy;
+    }
+
+    function reset() {
+      knob.style.transform = 'translate(-50%, -50%)';
+      cx = 0; cy = 0;
+      stopMove();
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    function loop() {
+      if (!active) return;
+      fc++;
+      if (fc % 2 === 0) {
+        const ax = Math.abs(cx), ay = Math.abs(cy);
+        if (ax < 8 && ay < 8) stopMove();
+        else if (ax >= ay) cx > 0 ? sm('r') : sm('l');
+        else cy > 0 ? sm('d') : sm('u');
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+
+    // 터치
+    base.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      active = true; fc = 0;
+      setKnob(e.touches[0].clientX, e.touches[0].clientY);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loop);
+    }, { passive: false });
+
+    base.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      setKnob(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    base.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      active = false;
+      reset();
+    }, { passive: false });
+
+    // 마우스 (PC)
+    base.addEventListener('mousedown', function(e) {
+      active = true; fc = 0;
+      setKnob(e.clientX, e.clientY);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loop);
+      function onMove(e) { setKnob(e.clientX, e.clientY); }
+      function onUp() {
+        active = false; reset();
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
 </script>
 
 <!-- 낮/밤 전환 버튼 -->
