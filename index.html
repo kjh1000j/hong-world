@@ -26,7 +26,7 @@
   /* 말풍선 */
   #bbl, #career-bbl, #sun-bbl { position:fixed; z-index:500; left:50%; transform:translateX(-50%); display:none; animation:popIn 0.18s ease; font-family:'Nanum Gothic',sans-serif; }
   @keyframes popIn { from{transform:translateX(-50%) scale(0.85);opacity:0} to{transform:translateX(-50%) scale(1);opacity:1} }
-  #bbl { background:white; border:2px solid #8b6914; border-radius:14px; padding:14px 18px; width:min(270px,82vw); font-size:13px; line-height:1.85; color:#2d1a00; box-shadow:0 6px 22px rgba(0,0,0,0.32); }
+  #bbl { background:white; border:2px solid #8b6914; border-radius:14px; padding:14px 18px; width:min(270px,82vw); font-size:13px; line-height:1.85; color:#2d1a00; box-shadow:0 6px 22px rgba(0,0,0,0.32); overflow:hidden; }
   #career-bbl { background:linear-gradient(135deg,#fffdf0,#fff8e0); border:2px solid #8b6914; border-radius:14px; padding:14px 18px; width:min(285px,84vw); font-size:12px; line-height:1.85; color:#2d1a00; box-shadow:0 6px 22px rgba(0,0,0,0.35); }
   #sun-bbl { background:linear-gradient(135deg,#fffde7,#fff9c4); border:2px solid #f5c842; border-radius:14px; padding:14px 18px; width:min(268px,82vw); font-size:13px; line-height:1.85; color:#3d2a00; box-shadow:0 6px 22px rgba(245,200,66,0.4); }
   .bbl-title { font-family:'Jua',sans-serif; font-size:14px; color:#8b6914; display:block; margin-bottom:7px; border-bottom:1px solid #e8d5a0; padding-bottom:4px; }
@@ -40,9 +40,12 @@
   .sb-row { display:flex; gap:10px; align-items:flex-start; padding:6px 0; border-bottom:1px dashed #f5c842; }
   .sb-row:last-child { border-bottom:none; }
   /* 컨트롤 */
-  #controls { position:fixed; bottom:14px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:6px; z-index:500; }
-  .ctrl-row { display:flex; gap:6px; }
-  .ctrl-btn { width:54px; height:54px; background:rgba(245,200,66,0.9); border:2px solid #8b6914; border-radius:10px; font-size:22px; cursor:pointer; display:flex; align-items:center; justify-content:center; user-select:none; box-shadow:0 3px 8px rgba(0,0,0,0.35); -webkit-tap-highlight-color:transparent; }
+  #controls {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    z-index:500; touch-action:none;
+  }
+  
+  
   .ctrl-btn:active { background:#f5c842; transform:scale(0.92); }
   #hint { position:fixed; bottom:136px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.65); color:#f5c842; font-size:11px; padding:6px 16px; border-radius:20px; font-family:'Nanum Gothic',sans-serif; pointer-events:none; transition:opacity 1s; white-space:nowrap; }
 
@@ -191,6 +194,39 @@
     animation:starFloat 0.8s ease forwards;
   }
 
+
+  /* 조이스틱 */
+  #joystick-wrap {
+    position:fixed; bottom:14px; left:50%; transform:translateX(-50%);
+    z-index:500; touch-action:none; user-select:none;
+  }
+  #joystick-base {
+    width:110px; height:110px; border-radius:50%;
+    background:rgba(245,200,66,0.35); border:3px solid rgba(245,200,66,0.7);
+    position:relative; box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  }
+  #joystick-knob {
+    width:46px; height:46px; border-radius:50%;
+    background:linear-gradient(135deg,#f5c842,#e8a820);
+    border:2px solid #8b6914;
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 3px 8px rgba(0,0,0,0.4);
+    transition:transform 0.05s;
+  }
+  /* JUMP 버튼 */
+  #jump-btn {
+    position:fixed; bottom:20px; right:80px; z-index:500;
+    width:54px; height:54px; border-radius:50%;
+    background:linear-gradient(135deg,#ff9c3a,#e8701a);
+    border:2px solid #8b4a0a;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Jua',sans-serif; font-size:13px; color:white;
+    cursor:pointer; touch-action:none;
+    box-shadow:0 4px 12px rgba(0,0,0,0.35);
+    -webkit-tap-highlight-color:transparent;
+  }
+
   @keyframes spinSun { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
   /* 밤 모드 */
@@ -248,7 +284,7 @@
     </div>
     <div style="font-size:13px;color:#3d2a00;line-height:2;text-align:left;margin-bottom:18px;">
       <div style="margin-bottom:6px;font-weight:700;color:#8b6914;">🕹️ 이렇게 즐기세요</div>
-      <div>▲▼◀▶ 버튼으로 홍을 <b>이동</b></div>
+      <div>🕹️ 조이스틱으로 홍을 <b>이동</b></div>
       <div>🏠 오브젝트에 <b>가까이 가면</b> 소개 등장</div>
       <div>💕 와이프 · 🐩 아들 · 🐩 딸<br>&nbsp;&nbsp;&nbsp;☀️ 햇님 · 🔥 모닥불은 <b>클릭</b>하세요</div>
       <div>🪖 홍 <b>한번탭</b> 점프 · <b>두번탭</b> 경력</div>
@@ -312,7 +348,7 @@
   <!-- 하늘 -->
   <div id="sky">
     <!-- 햇님 -->
-    <div class="obj" id="o-sun" style="top:55px;right:16px;z-index:50;" onclick="showSunBbl()">
+    <div class="obj" id="o-sun" style="top:100px;right:16px;z-index:50;" onclick="showSunBbl()">
       <svg width="70" height="70" viewBox="0 0 64 64">
         <g style="transform-origin:32px 32px;animation:spinSun 8s linear infinite;">
           <line x1="32" y1="4"  x2="32" y2="13" stroke="#f5c842" stroke-width="3" stroke-linecap="round"/>
@@ -751,9 +787,6 @@
 </div><!-- /world -->
 </div><!-- /game-wrap -->
 
-<div id="controls">
-  <div class="ctrl-row">
-    <div class="ctrl-btn" ontouchstart="doJump()" onclick="doJump()" style="background:rgba(255,160,50,0.92);font-size:13px;font-family:'Jua',sans-serif;">JUMP</div>
     <div class="ctrl-btn" onmousedown="sm('u')" onmouseup="stopMove()" ontouchstart="sm('u')" ontouchend="stopMove()">▲</div>
   </div>
   <div class="ctrl-row">
@@ -789,7 +822,7 @@ const careerBbl = document.getElementById('career-bbl');
 const sunBbl = document.getElementById('sun-bbl');
 
 let py = 640, px = -1, worldOff = 0, moveInt = null, nearId = null;
-const SPEED = 9, WORLD_H = 1850, PROX_D = 110;
+const SPEED = 6, WORLD_H = 1850, PROX_D = 110;
 
 function getPx() { if(px===-1) px=window.innerWidth/2-26; return px; }
 
@@ -811,15 +844,21 @@ function updatePlayer() {
   }
 }
 
-function bblTop() { return Math.floor(wrap.getBoundingClientRect().top + wrap.offsetHeight*0.25); }
+function bblTop() { return Math.floor(window.innerHeight * 0.5); }
 
+let bblTimer = null;
 function showBbl(title, text, id) {
   if(id) addEnergy(id);
+  if(bblTimer) clearTimeout(bblTimer);
   closeAll(false);
   document.getElementById('bbl-t').innerHTML = title;
   document.getElementById('bbl-c').innerHTML = text;
   bbl.style.top = bblTop()+'px';
   bbl.style.display = 'block';
+  bblTimer = setTimeout(() => closeAll(false), 3000);
+  // 모닥불 이미지 매핑
+  const fireImgs = {'🔥 한마음회':'hanmaum.jpg','🔥 벗우회':'beotwu.jpg','🔥 인민군':'inmin.jpg'};
+  if(fireImgs[title]) setTimeout(() => showImgPopup(fireImgs[title]), 50);
 }
 function showCareerBbl() {
   addEnergy('career');
@@ -834,6 +873,7 @@ function showSunBbl() {
   sunBbl.style.display = 'block';
 }
 function closeAll(clearNear=true) {
+  closeImgPopup();
   bbl.style.display = 'none';
   careerBbl.style.display = 'none';
   sunBbl.style.display = 'none';
@@ -868,6 +908,12 @@ function checkProx() {
     document.getElementById(nearId)?.classList.add('near');
     showBbl(found.title, found.text);
     addEnergy(found.id);
+    if(found.id==='o-house') showImgPopup('house.jpg');
+    else if(found.id==='o-mountain') showImgPopup('annapurna.jpg');
+    else if(found.id==='o-building') showImgPopup('personnel.jpg');
+    else if(found.id==='o-sagrada') showImgPopup('sagrada.jpg');
+    else if(found.id==='o-eggtart') showImgPopup('belem.jpg');
+    else if(found.id==='o-shanghai') showImgPopup('guangzhou.jpg');
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
@@ -978,6 +1024,7 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
   // 와이프 클릭 → 흔들기
   const wifeEl = document.getElementById('o-wife');
   if(wifeEl) wifeEl.addEventListener('click', function() {
+    showImgPopup('familly.jpg');
     this.classList.remove('wiggling'); void this.offsetWidth; this.classList.add('wiggling');
     setTimeout(() => this.classList.remove('wiggling'), 600);
   });
@@ -1087,10 +1134,121 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
   // 홍 탭 → career 에너지
   const _playerEl2 = document.getElementById('player');
   // career 에너지는 더블탭에서만
+
+
+  // ===== 이미지 팝업 =====
+  let imgTimer = null;
+  function showImgPopup(src) {
+    const popup = document.getElementById('img-popup');
+    const bg    = document.getElementById('img-popup-bg');
+    const img   = document.getElementById('img-popup-src');
+    if(!popup || !img) return;
+    img.src = src;
+    popup.style.top = '80px';
+    popup.style.left = '50%';
+    popup.style.transform = 'translateX(-50%)';
+    popup.style.display = 'block';
+    bg.style.display    = 'none';
+    if(imgTimer) clearTimeout(imgTimer);
+    imgTimer = setTimeout(closeImgPopup, 3000);
+  }
+  function closeImgPopup() {
+    document.getElementById('img-popup').style.display = 'none';
+    document.getElementById('img-popup-bg').style.display = 'none';
+    if(imgTimer) clearTimeout(imgTimer);
+  }
+
+  // ===== 조이스틱 =====
+  document.addEventListener('DOMContentLoaded', function() {
+    const base = document.getElementById('joystick-base');
+    const knob = document.getElementById('joystick-knob');
+    if (!base || !knob) { console.log('joystick elements not found'); return; }
+
+    const MAX_R = 30;
+    let active = false, rafId = null, cx = 0, cy = 0, fc = 0;
+
+    function center() {
+      const r = base.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    function setKnob(tx, ty) {
+      const c = center();
+      let dx = tx - c.x, dy = ty - c.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > MAX_R) { dx = dx / dist * MAX_R; dy = dy / dist * MAX_R; }
+      knob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+      cx = dx; cy = dy;
+    }
+
+    function reset() {
+      knob.style.transform = 'translate(-50%, -50%)';
+      cx = 0; cy = 0;
+      stopMove();
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    function loop() {
+      if (!active) return;
+      fc++;
+      if (fc % 2 === 0) {
+        const ax = Math.abs(cx), ay = Math.abs(cy);
+        if (ax < 8 && ay < 8) stopMove();
+        else if (ax >= ay) cx > 0 ? sm('r') : sm('l');
+        else cy > 0 ? sm('d') : sm('u');
+      }
+      rafId = requestAnimationFrame(loop);
+    }
+
+    // 터치
+    base.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      active = true; fc = 0;
+      setKnob(e.touches[0].clientX, e.touches[0].clientY);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loop);
+    }, { passive: false });
+
+    base.addEventListener('touchmove', function(e) {
+      e.preventDefault();
+      setKnob(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    base.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      active = false;
+      reset();
+    }, { passive: false });
+
+    // 마우스 (PC)
+    base.addEventListener('mousedown', function(e) {
+      active = true; fc = 0;
+      setKnob(e.clientX, e.clientY);
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(loop);
+      function onMove(e) { setKnob(e.clientX, e.clientY); }
+      function onUp() {
+        active = false; reset();
+        document.removeEventListener('mousemove', onMove);
+        document.removeEventListener('mouseup', onUp);
+      }
+      document.addEventListener('mousemove', onMove);
+      document.addEventListener('mouseup', onUp);
+    });
+  });
 </script>
 
 <!-- 낮/밤 전환 버튼 -->
 <div id="daynight-btn" onclick="toggleDayNight()" title="낮/밤 전환">🌙</div>
+
+<!-- 조이스틱 -->
+<div id="joystick-wrap">
+  <div id="joystick-base">
+    <div id="joystick-knob"></div>
+  </div>
+</div>
+<!-- JUMP 버튼 -->
+<div id="jump-btn" ontouchstart="doJump()" onclick="doJump()">JUMP</div>
 
 <!-- 배경음악 (Web Audio API — 외부 URL 불필요) -->
 <!-- 게임 버튼 -->
@@ -1200,6 +1358,28 @@ function toggleMusic() {
   }
 }
 </script>
+
+
+<!-- 이미지 팝업 -->
+<div id="img-popup" style="
+  display:none; position:fixed; z-index:600;
+  top:80px; left:50%; transform:translateX(-50%);
+  background:white; border:3px solid #f5c842;
+  border-radius:16px; padding:8px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  width:min(260px,86vw);
+">
+  <img id="img-popup-src" src="" style="width:100%;height:180px;object-fit:cover;border-radius:10px;display:block;">
+  <div onclick="closeImgPopup()" style="
+    text-align:center; margin-top:8px;
+    font-family:'Nanum Gothic',sans-serif;
+    font-size:12px; color:#8b6914; cursor:pointer;
+  ">✕ 닫기</div>
+</div>
+<div id="img-popup-bg" onclick="closeImgPopup()" style="
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.4); z-index:599;
+"></div>
 
 </body>
 </html>
