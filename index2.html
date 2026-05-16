@@ -856,6 +856,9 @@ function showBbl(title, text, id) {
   bbl.style.top = bblTop()+'px';
   bbl.style.display = 'block';
   bblTimer = setTimeout(() => closeAll(false), 3000);
+  // 모닥불 이미지 매핑
+  const fireImgs = {'🔥 한마음회':'hanmaum.jpg','🔥 벗우회':'beotwu.jpg','🔥 인민군':'inmin.jpg'};
+  if(fireImgs[title]) setTimeout(() => showImgPopup(fireImgs[title]), 50);
 }
 function showCareerBbl() {
   addEnergy('career');
@@ -910,6 +913,7 @@ function checkProx() {
     else if(found.id==='o-building') showImgPopup('personnel.jpg');
     else if(found.id==='o-sagrada') showImgPopup('sagrada.jpg');
     else if(found.id==='o-eggtart') showImgPopup('belem.jpg');
+    else if(found.id==='o-shanghai') showImgPopup('guangzhou.jpg');
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
