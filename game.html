@@ -823,29 +823,80 @@ function drawEnemy(e){
 }
 function drawObstacle(o){
   const bv=Math.sin(Date.now()*.006+1)*4;const rot=(Date.now()*.0012)%(Math.PI*2);ctx.save();
+  // 보라 회전 링
   ctx.strokeStyle='#8b5cf6';ctx.lineWidth=2.5;ctx.setLineDash([6,4]);ctx.lineDashOffset=-rot*20;
   ctx.shadowBlur=16;ctx.shadowColor='#8b5cf6';ctx.beginPath();ctx.arc(o.x,o.y+bv,o.size*.82,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+  // 내부
   const g=ctx.createRadialGradient(o.x,o.y+bv-7,1,o.x,o.y+bv,o.size*.62);
   g.addColorStop(0,'rgba(139,92,246,.92)');g.addColorStop(1,'rgba(67,26,160,.85)');
   ctx.fillStyle=g;ctx.shadowBlur=10;ctx.beginPath();ctx.arc(o.x,o.y+bv,o.size*.62,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;ctx.font='bold '+(o.size*.7)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(o.emoji,o.x,o.y+bv-2);
+  // ⚠️ 경고 삼각형 (canvas로 직접)
+  ctx.shadowBlur=0;ctx.fillStyle='#fbbf24';
+  const ts=o.size*.32;
+  ctx.beginPath();ctx.moveTo(o.x,o.y+bv-ts);ctx.lineTo(o.x-ts*.86,o.y+bv+ts*.5);ctx.lineTo(o.x+ts*.86,o.y+bv+ts*.5);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1e0a00';ctx.font='bold '+(o.size*.28)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('!',o.x,o.y+bv+ts*.1);
+  // 라벨
   ctx.font='800 10px sans-serif';ctx.textBaseline='top';
   ctx.strokeStyle='rgba(0,0,0,.9)';ctx.lineWidth=4;ctx.strokeText(o.label,o.x,o.y+bv+o.size*.62-1);
   ctx.fillStyle='#c4b5fd';ctx.fillText(o.label,o.x,o.y+bv+o.size*.62-1);ctx.restore();
 }
+
 function drawBuff(b){
   const bv=Math.sin(Date.now()*.007)*4;const pulse=(.7+Math.sin(Date.now()*.004)*.3);ctx.save();
-  ctx.shadowBlur=18+pulse*8;ctx.shadowColor='#10b981';ctx.strokeStyle=`rgba(16,185,129,${pulse})`;ctx.lineWidth=2.5;
-  ctx.beginPath();ctx.arc(b.x,b.y+bv,b.size*.8,0,Math.PI*2);ctx.stroke();
+  // 타입별 색상
+  const typeColor=b.type==='hp'?'#f43f5e':b.type==='inv'?'#f59e0b':'#6ee7b7';
+  const typeGlow=b.type==='hp'?'#fb7185':b.type==='inv'?'#fde68a':'#34d399';
+  // 빛나는 링
+  ctx.shadowBlur=18+pulse*8;ctx.shadowColor=typeGlow;
+  ctx.strokeStyle=`rgba(${b.type==='hp'?'244,63,94':b.type==='inv'?'245,158,11':'16,185,129'},${pulse})`;
+  ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(b.x,b.y+bv,b.size*.8,0,Math.PI*2);ctx.stroke();
+  // 내부
   const g=ctx.createRadialGradient(b.x,b.y+bv-5,1,b.x,b.y+bv,b.size*.6);
-  g.addColorStop(0,'rgba(52,211,153,.95)');g.addColorStop(1,'rgba(5,60,40,.9)');
+  if(b.type==='hp'){g.addColorStop(0,'rgba(251,113,133,.95)');g.addColorStop(1,'rgba(136,19,55,.9)');}
+  else if(b.type==='inv'){g.addColorStop(0,'rgba(253,230,138,.95)');g.addColorStop(1,'rgba(120,53,15,.9)');}
+  else{g.addColorStop(0,'rgba(52,211,153,.95)');g.addColorStop(1,'rgba(5,60,40,.9)');}
   ctx.fillStyle=g;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(b.x,b.y+bv,b.size*.6,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;ctx.font='bold '+(b.size*.7)+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(b.emoji,b.x,b.y+bv-2);
+  ctx.shadowBlur=0;
+  // 타입별 아이콘 (canvas 직접)
+  const ic=b.size*.3;
+  ctx.fillStyle='rgba(255,255,255,.95)';ctx.strokeStyle='rgba(0,0,0,.3)';ctx.lineWidth=1;
+  if(b.type==='hp'){
+    // 하트
+    ctx.beginPath();
+    ctx.moveTo(b.x,b.y+bv+ic*.3);
+    ctx.bezierCurveTo(b.x,b.y+bv-ic*.1,b.x-ic*.8,b.y+bv-ic*.6,b.x-ic*.8,b.y+bv-ic*.2);
+    ctx.bezierCurveTo(b.x-ic*.8,b.y+bv-ic*.7,b.x,b.y+bv-ic*.7,b.x,b.y+bv-ic*.2);
+    ctx.bezierCurveTo(b.x,b.y+bv-ic*.7,b.x+ic*.8,b.y+bv-ic*.7,b.x+ic*.8,b.y+bv-ic*.2);
+    ctx.bezierCurveTo(b.x+ic*.8,b.y+bv-ic*.6,b.x,b.y+bv-ic*.1,b.x,b.y+bv+ic*.3);
+    ctx.fill();
+  }else if(b.type==='inv'){
+    // 방패
+    ctx.beginPath();ctx.moveTo(b.x,b.y+bv-ic);
+    ctx.lineTo(b.x+ic*.8,b.y+bv-ic*.5);ctx.lineTo(b.x+ic*.8,b.y+bv+ic*.1);
+    ctx.quadraticCurveTo(b.x,b.y+bv+ic*.9,b.x-ic*.8,b.y+bv+ic*.1);
+    ctx.lineTo(b.x-ic*.8,b.y+bv-ic*.5);ctx.closePath();ctx.fill();
+    ctx.fillStyle=b.type==='inv'?'rgba(120,53,15,.5)':'rgba(0,0,0,.2)';
+    ctx.font='bold '+(ic*.8)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('★',b.x,b.y+bv);
+  }else{
+    // 코인 (점수)
+    ctx.beginPath();ctx.arc(b.x,b.y+bv-ic*.1,ic*.7,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(5,60,40,.6)';
+    ctx.font='bold '+(ic*.8)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('$',b.x,b.y+bv-ic*.1);
+  }
+  // 타입 뱃지
+  const badgeText=b.type==='hp'?'❤️회복':b.type==='inv'?'🛡️무적':'💰점수';
+  ctx.font='700 9px sans-serif';ctx.textBaseline='top';
+  ctx.fillStyle=typeColor;
+  ctx.strokeStyle='rgba(0,0,0,.9)';ctx.lineWidth=3;
+  ctx.strokeText(badgeText,b.x,b.y+bv-b.size*.82);
+  ctx.fillText(badgeText,b.x,b.y+bv-b.size*.82);
+  // 라벨
   ctx.font='800 10px sans-serif';ctx.textBaseline='top';
   ctx.strokeStyle='rgba(0,0,0,.9)';ctx.lineWidth=4;ctx.strokeText(b.label,b.x,b.y+bv+b.size*.62-1);
-  ctx.fillStyle='#6ee7b7';ctx.fillText(b.label,b.x,b.y+bv+b.size*.62-1);ctx.restore();
+  ctx.fillStyle=typeColor;ctx.fillText(b.label,b.x,b.y+bv+b.size*.62-1);ctx.restore();
 }
 
 const PROJ_LABELS=['법령','규정','예규','훈령','지침','조례'];
