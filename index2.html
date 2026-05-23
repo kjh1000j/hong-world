@@ -227,6 +227,39 @@
     -webkit-tap-highlight-color:transparent;
   }
 
+
+  /* 작전 지침 말풍선 */
+  #op-bubble {
+    position:fixed; z-index:300;
+    background:linear-gradient(135deg,#2d1a00,#4a3000);
+    border:2px solid #f5c842;
+    border-radius:14px; padding:10px 14px;
+    font-family:'Nanum Gothic',sans-serif;
+    font-size:12px; color:#f5c842;
+    max-width:min(240px,70vw);
+    box-shadow:0 4px 16px rgba(0,0,0,0.5);
+    pointer-events:none;
+    animation:opPop 0.3s ease;
+    line-height:1.6;
+    text-align:center;
+  }
+  #op-bubble::after {
+    content:'';
+    position:absolute; bottom:-10px; left:50%;
+    transform:translateX(-50%);
+    border:5px solid transparent;
+    border-top-color:#f5c842;
+  }
+  @keyframes opPop {
+    from { opacity:0; transform:translateY(-10px) scale(0.9); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes opFade {
+    from { opacity:1; }
+    to   { opacity:0; }
+  }
+  #op-bubble.fading { animation:opFade 0.5s ease forwards; }
+
   @keyframes spinSun { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
   /* 밤 모드 */
@@ -297,7 +330,7 @@
     <div style="font-size:11px;color:#8b6914;margin-bottom:16px;">
       ▼ 아래로 내려가면 더 많은 이야기가 있어요!
     </div>
-    <div onclick="document.getElementById('intro-popup').style.display='none'" style="
+    <div onclick="document.getElementById('intro-popup').style.display='none'; setTimeout(showOpBubble, 500);" style="
       background:linear-gradient(to right,#f5c842,#e8a820);
       color:#2d1a00; font-family:'Jua',sans-serif;
       font-size:15px; padding:10px 0;
@@ -313,7 +346,7 @@
 
 <!-- 에너지바 -->
 <div id="energy-wrap">
-  <div id="energy-label">📖 홍의 이야기 0 / 14</div>
+  <div id="energy-label">📖 홍의 이야기 0 / 19</div>
   <div id="energy-bar-wrap"><div id="energy-bar"></div></div>
 </div>
 
@@ -333,6 +366,7 @@
   </div>
 </div>
 
+<div id="op-bubble" style="display:none;"></div>
 <div id="title-bar">
   🌿 홍의 세계 🌿
   <div style="font-size:10px;color:#d4b060;margin-top:3px;font-family:'Nanum Gothic',sans-serif;">
@@ -610,7 +644,7 @@
   </div>
   <div class="obj" id="o-dinner" style="top:960px;right:8%;">
     <svg width="78" height="62" viewBox="0 0 70 55"><rect x="10" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="55" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="18" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><rect x="48" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><ellipse cx="35" cy="27" rx="30" ry="10" fill="#c8813a"/><ellipse cx="35" cy="25" rx="28" ry="8" fill="#d4956a"/><ellipse cx="22" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="22" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="48" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="48" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="35" cy="20" rx="6" ry="4" fill="#c8513a" opacity="0.8"/></svg>
-    <div class="obj-label">🍽️ 저녁 식사</div>
+    <div class="obj-label">🍽️ 식사 자리</div>
   </div>
 
 
@@ -795,15 +829,14 @@
     <div class="ctrl-btn" onmousedown="sm('r')" onmouseup="stopMove()" ontouchstart="sm('r')" ontouchend="stopMove()">▶</div>
   </div>
 </div>
-<div id="hint">▲▼◀▶ 이동 | 홍 클릭→경력 | 가까이 가면 소개가 나와요!</div>
-
+<div id="hint">🕹️ 조이스틱 이동 | 홍 두번탭 경력</div>
 <script>
 const PROX = [
   { id:'o-kusa', title:'🎒 KUSA (유네스코 동아리)', text:'대학교 시절 KUSA 동아리<br>젊은날 잊을수 없는 추억 가득한<br>소중한 인연들 🌏<br><br>국토순례 2번 완주 🥾<br>함께 걸으며 나눈 땀과 추억<br>지금도 기억에 많이 남아' },
   { id:'o-house',    title:'🏠 우리 집',              text:'가족과 함께하는 공간<br>와이프, 아들 🤎, 딸 💛과 함께<br>자연과 함께 하는 삶을 살고 있지만<br>도시에 살고 싶음 🏙️' },
   { id:'o-tv',       title:'📺 TV',                   text:'연예 프로그램을 즐겨본다<br>예능·버라이어티 최애 📺<br>웃음이 최고의 힐링!<br><br>롯데자이언츠 팬 ⚾<br>가을야구 가즈아!! 🔥' },
   { id:'o-building', title:'🏢 인사업무',             text:'인사 분야 근무를 오래함<br>여러 제대에서 다양한<br>인사근무를 경험<br>인재선발, 운영, 복지,<br>상훈, 역사관 등? ㅎㅎ' },
-  { id:'o-dinner',   title:'🍽️ 저녁 식사',            text:'사람들과 함께하는<br>저녁 식사 자리를 좋아함<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂<br><br>사람과의 관계에서<br>행복을 느낀다 🤗' },
+  { id:'o-dinner',   title:'🍽️ 식사 자리',            text:'즐거운 식사 자리를 좋아함<br>맛있는 음식보다<br>함께하는 사람이 더 중요 🥂<br><br>사람과의 관계에서<br>행복을 느낀다 🤗' },
   
   
   { id:'o-howitzer', title:'🔫 포병',                  text:'전장의 신은 포병이지!! 💥<br>병 생활은 8인치 부대 FDC로 시작했고<br>K9, K55, 105미리 부대에서 근무를 했음<br>즐거웠던 백달리 생활~~ 🎖️' },
@@ -910,7 +943,11 @@ function checkProx() {
     addEnergy(found.id);
     if(found.id==='o-house') showImgPopup('house.jpg');
     else if(found.id==='o-mountain') showImgPopup('annapurna.jpg');
+    else if(found.id==='o-kusa') showImgPopup('kusa.jpg');
     else if(found.id==='o-building') showImgPopup('personnel.jpg');
+    else if(found.id==='o-dinner') showImgPopup('dinner.jpg');
+    else if(found.id==='o-howitzer') showImgPopup('howitzer8.jpg');
+    else if(found.id==='o-orange') showImgPopup('orange.jpg');
     else if(found.id==='o-sagrada') showImgPopup('sagrada.jpg');
     else if(found.id==='o-eggtart') showImgPopup('belem.jpg');
     else if(found.id==='o-shanghai') showImgPopup('guangzhou.jpg');
@@ -1234,6 +1271,76 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
       }
       document.addEventListener('mousemove', onMove);
       document.addEventListener('mouseup', onUp);
+    });
+  });
+
+  // ===== 오늘의 작전 지침 =====
+  const OP_MSGS = [
+    "🎖️ 오늘의 작전 지침\n적을 알고 나를 알면\n백전백승! 오늘도 화이팅!",
+    "💪 체력단련 지침\n아침 기상 후 연병장 5바퀴\n실시! 체력이 전투력이다!",
+    "🍚 오늘의 급양 지침\n밥은 든든히 먹어야\n전투력이 유지된다!",
+    "☀️ 오늘도 맑음\n좋은 날씨엔 야외활동 필수\n정신 무장하고 출발!",
+    "🪖 선임의 한마디\n군기는 잡는 게 아니라\n스스로 갖추는 것이다!",
+    "📋 오늘의 임무\n홍의 세계를 탐험하라\n모든 말풍선을 수집하라!",
+    "🔫 포병의 자부심\n전장의 신은 포병이다\n오늘도 힘차게!",
+    "😴 수면 지침\n취침 전 30분 독서 후\n정각 취침 준수!",
+    "🏃 체력 지침\n3km 구보 실시\n낙오자 없이 완주!",
+    "🌿 오늘의 명언\n작은 일에도 최선을 다하면\n큰 일도 이루어진다",
+    "🎯 집중 지침\n오늘 할 일을 내일로\n미루지 말 것!",
+    "🤝 전우애 지침\n옆 전우를 챙기는 것이\n진정한 강군의 자세!",
+    "📣 긴급 지침\n홍의 세계 방문 감사\n재방문 필수 명령!",
+    "⭐ 오늘의 목표\n홍의 이야기 19개\n모두 읽기 작전 개시!",
+    "🌙 야간 작전\n밤에도 홍의 세계는\n낮/밤 버튼으로 확인 가능!",
+    "🫡 경례!\n방문해주신 여러분\n감사합니다! 충성!",
+    "🎵 군가 한 소절\n앞으로 앞으로\n육군은 앞으로!",
+    "🌄 일출 지침\n하루의 시작은\n일찍 일어나는 새가 벌레를 잡는다!",
+    "🐕 오늘의 동물\n우수와 초선이를 클릭해봐\n귀여운 반응이 있다고!",
+    "💡 꿀팁 지침\n말풍선을 많이 읽을수록\n홍의 장비가 업그레이드된다!",
+    "🗺️ 탐험 지침\n아래로 계속 내려가라\n더 많은 세계가 펼쳐진다!",
+    "🏔️ 안나푸르나 보고\n숨막히는 설산 앞에서\n홍은 무슨 생각을 했을까?",
+    "⚽ 오늘의 운동\n딸내미랑 공놀이 한판\n스트레스 해소 실시!",
+    "🔥 모닥불 지침\n홍의 소중한 모임들을\n클릭해서 확인해보라!",
+    "🎮 게임 지침\n좌측 하단 게임 버튼으로\n홍의 게임 도전!",
+    "🌏 여행 명언\n여행은 편견과 고집과\n편협함을 없애준다 - 마크 트웨인",
+    "💬 인사 지침\n먼저 인사하는 사람이\n진정한 강자다!",
+    "🧠 두뇌 지침\n독서 한 페이지가\n포탄 한 발보다 강하다!",
+    "🌸 오늘의 감사\n오늘 하루도 살아있음에\n감사하라! 충성!",
+    "📮 연락 지침\n하고 싶은 말이 있으면\n좌측 하단 📮 버튼을 눌러라!",
+  ];
+
+  function showOpBubble() {
+    const bubble = document.getElementById('op-bubble');
+    if (!bubble) return;
+    const msg = OP_MSGS[Math.floor(Math.random() * OP_MSGS.length)];
+    bubble.innerHTML = msg.replace(/\n/g, '<br>');
+    bubble.style.display = 'block';
+    bubble.classList.remove('fading');
+
+    // 홍 캐릭터 위에 위치
+    function positionBubble() {
+      const prect = playerEl.getBoundingClientRect();
+      if (prect.width) {
+        bubble.style.left = (prect.left + prect.width/2 - bubble.offsetWidth/2) + 'px';
+        bubble.style.top  = (prect.top - bubble.offsetHeight - 14) + 'px';
+      } else {
+        bubble.style.left = '50%';
+        bubble.style.top  = '120px';
+        bubble.style.transform = 'translateX(-50%)';
+      }
+    }
+    setTimeout(positionBubble, 100);
+
+    // 4초 후 페이드아웃
+    setTimeout(() => {
+      bubble.classList.add('fading');
+      setTimeout(() => { bubble.style.display = 'none'; }, 500);
+    }, 4000);
+  }
+
+  // 입장 팝업 닫을 때 작전 지침 표시
+  const origClose = document.getElementById('intro-popup')?.querySelector('div[onclick]');
+  const introBtnOrig = document.querySelector('#intro-popup div[onclick]');
+</script>, onUp);
     });
   });
 </script>
