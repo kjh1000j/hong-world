@@ -208,17 +208,42 @@ canvas{display:block;touch-action:none;}
 const BIN_ID='6a048a28250b1311c344fd90';
 const BIN_KEY='$2a$10$DlaP9Oji1Udpuy2/B2oG9eXLkqUm3PwFcvJeTcCfx.qLpukOQqaXa';
 const BIN_URL='https://api.jsonbin.io/v3/b/'+BIN_ID;
+
+// 캐시: 마지막으로 불러온 데이터 메모리에 보관
+let _lbCache=null;
+let _lbCacheTime=0;
+const CACHE_TTL=60000; // 1분간 캐시 유지
+
 async function lbLoad(){
-  try{const r=await fetch(BIN_URL+'/latest',{headers:{'X-Master-Key':BIN_KEY,'X-Bin-Meta':'false'}});
-    if(!r.ok)throw new Error(r.status);const d=await r.json();
-    return{ok:true,scores:Array.isArray(d.scores)?d.scores:[]};
-  }catch(e){console.error('lbLoad',e);return{ok:false,scores:[]};}
+  // 캐시가 유효하면 즉시 반환
+  if(_lbCache&&(Date.now()-_lbCacheTime<CACHE_TTL)){
+    return{ok:true,scores:_lbCache};
+  }
+  try{
+    const r=await fetch(BIN_URL+'/latest',{
+      headers:{'X-Master-Key':BIN_KEY,'X-Bin-Meta':'false'},
+      signal:AbortSignal.timeout(8000) // 8초 타임아웃
+    });
+    if(!r.ok)throw new Error(r.status);
+    const d=await r.json();
+    const scores=Array.isArray(d.scores)?d.scores:[];
+    _lbCache=scores;_lbCacheTime=Date.now(); // 캐시 갱신
+    return{ok:true,scores};
+  }catch(e){
+    console.error('lbLoad',e);
+    // 서버 오류여도 캐시 있으면 캐시 반환
+    if(_lbCache)return{ok:true,scores:_lbCache};
+    return{ok:false,scores:[]};
+  }
 }
 async function lbSave(scores){
   try{const r=await fetch(BIN_URL,{method:'PUT',
     headers:{'Content-Type':'application/json','X-Master-Key':BIN_KEY,'X-Bin-Versioning':'false'},
-    body:JSON.stringify({scores})});
-    if(!r.ok)throw new Error(r.status);return true;
+    body:JSON.stringify({scores}),
+    signal:AbortSignal.timeout(10000)});
+    if(!r.ok)throw new Error(r.status);
+    _lbCache=scores;_lbCacheTime=Date.now(); // 저장 성공 시 캐시 갱신
+    return true;
   }catch(e){console.error('lbSave',e);return false;}
 }
 function fmtT(s){return Math.floor(s/60)+':'+(s%60+'').padStart(2,'0');}
