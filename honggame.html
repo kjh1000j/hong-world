@@ -265,6 +265,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
       <div class="r-title" id="r-title"></div>
       <div class="r-score" id="r-score"></div>
       <div class="r-bd" id="r-bd"></div>
+      <div id="r-register" style="display:flex;flex-direction:column;gap:8px;align-items:center;width:min(320px,88vw);background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:12px;">
+        <div style="color:#FFD700;font-family:'Black Han Sans';font-size:15px;">🏆 명예의 전당 등록</div>
+        <input type="text" id="r-name-input" maxlength="10" placeholder="이름/별명 (최대 10자)" style="width:100%;padding:10px;border-radius:8px;border:2px solid rgba(255,215,0,.4);background:#1a1a2e;color:#fff;font-family:'Noto Sans KR';font-size:15px;text-align:center;outline:none;">
+        <button class="r-btn" id="r-submit" style="background:linear-gradient(135deg,#FFD700,#FF8C00);color:#1a1a2e;width:100%;">📝 점수 등록</button>
+        <div id="r-submit-msg" style="font-family:'Noto Sans KR';font-size:12px;color:#aaa;min-height:16px;"></div>
+      </div>
       <div class="r-btns">
         <button class="r-btn r-next" id="r-next">다음 →</button>
         <button class="r-btn r-retry" id="r-retry">↺ 재도전</button>
@@ -1919,7 +1925,8 @@ function doWin(){
     },800);
   }
   document.getElementById('result-box').style.display='flex';
-  say('재홍 원사',G.stage.winMsg);saveLB(total);
+  say('재홍 원사',G.stage.winMsg);
+  G._pendingScore=total; prepRegister(total);
 }
 function doLose(){
   stopLoop();
@@ -1932,7 +1939,7 @@ function doLose(){
   document.getElementById('r-next').style.display='none';
   document.getElementById('result-box').style.display='flex';
   say('재홍 원사',G.stage.loseMsg);
-  saveLB(totalSoFar); // 패배해도 누적 점수 기록
+  G._pendingScore=totalSoFar; prepRegister(totalSoFar);
 }
 
 /* ══ WEAPON RENDER (탄종 선택 포함) ══ */
@@ -2268,14 +2275,47 @@ function titleBG(){
 }
 
 /* ══ LB ══ */
-const LB='https://api.jsonbin.io/v3/b/683ef0e08960c979a599e2fb';
-const LK='$2a$10$GhNdj.lNGWEr5GqHlq4cQuxAfZMJ8eZwi0wT0xVS.G7C5r8lqL9oW';
-async function saveLB(total){try{const nm=localStorage.getItem('pname')||'재홍 원사';const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm,score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,10);await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});}catch(e){console.log('LB fail',e);}}
+const LB='https://api.jsonbin.io/v3/b/6a1af9e421f9ee59d29dfa0e';
+const LK='$2a$10$DlaP9Oji1Udpuy2/B2oG9eXLkqUm3PwFcvJeTcCfx.qLpukOQqaXa';
+// 등록 UI 준비 (결과창 표시 시 호출)
+function prepRegister(total){
+  const box=document.getElementById('r-register');
+  const msg=document.getElementById('r-submit-msg');
+  const btn=document.getElementById('r-submit');
+  const inp=document.getElementById('r-name-input');
+  box.style.display='flex';
+  btn.disabled=false; btn.textContent='📝 점수 등록';
+  msg.textContent='';msg.style.color='#aaa';
+  // 이전에 쓴 이름 기억
+  inp.value=localStorage.getItem('pname')||'';
+}
+async function submitScore(){
+  const inp=document.getElementById('r-name-input');
+  const msg=document.getElementById('r-submit-msg');
+  const btn=document.getElementById('r-submit');
+  const nm=(inp.value||'').trim().slice(0,10)||'무명 원사';
+  localStorage.setItem('pname',nm); // 다음에 자동 입력
+  btn.disabled=true; btn.textContent='등록 중...';
+  msg.style.color='#aaa'; msg.textContent='명예의 전당에 올리는 중...';
+  const ok=await saveLB(G._pendingScore||0, nm);
+  if(ok){
+    msg.style.color='#4caf50';
+    msg.textContent=`✅ "${nm}" ${(G._pendingScore||0).toLocaleString()}점 등록 완료!`;
+    btn.textContent='등록됨 ✓';
+  } else {
+    msg.style.color='#f44';
+    msg.textContent='⚠️ 등록 실패 (네트워크 확인)';
+    btn.disabled=false; btn.textContent='📝 다시 시도';
+  }
+}
+
+async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return false;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm||'원사',score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,20);const w=await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});return w.ok;}catch(e){console.log('LB fail',e);return false;}}
 async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();const bd=Array.isArray(raw)?raw:(raw.record||[]);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
 
 /* ══ EVENTS ══ */
 document.getElementById('btn-start').onclick=()=>{showPg('pg-stage');renderStages();};
 document.getElementById('btn-lb-t').onclick=()=>{showPg('pg-lb');loadLB();};
+document.getElementById('r-submit').onclick=submitScore;
 document.getElementById('btn-lb-s').onclick=()=>{showPg('pg-lb');loadLB();};
 document.getElementById('btn-back-t').onclick=()=>showPg('pg-title');
 document.getElementById('btn-back-s').onclick=()=>{showPg('pg-stage');renderStages();};
