@@ -301,7 +301,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 
 <!-- LB -->
 <div class="pg" id="pg-lb">
-  <div class="pg-ttl">🏆 명예의 전당</div>
+  <div class="pg-ttl">🏆 명예의 전당 TOP 10</div>
   <div id="lb-list"></div>
   <button class="sm-btn" id="btn-back-lb">← 뒤로</button>
 </div>
@@ -314,7 +314,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
    탄종 효과: blast=폭발반경, pierce=관통수, dig=지형파괴배율, kb=넉백, dmgMul=데미지배율
 ══ */
 const WD=[
-  {id:'w105', name:'105mm 견인포', eng:'KH-178', ico:'💨',
+  {id:'w105', name:'105미리 견인포', eng:'', ico:'💨',
    dmg:[22,32],ammo:8, grav:.20,spd:18, wf:0.3, unlock:0, trail:'#cfe8ff', cd:1, mob:0.7, minAng:-5,
    spec:'⚡연사·재장전 즉시·만능 입문',
    ammos:[
@@ -322,7 +322,7 @@ const WD=[
      {id:'red',  name:'빨콩(고속탄)',ico:'🔴',blast:12,pierce:2,dig:0.6,kb:2.5,dmgMul:2.6,crater:0.5,trail:'#ff2020',desc:'작지만 직격 시 최강 데미지'}
    ]},
 
-  {id:'w155', name:'155mm 견인포', eng:'KH-179', ico:'🌀',
+  {id:'w155', name:'155미리 견인포', eng:'', ico:'🌀',
    dmg:[44,60],ammo:5, grav:.40,spd:16, wf:1.0, unlock:0, trail:'#b0bec5', cd:2, mob:0.5, minAng:5,
    spec:'💢묵직한 곡사·균형형',
    ammos:[
@@ -330,7 +330,7 @@ const WD=[
      {id:'cannon',name:'대포탄',ico:'💣',blast:58,pierce:0,dig:1.8,kb:1.8,dmgMul:1.3,crater:1.6,desc:'대형 폭발·큰 구멍·강력'}
    ]},
 
-  {id:'k9', name:'K9 썬더', eng:'K9 자주포', ico:'🔥',
+  {id:'k9', name:'K9 자주포', eng:'', ico:'🔥',
    dmg:[50,68],ammo:4, grav:.30,spd:17, wf:0.7, unlock:0, trail:'#ff7043', cd:3, mob:1.2, minAng:0,
    spec:'💥최강 단발 화력·느린 재장전',
    ammos:[
@@ -338,7 +338,7 @@ const WD=[
      {id:'cluster',name:'확산 클러스터',ico:'🌋',blast:40,pierce:0,dig:1.3,kb:1.1,dmgMul:0.85,crater:1.1,scatter:3,desc:'3발 확산·넓게 견제'}
    ]},
 
-  {id:'k55', name:'K55A1 자주포', eng:'K55A1', ico:'⚡',
+  {id:'k55', name:'K55 자주포', eng:'', ico:'⚡',
    dmg:[42,56],ammo:5, grav:.16,spd:23, wf:0.6, unlock:0, trail:'#ffeb3b', cd:2, mob:1.3, minAng:-10,
    spec:'🏹초고속 직사·관통/가스',
    ammos:[
@@ -346,7 +346,7 @@ const WD=[
      {id:'drill',name:'빵꾸탄(가스탄)',ico:'🕳️',blast:16,pierce:12,dig:1.4,kb:1.2,dmgMul:0.7,crater:0.8,gas:true,desc:'착탄지 독가스·적 강제 이동'}
    ]},
 
-  {id:'mlrs', name:'K-MLRS 다연장', eng:'130mm', ico:'💥',
+  {id:'mlrs', name:'다련장', eng:'', ico:'💥',
    dmg:[30,42],ammo:6,grav:.22,spd:18, wf:1.6, unlock:0, trail:'#ce93d8', cd:3, mob:0.9, minAng:5,
    spec:'🌧️산탄 폭우·광역 제압',
    ammos:[
@@ -354,7 +354,7 @@ const WD=[
      {id:'rain', name:'8연장 융단폭격',ico:'🌧️',blast:15,pierce:0,dig:1.1,kb:0.7,dmgMul:0.9,scatter:8,crater:0.6,desc:'8발 융단·초광역 제압'}
    ]},
 
-  {id:'pungik', name:'풍익 차륜포', eng:'차륜형 105mm', ico:'🛞',
+  {id:'pungik', name:'풍익', eng:'', ico:'🛞',
    dmg:[38,52],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
    spec:'🏃기동력 최강·바람 무시·근접 게릴라',
    ammos:[
@@ -362,12 +362,12 @@ const WD=[
      {id:'pierce',name:'관통 유도탄',ico:'🎯',blast:22,pierce:6,dig:1.2,kb:1.6,dmgMul:1.2,crater:0.8,desc:'바람0·다중 관통·고기동'}
    ]},
 
-  {id:'legend', name:'원사의 전설포', eng:'8인치 M110', ico:'☄️',
-   dmg:[120,180],ammo:2,grav:.18,spd:24, wf:0.0, unlock:99, trail:'#FFD700', cd:4, mob:0.6, minAng:-5,
-   spec:'🌟히든 해금·초토화·전 스테이지 노미스 클리어 시',
+  {id:'legend', name:'원사의 전설포', eng:'', ico:'☄️',
+   dmg:[42,58],ammo:3,grav:.18,spd:22, wf:0.0, unlock:99, trail:'#FFD700', cd:4, mob:0.6, minAng:-5,
+   spec:'🌟히든 해금·강력 화력·전 스테이지 노미스 클리어 시',
    ammos:[
-     {id:'basic',name:'전설 작렬탄',ico:'☄️',blast:90,pierce:6,dig:2.8,kb:2.5,dmgMul:1.0,crater:2.4,desc:'초토화·거대 구멍'},
-     {id:'nuke', name:'원사의 분노',ico:'☢️',blast:130,pierce:12,dig:3.6,kb:3.5,dmgMul:1.4,crater:3.2,gas:true,desc:'전 지형 초토화·핵폭발·가스'}
+     {id:'basic',name:'전설 작렬탄',ico:'☄️',blast:38,pierce:2,dig:1.3,kb:1.6,dmgMul:1.0,crater:1.2,desc:'강력 폭발·큰 구멍'},
+     {id:'nuke', name:'원사의 분노',ico:'☢️',blast:48,pierce:4,dig:1.6,kb:2.0,dmgMul:1.15,crater:1.5,gas:true,desc:'광역 폭발·가스'}
    ]}
 ];
 
@@ -1926,7 +1926,13 @@ function doWin(){
   }
   document.getElementById('result-box').style.display='flex';
   say('재홍 원사',G.stage.winMsg);
-  G._pendingScore=total; prepRegister(total);
+  G._pendingScore=total;
+  // 명예의 전당 등록은 최종 스테이지(위기5) 클리어 시에만
+  if(G.selStage>=5){
+    prepRegister(total);
+  } else {
+    document.getElementById('r-register').style.display='none'; // 중간 스테이지는 등록란 숨김
+  }
 }
 function doLose(){
   stopLoop();
@@ -1962,7 +1968,7 @@ function renderWeapons(){
       <div class="w-ico">${w.ico}</div>
       <div class="w-body">
         <div class="w-name">${w.name}${locked?' 🔒':''}</div>
-        <div class="w-eng">${w.eng}</div>
+        ${w.eng?`<div class="w-eng">${w.eng}</div>`:''}
         <div class="w-tags">
           <span class="tag tr">💥 ${w.dmg[0]}~${w.dmg[1]}</span>
           <span class="tag tg">탄수 ${w.ammo}</span>
@@ -2309,8 +2315,8 @@ async function submitScore(){
   }
 }
 
-async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return false;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm||'원사',score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,20);const w=await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});return w.ok;}catch(e){console.log('LB fail',e);return false;}}
-async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();const bd=Array.isArray(raw)?raw:(raw.record||[]);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
+async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return false;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm||'원사',score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,10);const w=await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});return w.ok;}catch(e){console.log('LB fail',e);return false;}}
+async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.sort((a,b)=>(b.score||0)-(a.score||0));bd=bd.slice(0,10);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
 
 /* ══ EVENTS ══ */
 document.getElementById('btn-start').onclick=()=>{showPg('pg-stage');renderStages();};
@@ -2356,8 +2362,10 @@ document.getElementById('r-retry').onclick=()=>{
   G.selStage=1;
   G.stage=SD[0];
   G.cleared=[]; // 진행도 초기화
+  G.legendUnlocked=false; // 전설포 다시 잠금 (도전과제/랜덤으로만 획득)
+  G.totalScore=0; G.runNoMiss=true;
   localStorage.removeItem('clr');
-  goWeapon(1); // 무기 다시 선택 후 시작
+  goWeapon(1); // 위기1 무기 선택부터
 };
 document.getElementById('r-menu').onclick=()=>{showPg('pg-stage');renderStages();};
 function onResize(){
