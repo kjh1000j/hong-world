@@ -123,15 +123,19 @@ canvas{display:block;touch-action:none;}
   <div class="card">
     <div style="font-size:28px;margin-bottom:5px;">🎖️</div>
     <h1>재홍 원사의<br><span style="color:#f59e0b;">군생활 위기 극복</span></h1>
-    <p>4개 스테이지를 돌파하라!<br><span style="color:#6ee7b7;">⏱ 빠를수록 점수 UP</span></p>
+    <p>5개 스테이지를 돌파하라!<br><span style="color:#6ee7b7;">⏱ 빠를수록 점수 UP</span></p>
     <div class="grow">
       <div class="gi gi-e"><span style="font-size:14px;">👹</span> <span style="font-size:9px;background:#ef4444;padding:1px 5px;border-radius:3px;font-weight:800;">공격가능</span><div class="gl">빨간 원 — 날려버려!</div></div>
       <div class="gi gi-o"><span style="font-size:14px;">⚠️</span> <span style="font-size:9px;background:#8b5cf6;padding:1px 5px;border-radius:3px;font-weight:800;">회피필수</span><div class="gl">보라 원 — 무조건 피해!</div></div>
-      <div class="gi gi-b"><span style="font-size:14px;">✨</span> <span style="font-size:9px;background:#10b981;padding:1px 5px;border-radius:3px;font-weight:800;">버프</span><div class="gl">초록 빛 — 획득하면 능력 강화!</div></div>
-      <div class="gi gi-s"><span style="font-size:14px;">⚡</span> <span style="font-size:9px;background:#7c3aed;padding:1px 5px;border-radius:3px;font-weight:800;">필살기</span><div class="gl">하단 보라 버튼 — 법전 폭탄! (30초 쿨)</div></div>
+      <div class="gi gi-b"><span style="font-size:14px;">✨</span> <span style="font-size:9px;background:#10b981;padding:1px 5px;border-radius:3px;font-weight:800;">버프</span><div class="gl">초록 빛 — 회복·무적·점수!</div></div>
+      <div class="gi" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);"><span style="font-size:14px;">⚔️</span> <span style="font-size:9px;background:#06b6d4;padding:1px 5px;border-radius:3px;font-weight:800;">특수무기</span><div class="gl" style="color:#67e8f9;">청록 — 8초간 강력 무기!</div></div>
+      <div class="gi" style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);"><span style="font-size:14px;">⭐</span> <span style="font-size:9px;background:#d4a017;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">황금포상</span><div class="gl" style="color:#fde68a;">빠르게 지나감 — 잡으면 +1500!</div></div>
+      <div class="gi gi-s"><span style="font-size:14px;">⚡</span> <span style="font-size:9px;background:#7c3aed;padding:1px 5px;border-radius:3px;font-weight:800;">필살기</span><div class="gl">30초마다 자동 발동!</div></div>
+      <div class="gi" style="grid-column:span 2;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);"><span style="font-size:14px;">🎖️</span> <span style="font-size:9px;background:#f59e0b;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">계급 진급</span><div class="gl" style="color:#fde68a;">하사→중사→상사→원사 / 상사부터 2줄 공격!</div></div>
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v2.2</div>
   </div>
 </div>
 
@@ -161,7 +165,7 @@ canvas{display:block;touch-action:none;}
   <div class="card" style="border-color:rgba(245,158,11,.25);">
     <div style="font-size:32px;margin-bottom:4px;">🏆</div>
     <h1 style="color:#f59e0b;">전역의 꿈 극복!</h1>
-    <p style="color:#777;">재홍 원사, 4개 스테이지 완전 정복!</p>
+    <p style="color:#777;">재홍 원사, 5개 스테이지 완전 정복!</p>
     <div class="sbox"><div class="sl">최종 공헌도</div><div class="sv" id="win-sc">0</div><div class="sdet" id="win-det"></div></div>
     <div id="win-rank" style="font-size:13px;color:#f59e0b;font-weight:700;margin:4px 0;min-height:15px;">순위 확인 중…</div>
     <div id="win-na" class="na" style="display:none;">
@@ -1265,9 +1269,9 @@ function spawnBuff(){
 // 황금 보너스 적 - 빠르게 가로지름, 잡으면 대박
 function spawnGolden(){
   const fromLeft=Math.random()<.5;
-  enemies.push({id:Math.random(),x:fromLeft?-30:canvas.width+30,y:60+Math.random()*200,size:34,
-    speed:0,hp:3,maxHp:3,emoji:'⭐',label:'황금 포상',category:'enemy',
-    golden:true,gvx:(fromLeft?1:-1)*260,gvy:40});
+  enemies.push({id:Math.random(),x:fromLeft?-30:canvas.width+30,y:60+Math.random()*180,size:36,
+    speed:0,hp:2,maxHp:2,emoji:'⭐',label:'황금 포상',category:'enemy',
+    golden:true,gvx:(fromLeft?1:-1)*195,gvy:32});
 }
 // 특수 무기 (버프처럼 떨어짐)
 const WEAPONS=[
@@ -1422,6 +1426,20 @@ function loop(ts){
       if(boss&&boss.y>0){const d=Math.hypot(boss.x-p.x,boss.y-p.y);if(d<td){td=d;tgt=boss;}}
       if(tgt){const ang=Math.atan2(tgt.y-p.y,tgt.x-p.x);p.x+=Math.cos(ang)*220*dt;}
     }
+    // 폭발탄 - 적 근처(55px)에 접근하면 빗나가도 자동 폭발
+    if(p.explode){
+      let near=null;
+      for(const e of enemies){if(!e.golden&&Math.hypot(e.x-p.x,e.y-p.y)<55){near=e;break;}}
+      if(!near&&boss&&boss.y>0&&Math.hypot(boss.x-p.x,boss.y-p.y)<70)near=boss;
+      if(near){
+        const R=120;spawnExplosion(p.x,p.y,R);shake=15;sfx('skill');
+        enemies.forEach(e2=>{if(!e2.golden&&Math.hypot(e2.x-p.x,e2.y-p.y)<R){e2.hp-=3;}});
+        if(boss&&boss.y>0&&Math.hypot(boss.x-p.x,boss.y-p.y)<R){boss.hp-=3;if(boss.hp<=0){sfx('clear');projectiles.splice(i,1);onStageClear();return;}}
+        // 죽은 적 정리
+        for(let ei=enemies.length-1;ei>=0;ei--){const e2=enemies[ei];if(e2.hp<=0){if(e2.kamikaze)spawnExplosion(e2.x,e2.y,60);const pts=Math.floor((e2.kamikaze?300:200)*getComboMult());score+=pts;stScore+=pts;addCombo();enemies.splice(ei,1);}}
+        projectiles.splice(i,1);renderHUD();continue;
+      }
+    }
     drawProj(p);
     if(p.y<-40||p.x<-40||p.x>canvas.width+40)projectiles.splice(i,1);
   }
@@ -1453,9 +1471,9 @@ function loop(ts){
         sfx('hit');spawnHitParticles(e.x,e.y,'#ef4444');
         if(p.explode){
           // 폭발탄 - 충격파 이펙트 + 범위 피해
-          const R=90;
-          spawnExplosion(e.x,e.y,R);shake=14;sfx('skill');
-          enemies.forEach(e2=>{if(e2!==e&&Math.hypot(e2.x-e.x,e2.y-e.y)<R){e2.hp-=2;}});
+          const R=120;
+          spawnExplosion(e.x,e.y,R);shake=15;sfx('skill');
+          enemies.forEach(e2=>{if(e2!==e&&!e2.golden&&Math.hypot(e2.x-e.x,e2.y-e.y)<R){e2.hp-=3;}});
         }
         if(e.hp<=0){
           if(e.kamikaze){spawnExplosion(e.x,e.y,70);shake=12;sfx('skill');}
@@ -1463,7 +1481,7 @@ function loop(ts){
             // 황금 적 - 대박 보너스
             const gp=1500;score+=gp;stScore+=gp;sfx('item');
             for(let k=0;k<25;k++){const ang=Math.random()*Math.PI*2,sp=100+Math.random()*180;particles.push({x:e.x,y:e.y,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,life:1,color:'#FFD700',size:4+Math.random()*4});}
-            showFloatText(e.x,e.y,'+1500',' #FFD700');
+            showFloatText(e.x,e.y,'+1500','#FFD700');
             enemies.splice(i,1);addCombo();dead=true;break;
           }
           enemies.splice(i,1);const pts=Math.floor((e.kamikaze?300:200)*getComboMult());score+=pts;stScore+=pts;addCombo();dead=true;break;
