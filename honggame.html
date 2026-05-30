@@ -1925,13 +1925,12 @@ function doWin(){
     },800);
   }
   document.getElementById('result-box').style.display='flex';
+  document.getElementById('r-register').style.display='none'; // 항상 먼저 숨김
   say('재홍 원사',G.stage.winMsg);
   G._pendingScore=total;
   // 명예의 전당 등록은 최종 스테이지(위기5) 클리어 시에만
   if(G.selStage>=5){
     prepRegister(total);
-  } else {
-    document.getElementById('r-register').style.display='none'; // 중간 스테이지는 등록란 숨김
   }
 }
 function doLose(){
@@ -2047,6 +2046,7 @@ function startGame(){
     document.getElementById('hud-score').textContent=(G.totalScore||0).toLocaleString();
     document.getElementById('combo-el').textContent='';
     document.getElementById('result-box').style.display='none';
+    document.getElementById('r-register').style.display='none';
     document.getElementById('w-thumb').textContent=G.wpn.ico;
     document.getElementById('wpn-lbl').textContent=G.wpn.name+' · '+(G.wpn.ammos[G.selAmmo]||G.wpn.ammos[0]).name;
     // 무기별 최소 발사각 적용 (직사 가능 여부)
