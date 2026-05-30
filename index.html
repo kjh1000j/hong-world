@@ -7,18 +7,18 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#1a0a00; font-family:'Jua',sans-serif; overflow:hidden; width:100vw; height:100vh; display:flex; flex-direction:column; touch-action:none; }
+  body { background:#3d7a22; font-family:'Jua',sans-serif; overflow:hidden; width:100vw; height:100vh; display:flex; flex-direction:column; touch-action:none; }
   #title-bar { width:100%; text-align:center; background:linear-gradient(to right,#2d1a00,#5c3a00,#2d1a00); color:#f5c842; padding:8px 0; font-size:13px; letter-spacing:2px; border-bottom:2px solid #f5c842; flex-shrink:0; z-index:100; }
-  #game-wrap { flex:1; width:100%; position:relative; overflow:hidden; }
-  #world { position:absolute; top:0; left:0; width:100%; height:1850px; }
+  #game-wrap { flex:1; width:100%; position:relative; overflow:hidden; background:#3d7a22; }
+  #world { position:absolute; top:0; left:0; width:100%; height:2200px; }
   #sky { position:absolute; top:0; left:0; right:0; height:320px; background:linear-gradient(to bottom,#87ceeb,#b8e4f7 60%,#d4f0c0); }
   .cloud { position:absolute; background:white; border-radius:50px; opacity:0.85; animation:cloudMove linear infinite; }
   @keyframes cloudMove { from{transform:translateX(-160px)} to{transform:translateX(110vw)} }
-  #ground { position:absolute; top:290px; left:0; right:0; bottom:0; background:linear-gradient(to bottom,#5a9e3a,#4a8a2a 30%,#3d7a22); }
+  #ground { position:absolute; top:290px; left:0; right:0; height:1950px; background:linear-gradient(to bottom,#5a9e3a,#4a8a2a 20%,#3d7a22 60%,#3d7a22); }
   .vpath { position:absolute; top:0; left:50%; transform:translateX(-50%); width:55px; height:100%; opacity:0.6; background:linear-gradient(to bottom,#c8a96a,#d4b878); }
   .obj { position:absolute; display:flex; flex-direction:column; align-items:center; cursor:pointer; transition:filter 0.2s; }
   .obj:active, .obj.near { filter:drop-shadow(0 0 10px #f5c842); }
-  .obj-label { font-size:12px; color:#fff; text-shadow:0 1px 3px #000; margin-top:3px; font-family:'Nanum Gothic',sans-serif; white-space:nowrap; }
+  .obj-label { font-size:11px; color:#fff; text-shadow:0 1px 3px #000; margin-top:3px; font-family:'Nanum Gothic',sans-serif; white-space:nowrap; }
   .flower { position:absolute; pointer-events:none; }
   #player { position:absolute; z-index:80; cursor:pointer; display:flex; flex-direction:column; align-items:center; }
   #player svg { width:52px; height:70px; }
@@ -325,7 +325,7 @@
       <div>🔊 우측 버튼으로 <b>음악</b> 켜기</div>
       <div>📮 좌측 버튼으로 <b>방명록</b> 이메일</div>
       <div>🎮 좌측 버튼으로 <b>게임</b> 이동</div>
-      <div>📖 말풍선 읽을수록 <b>에너지</b> 충전<br>&nbsp;&nbsp;&nbsp;🪖→🔫→🥾 레벨업!</div>
+      <div>📖 말풍선 읽을수록 홍이 <b>무장</b>!<br>&nbsp;&nbsp;&nbsp;방탄모→군복→총→군화 착용!</div>
     </div>
     <div style="font-size:11px;color:#8b6914;margin-bottom:16px;">
       ▼ 아래로 내려가면 더 많은 이야기가 있어요!
@@ -532,7 +532,6 @@
     </div>
 
     <div class="cloud" style="width:110px;height:26px;top:140px;left:-110px;animation-duration:36s;animation-delay:14s;opacity:0.7;"><div style="position:absolute;width:54px;height:42px;background:white;border-radius:50%;top:-24px;left:22px;"></div><div style="position:absolute;width:36px;height:34px;background:white;border-radius:50%;top:-18px;left:56px;"></div></div>
-  </div>
 
   <!-- 땅 -->
   <div id="ground"><div class="vpath"></div></div>
@@ -540,8 +539,8 @@
   <!-- ===== 구역1: 집+가족 (300~530) ===== -->
 
   <!-- KUSA 동아리 (집 왼쪽) -->
-  <div class="obj" id="o-kusa" style="top:550px;left:8%;">
-    <svg width="70" height="90" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
+  <div class="obj" id="o-kusa" style="top:1150px;left:42%;">
+    <svg width="56" height="72" viewBox="0 0 70 90" xmlns="http://www.w3.org/2000/svg">
       <!-- 국토순례 배낭 메고 걷는 캐릭터 -->
       <!-- 그림자 -->
       <ellipse cx="35" cy="88" rx="14" ry="4" fill="rgba(0,0,0,0.15)"/>
@@ -588,8 +587,8 @@
     <div class="obj-label">🎒 KUSA</div>
   </div>
 
-  <div class="obj" id="o-house" style="top:310px;left:6%;">
-    <svg width="105" height="105" viewBox="0 0 110 110">
+  <div class="obj" id="o-house" style="top:340px;left:6%;">
+    <svg width="84" height="84" viewBox="0 0 110 110">
       <rect x="15" y="55" width="80" height="55" fill="#d4956a" rx="2"/>
       <rect x="43" y="75" width="24" height="35" fill="#8b5e3c" rx="3"/>
       <circle cx="61" cy="93" r="2.5" fill="#f5c842"/>
@@ -607,43 +606,73 @@
   </div>
   <div style="position:absolute;top:305px;right:6%;pointer-events:none;"><svg width="62" height="98" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#35a020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#3db825"/></svg></div>
 
-  <div class="obj" id="o-wife" style="top:448px;left:19%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰','o-wife')">
-    <svg width="44" height="60" viewBox="0 0 40 56"><ellipse cx="20" cy="54" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><path d="M10,28 Q8,44 9,53 H31 Q32,44 30,28 Q25,35 20,34 Q15,35 10,28Z" fill="#ff9ec4"/><path d="M9,46 Q5,50 8,54 H32 Q35,50 31,46 Q25,50 20,50 Q15,50 9,46Z" fill="#ff7aad"/><path d="M10,30 Q4,36 6,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M30,30 Q36,36 34,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="17" y="20" width="6" height="9" fill="#f9c9a0" rx="2"/><ellipse cx="20" cy="16" rx="11" ry="12" fill="#f9c9a0"/><path d="M9,12 Q10,2 20,3 Q30,2 31,12 Q28,6 20,6 Q12,6 9,12Z" fill="#5c3317"/><path d="M9,14 Q6,22 9,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M31,14 Q34,22 31,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="16" cy="16" r="1.5" fill="#5c3317"/><circle cx="24" cy="16" r="1.5" fill="#5c3317"/><path d="M16,21 Q20,24 24,21" stroke="#e85d8a" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><ellipse cx="27" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><rect x="13" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/><rect x="22" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/></svg>
+  <div class="obj" id="o-wife" style="top:500px;left:20%;" onclick="showBbl('💕 와이프','사랑하는 나의 반쪽 💍<br>함께하는 강원도 생활<br>아들&amp;딸의 엄마<br>언제나 내 편 🥰','o-wife')">
+    <svg width="35" height="48" viewBox="0 0 40 56"><ellipse cx="20" cy="54" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><path d="M10,28 Q8,44 9,53 H31 Q32,44 30,28 Q25,35 20,34 Q15,35 10,28Z" fill="#ff9ec4"/><path d="M9,46 Q5,50 8,54 H32 Q35,50 31,46 Q25,50 20,50 Q15,50 9,46Z" fill="#ff7aad"/><path d="M10,30 Q4,36 6,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M30,30 Q36,36 34,42" stroke="#f9c9a0" stroke-width="5" stroke-linecap="round" fill="none"/><rect x="17" y="20" width="6" height="9" fill="#f9c9a0" rx="2"/><ellipse cx="20" cy="16" rx="11" ry="12" fill="#f9c9a0"/><path d="M9,12 Q10,2 20,3 Q30,2 31,12 Q28,6 20,6 Q12,6 9,12Z" fill="#5c3317"/><path d="M9,14 Q6,22 9,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M31,14 Q34,22 31,26" stroke="#5c3317" stroke-width="4" stroke-linecap="round" fill="none"/><circle cx="16" cy="16" r="1.5" fill="#5c3317"/><circle cx="24" cy="16" r="1.5" fill="#5c3317"/><path d="M16,21 Q20,24 24,21" stroke="#e85d8a" stroke-width="1.5" fill="none" stroke-linecap="round"/><ellipse cx="13" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><ellipse cx="27" cy="19" rx="3" ry="2" fill="#ffb6c1" opacity="0.6"/><rect x="13" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/><rect x="22" y="51" width="5" height="5" fill="#f9c9a0" rx="2"/></svg>
     <div class="obj-label" style="color:#ffb6c1;">💕 와이프</div>
   </div>
-  <div class="obj" id="o-wusu" style="top:392px;left:38%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?','o-wusu')">
-    <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="18" cy="22" rx="13" ry="8" fill="#8b5a2b"/><circle cx="10" cy="19" r="5" fill="#9b6a3b"/><circle cx="18" cy="17" r="5.5" fill="#9b6a3b"/><circle cx="26" cy="19" r="5" fill="#9b6a3b"/><circle cx="30" cy="13" r="7" fill="#8b5a2b"/><circle cx="30" cy="11" r="6" fill="#9b6a3b"/><ellipse cx="35" cy="14" rx="4" ry="3" fill="#7a4a20"/><ellipse cx="36" cy="13" rx="1.5" ry="1" fill="#3d1a00"/><circle cx="31" cy="11" r="1.5" fill="#1a0a00"/><circle cx="31.5" cy="10.5" r="0.5" fill="white"/><circle cx="25" cy="10" r="4" fill="#7a4a1a"/><rect x="7" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><circle cx="5" cy="19" r="4" fill="#9b6a3b"/></svg>
+  <div class="obj" id="o-wusu" style="top:430px;left:40%;" onclick="showBbl('🐩 아들 (갈색 푸들)','눈치도 빠르고 영리한 아들 🤎<br>말귀를 잘 알아들어요<br>가족 중 제일 똑똑할지도?','o-wusu')">
+    <svg width="42" height="35" viewBox="0 0 38 32"><ellipse cx="18" cy="22" rx="13" ry="8" fill="#8b5a2b"/><circle cx="10" cy="19" r="5" fill="#9b6a3b"/><circle cx="18" cy="17" r="5.5" fill="#9b6a3b"/><circle cx="26" cy="19" r="5" fill="#9b6a3b"/><circle cx="30" cy="13" r="7" fill="#8b5a2b"/><circle cx="30" cy="11" r="6" fill="#9b6a3b"/><ellipse cx="35" cy="14" rx="4" ry="3" fill="#7a4a20"/><ellipse cx="36" cy="13" rx="1.5" ry="1" fill="#3d1a00"/><circle cx="31" cy="11" r="1.5" fill="#1a0a00"/><circle cx="31.5" cy="10.5" r="0.5" fill="white"/><circle cx="25" cy="10" r="4" fill="#7a4a1a"/><rect x="7" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#8b5a2b" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#8b5a2b" rx="2"/><circle cx="5" cy="19" r="4" fill="#9b6a3b"/></svg>
     <div class="obj-label" style="color:#c8901a;">🐩 아들</div>
   </div>
 
   <!-- 축구공 (딸 옆) -->
   <div id="choson-ball" style="position:absolute;top:452px;right:38%;font-size:26px;pointer-events:none;">⚽</div>
 
-  <div class="obj" id="o-choson" style="top:460px;right:22%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾','o-choson')">
-    <svg width="52" height="44" viewBox="0 0 38 32"><ellipse cx="20" cy="22" rx="13" ry="8" fill="#c8a035"/><circle cx="12" cy="19" r="5" fill="#d4b045"/><circle cx="20" cy="17" r="5.5" fill="#d4b045"/><circle cx="28" cy="19" r="5" fill="#d4b045"/><circle cx="8" cy="13" r="7" fill="#c8a035"/><circle cx="8" cy="11" r="6" fill="#d4b045"/><ellipse cx="3" cy="14" rx="4" ry="3" fill="#b8900a"/><ellipse cx="2" cy="13" rx="1.5" ry="1" fill="#3d2a00"/><circle cx="7" cy="11" r="1.5" fill="#1a0a00"/><circle cx="7.5" cy="10.5" r="0.5" fill="white"/><circle cx="13" cy="10" r="4" fill="#b8900a"/><rect x="7" y="27" width="4" height="5" fill="#c8a035" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#c8a035" rx="2"/><circle cx="33" cy="19" r="4" fill="#d4b045"/></svg>
+  <div class="obj" id="o-choson" style="top:520px;right:20%;" onclick="showBbl('🐩 딸 (크림색 푸들)','세상에서 제일 귀여운 딸 💛<br>애교가 넘쳐서 보는 것만으로도<br>힐링이 되는 강아지<br>귀여움으로 모든 걸 해결함 🐾','o-choson')">
+    <svg width="42" height="35" viewBox="0 0 38 32"><ellipse cx="20" cy="22" rx="13" ry="8" fill="#c8a035"/><circle cx="12" cy="19" r="5" fill="#d4b045"/><circle cx="20" cy="17" r="5.5" fill="#d4b045"/><circle cx="28" cy="19" r="5" fill="#d4b045"/><circle cx="8" cy="13" r="7" fill="#c8a035"/><circle cx="8" cy="11" r="6" fill="#d4b045"/><ellipse cx="3" cy="14" rx="4" ry="3" fill="#b8900a"/><ellipse cx="2" cy="13" rx="1.5" ry="1" fill="#3d2a00"/><circle cx="7" cy="11" r="1.5" fill="#1a0a00"/><circle cx="7.5" cy="10.5" r="0.5" fill="white"/><circle cx="13" cy="10" r="4" fill="#b8900a"/><rect x="7" y="27" width="4" height="5" fill="#c8a035" rx="2"/><rect x="13" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="21" y="28" width="4" height="4" fill="#c8a035" rx="2"/><rect x="27" y="27" width="4" height="5" fill="#c8a035" rx="2"/><circle cx="33" cy="19" r="4" fill="#d4b045"/></svg>
     <div class="obj-label" style="color:#d4b896;">🐩 딸</div>
   </div>
   <div class="flower" style="top:530px;left:30%;"><svg width="26" height="30" viewBox="0 0 28 32"><line x1="14" y1="30" x2="14" y2="14" stroke="#2d7a15" stroke-width="2"/><circle cx="14" cy="10" r="5" fill="#ff6b9d" opacity="0.9"/><circle cx="9" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="19" cy="13" r="4" fill="#ff8fb0" opacity="0.8"/><circle cx="14" cy="10" r="3" fill="#fff0f5"/></svg></div>
 
   <!-- ===== 구역2: 홍+TV (610~720) ===== -->
   <div id="player" style="top:640px;left:calc(50% - 26px);cursor:pointer;z-index:80;" >
-    <svg viewBox="0 0 44 62" style="pointer-events:none;"><ellipse cx="22" cy="60" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><rect x="13" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="24" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="12" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="23" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="11" y="25" width="22" height="20" fill="#4a7fc1" rx="4"/><path d="M18,25 L22,30 L26,25" fill="#3a6fa8"/><rect x="5" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><rect x="32" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><ellipse cx="8" cy="40" rx="4" ry="4" fill="#f5c4a0"/><ellipse cx="36" cy="40" rx="4" ry="4" fill="#f5c4a0"/><rect x="18" y="19" width="8" height="8" fill="#f5c4a0" rx="2"/><ellipse cx="22" cy="13" rx="12" ry="12" fill="#f5c4a0"/><path d="M10,10 Q11,2 22,2 Q33,2 34,10 Q30,5 22,5 Q14,5 10,10Z" fill="#3d2a00"/><path d="M10,12 Q8,17 10,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M34,12 Q36,17 34,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="17" cy="13" r="1.8" fill="#3d2a00"/><circle cx="27" cy="13" r="1.8" fill="#3d2a00"/><circle cx="17.6" cy="12.4" r="0.6" fill="white"/><circle cx="27.6" cy="12.4" r="0.6" fill="white"/><path d="M18,18 Q22,21 26,18" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 44 62" style="pointer-events:none;"><ellipse cx="22" cy="60" rx="10" ry="3" fill="rgba(0,0,0,0.15)"/><rect x="13" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="24" y="43" width="7" height="15" fill="#5b6e8a" rx="3"/><rect x="12" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="23" y="53" width="9" height="6" fill="#3a3a3a" rx="2"/><rect x="11" y="25" width="22" height="20" fill="#4a7fc1" rx="4"/><path d="M18,25 L22,30 L26,25" fill="#3a6fa8"/><rect x="5" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><rect x="32" y="26" width="7" height="13" fill="#4a7fc1" rx="3"/><ellipse cx="8" cy="40" rx="4" ry="4" fill="#f5c4a0"/><ellipse cx="36" cy="40" rx="4" ry="4" fill="#f5c4a0"/><rect x="18" y="19" width="8" height="8" fill="#f5c4a0" rx="2"/><ellipse cx="22" cy="13" rx="12" ry="12" fill="#f5c4a0"/><path d="M10,10 Q11,2 22,2 Q33,2 34,10 Q30,5 22,5 Q14,5 10,10Z" fill="#3d2a00"/><path d="M10,12 Q8,17 10,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><path d="M34,12 Q36,17 34,20" stroke="#3d2a00" stroke-width="3" stroke-linecap="round" fill="none"/><circle cx="17" cy="13" r="1.8" fill="#3d2a00"/><circle cx="27" cy="13" r="1.8" fill="#3d2a00"/><circle cx="17.6" cy="12.4" r="0.6" fill="white"/><circle cx="27.6" cy="12.4" r="0.6" fill="white"/><path d="M18,18 Q22,21 26,18" stroke="#c07050" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+<!-- 장비: 군복(몸통 덮기) -->
+<g id="g-uniform" opacity="0">
+  <rect x="11" y="25" width="22" height="20" fill="#4a5d3a" rx="4"/>
+  <rect x="5" y="26" width="7" height="13" fill="#4a5d3a" rx="3"/>
+  <rect x="32" y="26" width="7" height="13" fill="#4a5d3a" rx="3"/>
+  <path d="M11,28 L33,28" stroke="#3a4a2e" stroke-width="1"/>
+  <rect x="20" y="27" width="4" height="16" fill="#3a4a2e"/>
+  <circle cx="22" cy="31" r="0.8" fill="#2a3520"/>
+  <circle cx="22" cy="36" r="0.8" fill="#2a3520"/>
+  <rect x="13" y="29" width="5" height="3" fill="#3a4a2e" rx="1"/>
+</g>
+<!-- 장비: 총 (어깨에 멘 소총) -->
+<g id="g-gun" opacity="0">
+  <rect x="6" y="22" width="2.5" height="26" fill="#2a2a2a" rx="1" transform="rotate(20 7 35)"/>
+  <rect x="9" y="20" width="6" height="2.5" fill="#1a1a1a" rx="1" transform="rotate(20 12 21)"/>
+</g>
+<!-- 장비: 군화 (발) -->
+<g id="g-boots" opacity="0">
+  <rect x="11" y="51" width="10" height="8" fill="#2a1f15" rx="2"/>
+  <rect x="23" y="51" width="10" height="8" fill="#2a1f15" rx="2"/>
+  <rect x="11" y="57" width="10" height="2" fill="#1a1208" rx="1"/>
+  <rect x="23" y="57" width="10" height="2" fill="#1a1208" rx="1"/>
+</g>
+<!-- 장비: 방탄 헬멧 (머리 위) -->
+<g id="g-helmet" opacity="0">
+  <path d="M9,12 Q9,1 22,1 Q35,1 35,12 L35,14 Q35,12 22,12 Q9,12 9,14 Z" fill="#4a5d3a"/>
+  <ellipse cx="22" cy="12" rx="13" ry="3" fill="#3a4a2e"/>
+  <rect x="20" y="3" width="4" height="6" fill="#3a4a2e" rx="1"/>
+</g>
+</svg>
     <div id="player-name">홍 👆</div>
 
   </div>
-  <div class="obj" id="o-tv" style="top:622px;right:8%;">
-    <svg width="72" height="60" viewBox="0 0 65 55"><rect x="27" y="46" width="11" height="6" fill="#555"/><rect x="20" y="50" width="25" height="4" fill="#444" rx="2"/><rect x="3" y="3" width="59" height="44" fill="#222" rx="5"/><rect x="6" y="6" width="53" height="37" fill="#111" rx="3"/><rect x="8" y="8" width="49" height="33" fill="#1a3a6a" rx="2"/><rect x="10" y="10" width="45" height="20" fill="#2a5a9a" rx="1"/><ellipse cx="22" cy="20" rx="8" ry="9" fill="#f5c4a0" opacity="0.9"/><ellipse cx="43" cy="20" rx="8" ry="9" fill="#f9b0c0" opacity="0.9"/><text x="32" y="36" font-size="8" fill="#f5c842" text-anchor="middle">😂</text></svg>
+  <div class="obj" id="o-tv" style="top:720px;right:8%;">
+    <svg width="58" height="48" viewBox="0 0 65 55"><rect x="27" y="46" width="11" height="6" fill="#555"/><rect x="20" y="50" width="25" height="4" fill="#444" rx="2"/><rect x="3" y="3" width="59" height="44" fill="#222" rx="5"/><rect x="6" y="6" width="53" height="37" fill="#111" rx="3"/><rect x="8" y="8" width="49" height="33" fill="#1a3a6a" rx="2"/><rect x="10" y="10" width="45" height="20" fill="#2a5a9a" rx="1"/><ellipse cx="22" cy="20" rx="8" ry="9" fill="#f5c4a0" opacity="0.9"/><ellipse cx="43" cy="20" rx="8" ry="9" fill="#f9b0c0" opacity="0.9"/><text x="32" y="36" font-size="8" fill="#f5c842" text-anchor="middle">😂</text></svg>
     <div class="obj-label">📺 TV</div>
   </div>
   <div class="flower" style="top:730px;left:8%;"><svg width="24" height="28" viewBox="0 0 24 28"><line x1="12" y1="26" x2="12" y2="12" stroke="#2d7a15" stroke-width="2"/><circle cx="12" cy="9" r="5" fill="#ffcc00" opacity="0.9"/><circle cx="7" cy="12" r="3.5" fill="#ffd633" opacity="0.8"/><circle cx="17" cy="12" r="3.5" fill="#ffd633" opacity="0.8"/><circle cx="12" cy="9" r="2.5" fill="#fff8dc"/></svg></div>
 
   <!-- ===== 구역3: 빌딩+밥상 (800~950) ===== -->
-  <div class="obj" id="o-building" style="top:815px;left:6%;">
-    <svg width="78" height="115" viewBox="0 0 80 120"><rect x="8" y="20" width="64" height="100" fill="#b0bec5" rx="3"/><rect x="52" y="20" width="20" height="100" fill="#90a4ae" rx="2"/><rect x="5" y="14" width="70" height="10" fill="#78909c" rx="2"/><rect x="28" y="5" width="6" height="12" fill="#607d8b"/><rect x="14" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="46" y="30" width="10" height="12" fill="#b0d4e8" rx="1" opacity="0.7"/><rect x="14" y="50" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="50" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="14" y="70" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="30" y="70" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="14" y="90" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="90" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="28" y="100" width="24" height="20" fill="#5d4037" rx="2"/><rect x="10" y="108" width="16" height="8" fill="#1565c0" rx="1"/><text x="18" y="115" font-size="5" fill="white" text-anchor="middle">인사</text></svg>
+  <div class="obj" id="o-building" style="top:780px;left:8%;">
+    <svg width="62" height="92" viewBox="0 0 80 120"><rect x="8" y="20" width="64" height="100" fill="#b0bec5" rx="3"/><rect x="52" y="20" width="20" height="100" fill="#90a4ae" rx="2"/><rect x="5" y="14" width="70" height="10" fill="#78909c" rx="2"/><rect x="28" y="5" width="6" height="12" fill="#607d8b"/><rect x="14" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="30" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="46" y="30" width="10" height="12" fill="#b0d4e8" rx="1" opacity="0.7"/><rect x="14" y="50" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="50" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="14" y="70" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="30" y="70" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="14" y="90" width="10" height="12" fill="#87ceeb" rx="1" opacity="0.9"/><rect x="30" y="90" width="10" height="12" fill="#ffe082" rx="1" opacity="0.9"/><rect x="28" y="100" width="24" height="20" fill="#5d4037" rx="2"/><rect x="10" y="108" width="16" height="8" fill="#1565c0" rx="1"/><text x="18" y="115" font-size="5" fill="white" text-anchor="middle">인사</text></svg>
     <div class="obj-label">🏢 인사업무</div>
   </div>
-  <div class="obj" id="o-dinner" style="top:960px;right:8%;">
-    <svg width="78" height="62" viewBox="0 0 70 55"><rect x="10" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="55" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="18" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><rect x="48" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><ellipse cx="35" cy="27" rx="30" ry="10" fill="#c8813a"/><ellipse cx="35" cy="25" rx="28" ry="8" fill="#d4956a"/><ellipse cx="22" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="22" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="48" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="48" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="35" cy="20" rx="6" ry="4" fill="#c8513a" opacity="0.8"/></svg>
+  <div class="obj" id="o-dinner" style="top:880px;right:8%;">
+    <svg width="62" height="50" viewBox="0 0 70 55"><rect x="10" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="55" y="28" width="5" height="22" fill="#8b5e3c" rx="2"/><rect x="18" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><rect x="48" y="32" width="4" height="18" fill="#7a4e2c" rx="2"/><ellipse cx="35" cy="27" rx="30" ry="10" fill="#c8813a"/><ellipse cx="35" cy="25" rx="28" ry="8" fill="#d4956a"/><ellipse cx="22" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="22" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="48" cy="23" rx="8" ry="5" fill="#e8e0c8"/><ellipse cx="48" cy="22" rx="6" ry="3.5" fill="#f5f0e0"/><ellipse cx="35" cy="20" rx="6" ry="4" fill="#c8513a" opacity="0.8"/></svg>
     <div class="obj-label">🍽️ 식사 자리</div>
   </div>
 
@@ -651,8 +680,8 @@
   <!-- ===== 모임 모닥불 3개 (1050~1150) ===== -->
 
   <!-- 한마음회 (왼쪽) -->
-  <div class="obj" id="o-hanmaum" style="top:1040px;left:8%;" onclick="firePop(this); showBbl('🔥 한마음회','인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연','o-hanmaum')">
-    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+  <div class="obj" id="o-hanmaum" style="top:1000px;right:25%;" onclick="firePop(this); showBbl('🔥 한마음회','인재선발 최전선의 사람들 모임<br>같은 곳을 바라보며<br>함께했던 사람들 🤝<br>소중한 인연','o-hanmaum')">
+    <svg width="56" height="60" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <!-- 장작 -->
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
@@ -679,8 +708,8 @@
   </div>
 
   <!-- 벗우회 (중앙) -->
-  <div class="obj" id="o-beotwu" style="top:710px;left:12%;" onclick="firePop(this); showBbl('🔥 벗우회','부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂','o-beotwu')">
-    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+  <div class="obj" id="o-beotwu" style="top:1000px;left:25%;" onclick="firePop(this); showBbl('🔥 벗우회','부산 사상 감전동 친구들 👊<br>어릴 때부터 함께한<br>진짜 오래된 지인들<br>미국에 나가 있는 ㅂㅎㅂ<br>보고싶다 빨리 와라 🫂','o-beotwu')">
+    <svg width="56" height="60" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="15" y1="68" x2="55" y2="68" stroke="#5a3210" stroke-width="4" stroke-linecap="round"/>
@@ -704,8 +733,8 @@
   </div>
 
   <!-- 인민군 (오른쪽) -->
-  <div class="obj" id="o-inmin" style="top:740px;right:8%;" onclick="firePop(this); showBbl('🔥 인민군','백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️','o-inmin')">
-    <svg width="70" height="75" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
+  <div class="obj" id="o-inmin" style="top:850px;left:43%;" onclick="firePop(this); showBbl('🔥 인민군','백달리에서<br>인사·민간인·군수팀이 뭉쳐 만든 모임<br>너무 좋았던 사람들과<br>계속 이어가는 인연 ❤️','o-inmin')">
+    <svg width="56" height="60" viewBox="0 0 70 75" xmlns="http://www.w3.org/2000/svg">
       <line x1="20" y1="65" x2="40" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="50" y1="65" x2="30" y2="48" stroke="#7a4a20" stroke-width="5" stroke-linecap="round"/>
       <line x1="15" y1="68" x2="55" y2="68" stroke="#5a3210" stroke-width="4" stroke-linecap="round"/>
@@ -729,61 +758,41 @@
   </div>
 
   <!-- ===== 구역4: 자주포 (1060) ===== -->
-  <div class="obj" id="o-howitzer" style="top:1150px;left:11%;">
-    <svg width="135" height="84" viewBox="0 0 130 80"><rect x="10" y="30" width="90" height="32" fill="#556b2f" rx="4"/><rect x="30" y="18" width="50" height="24" fill="#4a5e28" rx="4"/><rect x="72" y="24" width="50" height="8" fill="#3d5020" rx="3"/><rect x="118" y="23" width="6" height="10" fill="#2d3e18" rx="1"/><rect x="8" y="58" width="94" height="14" fill="#333" rx="7"/><circle cx="18" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="36" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="54" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="72" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="90" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><line x1="30" y1="38" x2="100" y2="38" stroke="#3d5020" stroke-width="1" opacity="0.5"/></svg>
+  <div class="obj" id="o-howitzer" style="top:1290px;left:38%;">
+    <svg width="108" height="67" viewBox="0 0 130 80"><rect x="10" y="30" width="90" height="32" fill="#556b2f" rx="4"/><rect x="30" y="18" width="50" height="24" fill="#4a5e28" rx="4"/><rect x="72" y="24" width="50" height="8" fill="#3d5020" rx="3"/><rect x="118" y="23" width="6" height="10" fill="#2d3e18" rx="1"/><rect x="8" y="58" width="94" height="14" fill="#333" rx="7"/><circle cx="18" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="36" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="54" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="72" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><circle cx="90" cy="65" r="7" fill="#555" stroke="#333" stroke-width="1.5"/><line x1="30" y1="38" x2="100" y2="38" stroke="#3d5020" stroke-width="1" opacity="0.5"/></svg>
     <div class="obj-label">🔫 포병</div>
   </div>
   <div style="position:absolute;top:1145px;right:6%;pointer-events:none;"><svg width="58" height="95" viewBox="0 0 55 95"><rect x="23" y="62" width="9" height="33" fill="#6b4226"/><ellipse cx="27" cy="40" rx="22" ry="28" fill="#2d8a1a"/><ellipse cx="27" cy="33" rx="16" ry="22" fill="#2da020"/><ellipse cx="27" cy="26" rx="11" ry="16" fill="#35b828"/></svg></div>
 
 
-  <!-- 여행지 배너 -->
-  <div style="position:absolute;top:1270px;left:0;right:0;pointer-events:none;">
-    <!-- 배너 배경 -->
-    <div style="
-      margin:0 10px;
-      background:linear-gradient(135deg,rgba(26,90,138,0.7),rgba(45,26,0,0.7));
-      border:2px solid rgba(245,200,66,0.6);
-      border-radius:14px;
-      padding:12px 20px;
-      text-align:center;
-    ">
-      <div style="font-family:'Jua',sans-serif;font-size:16px;color:#f5c842;letter-spacing:2px;">
-        ✈️ 내가 가본 추억의 여행지들
-      </div>
-      <div style="font-family:'Nanum Gothic',sans-serif;font-size:11px;color:#d4b060;margin-top:4px;">
-        평생 잊을 수 없는 소중한 기억들 🌍
-      </div>
-    </div>
-  </div>
-
   <!-- ===== 구역5: 안나푸르나 (1180) ===== -->
-  <div class="obj" id="o-mountain" style="top:1330px;left:16%;">
-    <svg width="160" height="130" viewBox="0 0 160 130"><polygon points="60,130 0,60 120,60" fill="#b0c4d8" opacity="0.6"/><polygon points="130,130 70,45 190,45" fill="#8faaba" opacity="0.5"/><polygon points="80,130 10,50 150,50" fill="#c8d8e8"/><polygon points="80,130 30,60 130,60" fill="#d8e8f4"/><polygon points="80,8 40,55 120,55" fill="white"/><polygon points="80,8 50,48 110,48" fill="#f0f8ff"/><polygon points="80,8 80,45 110,48" fill="#ddeeff" opacity="0.7"/><polygon points="30,80 5,55 55,55" fill="#b8ccd8"/><polygon points="30,60 18,50 42,50" fill="white" opacity="0.9"/><polygon points="135,85 110,58 160,58" fill="#b0c4d4"/><polygon points="135,60 120,50 150,50" fill="white" opacity="0.85"/><ellipse cx="25" cy="42" rx="18" ry="7" fill="white" opacity="0.7"/><ellipse cx="140" cy="38" rx="16" ry="6" fill="white" opacity="0.6"/></svg>
+  <div class="obj" id="o-mountain" style="top:1500px;right:8%;">
+    <svg width="128" height="104" viewBox="0 0 160 130"><polygon points="60,130 0,60 120,60" fill="#b0c4d8" opacity="0.6"/><polygon points="130,130 70,45 190,45" fill="#8faaba" opacity="0.5"/><polygon points="80,130 10,50 150,50" fill="#c8d8e8"/><polygon points="80,130 30,60 130,60" fill="#d8e8f4"/><polygon points="80,8 40,55 120,55" fill="white"/><polygon points="80,8 50,48 110,48" fill="#f0f8ff"/><polygon points="80,8 80,45 110,48" fill="#ddeeff" opacity="0.7"/><polygon points="30,80 5,55 55,55" fill="#b8ccd8"/><polygon points="30,60 18,50 42,50" fill="white" opacity="0.9"/><polygon points="135,85 110,58 160,58" fill="#b0c4d4"/><polygon points="135,60 120,50 150,50" fill="white" opacity="0.85"/><ellipse cx="25" cy="42" rx="18" ry="7" fill="white" opacity="0.7"/><ellipse cx="140" cy="38" rx="16" ry="6" fill="white" opacity="0.6"/></svg>
     <div class="obj-label">🏔️ 안나푸르나</div>
   </div>
   <!-- 눈꽃 장식 -->
   <div style="position:absolute;top:1520px;right:14%;pointer-events:none;"><svg width="28" height="28" viewBox="0 0 30 30"><line x1="15" y1="2" x2="15" y2="28" stroke="white" stroke-width="2" opacity="0.6"/><line x1="2" y1="15" x2="28" y2="15" stroke="white" stroke-width="2" opacity="0.6"/><line x1="6" y1="6" x2="24" y2="24" stroke="white" stroke-width="2" opacity="0.6"/><line x1="24" y1="6" x2="6" y2="24" stroke="white" stroke-width="2" opacity="0.6"/><circle cx="15" cy="15" r="3" fill="white" opacity="0.8"/></svg></div>
 
   <!-- ===== 구역6: 상하이 (1390) ===== -->
-  <div class="obj" id="o-shanghai" style="top:1450px;right:8%;">
-    <svg width="70" height="140" viewBox="0 0 70 140"><path d="M28,140 Q25,100 27,60 Q29,30 35,5 Q41,30 43,60 Q45,100 42,140Z" fill="#4a6fa8"/><path d="M35,5 Q41,30 43,60 Q45,100 42,140 L28,140 Q25,100 27,60 Q29,30 35,5Z" fill="#5a80b8" opacity="0.6"/><line x1="28" y1="110" x2="42" y2="110" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="85" x2="43" y2="85" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="60" x2="43" y2="60" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="28" y1="38" x2="42" y2="38" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><rect x="33" y="2" width="4" height="8" fill="#c8c8c8" rx="1"/><circle cx="35" cy="2" r="2" fill="#f5c842"/><path d="M30,140 Q28,100 29,60 Q30,30 35,8" stroke="#87ceeb" stroke-width="1.5" fill="none" opacity="0.4"/><ellipse cx="15" cy="50" rx="14" ry="6" fill="white" opacity="0.6"/></svg>
+  <div class="obj" id="o-shanghai" style="top:1500px;left:8%;">
+    <svg width="56" height="112" viewBox="0 0 70 140"><path d="M28,140 Q25,100 27,60 Q29,30 35,5 Q41,30 43,60 Q45,100 42,140Z" fill="#4a6fa8"/><path d="M35,5 Q41,30 43,60 Q45,100 42,140 L28,140 Q25,100 27,60 Q29,30 35,5Z" fill="#5a80b8" opacity="0.6"/><line x1="28" y1="110" x2="42" y2="110" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="85" x2="43" y2="85" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="27" y1="60" x2="43" y2="60" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><line x1="28" y1="38" x2="42" y2="38" stroke="#87ceeb" stroke-width="0.8" opacity="0.6"/><rect x="33" y="2" width="4" height="8" fill="#c8c8c8" rx="1"/><circle cx="35" cy="2" r="2" fill="#f5c842"/><path d="M30,140 Q28,100 29,60 Q30,30 35,8" stroke="#87ceeb" stroke-width="1.5" fill="none" opacity="0.4"/><ellipse cx="15" cy="50" rx="14" ry="6" fill="white" opacity="0.6"/></svg>
     <div class="obj-label">🏙️ 광저우 타워</div>
   </div>
   <!-- 황푸강 -->
   <div style="position:absolute;top:1520px;left:0;right:0;pointer-events:none;"><svg width="100%" height="35" viewBox="0 0 400 35" preserveAspectRatio="none"><path d="M0,18 Q50,5 100,18 Q150,31 200,18 Q250,5 300,18 Q350,31 400,18 L400,35 L0,35Z" fill="#1a5a8a" opacity="0.45"/></svg></div>
 
   <!-- ===== 구역7: 스페인·포르투갈 (1600~1820) ===== -->
-  <div class="obj" id="o-sagrada" style="top:1490px;left:4%;">
-    <svg width="100" height="150" viewBox="0 0 100 150"><polygon points="50,2 44,18 56,18" fill="#b89858"/><rect x="44" y="10" width="12" height="100" fill="#c8a878" rx="2"/><polygon points="31,22 26,36 36,36" fill="#b89858"/><rect x="26" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="69,22 64,36 74,36" fill="#b89858"/><rect x="64" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="14,43 10,55 18,55" fill="#c4a878"/><rect x="10" y="50" width="8" height="60" fill="#d4b888" rx="2"/><polygon points="86,43 82,55 90,55" fill="#c4a878"/><rect x="82" y="50" width="8" height="60" fill="#d4b888" rx="2"/><rect x="8" y="105" width="84" height="45" fill="#c8a878" rx="3"/><ellipse cx="25" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><ellipse cx="50" cy="118" rx="7" ry="10" fill="#f5c842" opacity="0.5"/><ellipse cx="75" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><path d="M42,150 L42,132 Q50,125 58,132 L58,150Z" fill="#8b6914"/><circle cx="50" cy="2" r="2.5" fill="#f5c842"/></svg>
+  <div class="obj" id="o-sagrada" style="top:1720px;right:8%;">
+    <svg width="80" height="120" viewBox="0 0 100 150"><polygon points="50,2 44,18 56,18" fill="#b89858"/><rect x="44" y="10" width="12" height="100" fill="#c8a878" rx="2"/><polygon points="31,22 26,36 36,36" fill="#b89858"/><rect x="26" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="69,22 64,36 74,36" fill="#b89858"/><rect x="64" y="30" width="10" height="80" fill="#c8a878" rx="2"/><polygon points="14,43 10,55 18,55" fill="#c4a878"/><rect x="10" y="50" width="8" height="60" fill="#d4b888" rx="2"/><polygon points="86,43 82,55 90,55" fill="#c4a878"/><rect x="82" y="50" width="8" height="60" fill="#d4b888" rx="2"/><rect x="8" y="105" width="84" height="45" fill="#c8a878" rx="3"/><ellipse cx="25" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><ellipse cx="50" cy="118" rx="7" ry="10" fill="#f5c842" opacity="0.5"/><ellipse cx="75" cy="120" rx="6" ry="9" fill="#87ceeb" opacity="0.7"/><path d="M42,150 L42,132 Q50,125 58,132 L58,150Z" fill="#8b6914"/><circle cx="50" cy="2" r="2.5" fill="#f5c842"/></svg>
     <div class="obj-label">⛪ 사그라다 파밀리아</div>
   </div>
-  <div class="obj" id="o-orange" style="top:1650px;right:10%;">
-    <svg width="85" height="110" viewBox="0 0 85 110"><rect x="38" y="65" width="9" height="45" fill="#7a5230" rx="3"/><ellipse cx="42" cy="45" rx="32" ry="30" fill="#2d7a15"/><ellipse cx="42" cy="40" rx="26" ry="25" fill="#35901a"/><ellipse cx="42" cy="35" rx="20" ry="20" fill="#3da020"/><circle cx="28" cy="50" r="7" fill="#ff7c00"/><circle cx="28" cy="50" r="5.5" fill="#ff9020"/><circle cx="55" cy="48" r="7" fill="#ff7c00"/><circle cx="55" cy="48" r="5.5" fill="#ff9020"/><circle cx="38" cy="58" r="7" fill="#ff7c00"/><circle cx="38" cy="58" r="5.5" fill="#ff9020"/><circle cx="18" cy="40" r="6" fill="#ff7c00"/><circle cx="18" cy="40" r="4.5" fill="#ff9020"/><circle cx="62" cy="38" r="6" fill="#ff7c00"/><circle cx="62" cy="38" r="4.5" fill="#ff9020"/></svg>
+  <div class="obj" id="o-orange" style="top:1920px;right:10%;">
+    <svg width="68" height="88" viewBox="0 0 85 110"><rect x="38" y="65" width="9" height="45" fill="#7a5230" rx="3"/><ellipse cx="42" cy="45" rx="32" ry="30" fill="#2d7a15"/><ellipse cx="42" cy="40" rx="26" ry="25" fill="#35901a"/><ellipse cx="42" cy="35" rx="20" ry="20" fill="#3da020"/><circle cx="28" cy="50" r="7" fill="#ff7c00"/><circle cx="28" cy="50" r="5.5" fill="#ff9020"/><circle cx="55" cy="48" r="7" fill="#ff7c00"/><circle cx="55" cy="48" r="5.5" fill="#ff9020"/><circle cx="38" cy="58" r="7" fill="#ff7c00"/><circle cx="38" cy="58" r="5.5" fill="#ff9020"/><circle cx="18" cy="40" r="6" fill="#ff7c00"/><circle cx="18" cy="40" r="4.5" fill="#ff9020"/><circle cx="62" cy="38" r="6" fill="#ff7c00"/><circle cx="62" cy="38" r="4.5" fill="#ff9020"/></svg>
     <div class="obj-label">🍊 세비야 오렌지 나무</div>
   </div>
   <div class="flower" style="top:1780px;left:40%;"><svg width="24" height="28" viewBox="0 0 24 28"><line x1="12" y1="26" x2="12" y2="12" stroke="#2d7a15" stroke-width="2"/><circle cx="12" cy="9" r="5" fill="#a855f7" opacity="0.9"/><circle cx="7" cy="12" r="3.5" fill="#c084fc" opacity="0.8"/><circle cx="17" cy="12" r="3.5" fill="#c084fc" opacity="0.8"/><circle cx="12" cy="9" r="2.5" fill="#faf5ff"/></svg></div>
-  <div class="obj" id="o-eggtart" style="top:1700px;left:10%;">
-    <svg width="110" height="110" viewBox="0 0 110 110"><rect x="5" y="20" width="100" height="65" fill="#f5e8c8" rx="3"/><rect x="12" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M12,30 Q19,24 26,30" fill="#c8a878"/><rect x="48" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M48,30 Q55,24 62,30" fill="#c8a878"/><rect x="84" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M84,30 Q91,24 98,30" fill="#c8a878"/><rect x="44" y="58" width="22" height="27" fill="#8b6914" rx="2"/><path d="M44,58 Q55,50 66,58" fill="#a07820"/><rect x="2" y="14" width="106" height="10" fill="#c8813a" rx="2"/><rect x="0" y="12" width="110" height="5" fill="#d4956a" rx="1"/><rect x="52" y="2" width="6" height="14" fill="#c8a878" rx="1"/><rect x="46" y="6" width="18" height="4" fill="#c8a878" rx="1"/><ellipse cx="28" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="55" cy="98" rx="14" ry="6" fill="#d4956a"/><ellipse cx="82" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="28" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="55" cy="94" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="82" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="28" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="55" cy="94" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="82" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/></svg>
+  <div class="obj" id="o-eggtart" style="top:1920px;left:10%;">
+    <svg width="88" height="88" viewBox="0 0 110 110"><rect x="5" y="20" width="100" height="65" fill="#f5e8c8" rx="3"/><rect x="12" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M12,30 Q19,24 26,30" fill="#c8a878"/><rect x="48" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M48,30 Q55,24 62,30" fill="#c8a878"/><rect x="84" y="30" width="14" height="18" fill="#87ceeb" rx="2" opacity="0.8"/><path d="M84,30 Q91,24 98,30" fill="#c8a878"/><rect x="44" y="58" width="22" height="27" fill="#8b6914" rx="2"/><path d="M44,58 Q55,50 66,58" fill="#a07820"/><rect x="2" y="14" width="106" height="10" fill="#c8813a" rx="2"/><rect x="0" y="12" width="110" height="5" fill="#d4956a" rx="1"/><rect x="52" y="2" width="6" height="14" fill="#c8a878" rx="1"/><rect x="46" y="6" width="18" height="4" fill="#c8a878" rx="1"/><ellipse cx="28" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="55" cy="98" rx="14" ry="6" fill="#d4956a"/><ellipse cx="82" cy="100" rx="14" ry="6" fill="#d4956a"/><ellipse cx="28" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="55" cy="94" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="82" cy="96" rx="11" ry="4.5" fill="#f5d060"/><ellipse cx="28" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="55" cy="94" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/><ellipse cx="82" cy="96" rx="7" ry="2.5" fill="#e8a820" opacity="0.7"/></svg>
     <div class="obj-label">🥧 벨렝 수녀원</div>
   </div>
   <div style="position:absolute;top:1700px;right:5%;pointer-events:none;"><svg width="55" height="90" viewBox="0 0 50 90"><rect x="21" y="60" width="8" height="30" fill="#5a3820"/><polygon points="25,5 47,62 3,62" fill="#1e6b10"/><polygon points="25,18 45,59 5,59" fill="#258a15"/><polygon points="25,30 43,57 7,57" fill="#2da01a"/></svg></div>
@@ -809,26 +818,8 @@
     <div class="sb-row"><span style="font-size:20px;line-height:1.2;">🤝</span><span>일보다는 사람이 먼저</span></div>
     <div class="sb-row"><span style="font-size:20px;line-height:1.4;">🎖️</span><span>현재의 계급과 해왔던<br>군생활이 쪽팔리게 하지 말자</span></div>
   </div>
-  </div>
-
-
-  <!-- 레벨업 아이템 (홍 왼쪽 일렬) -->
-  <div id="lv-items" style="position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:81;pointer-events:none;">
-    <div id="lv-helmet" style="display:none;font-size:22px;">🪖</div>
-    <div id="lv-gun"    style="display:none;font-size:22px;">🔫</div>
-    <div id="lv-boots"  style="display:none;font-size:20px;">🥾</div>
-  </div>
 </div><!-- /world -->
 </div><!-- /game-wrap -->
-
-    <div class="ctrl-btn" onmousedown="sm('u')" onmouseup="stopMove()" ontouchstart="sm('u')" ontouchend="stopMove()">▲</div>
-  </div>
-  <div class="ctrl-row">
-    <div class="ctrl-btn" onmousedown="sm('l')" onmouseup="stopMove()" ontouchstart="sm('l')" ontouchend="stopMove()">◀</div>
-    <div class="ctrl-btn" onmousedown="sm('d')" onmouseup="stopMove()" ontouchstart="sm('d')" ontouchend="stopMove()">▼</div>
-    <div class="ctrl-btn" onmousedown="sm('r')" onmouseup="stopMove()" ontouchstart="sm('r')" ontouchend="stopMove()">▶</div>
-  </div>
-</div>
 <div id="hint">🕹️ 조이스틱 이동 | 홍 두번탭 경력</div>
 <script>
 const PROX = [
@@ -855,7 +846,7 @@ const careerBbl = document.getElementById('career-bbl');
 const sunBbl = document.getElementById('sun-bbl');
 
 let py = 640, px = -1, worldOff = 0, moveInt = null, nearId = null;
-const SPEED = 6, WORLD_H = 1850, PROX_D = 110;
+const SPEED = 6, WORLD_H = 2200, PROX_D = 110;
 
 function getPx() { if(px===-1) px=window.innerWidth/2-26; return px; }
 
@@ -869,12 +860,6 @@ function updateScroll() {
 function updatePlayer() {
   playerEl.style.top = py+'px';
   playerEl.style.left = getPx()+'px';
-  // 레벨업 아이템 위치 — worldOff 반영
-  const lvi = document.getElementById('lv-items');
-  if(lvi) {
-    lvi.style.top  = (py + worldOff + 3) + 'px';
-    lvi.style.left = (getPx() - 42) + 'px';
-  }
 }
 
 function bblTop() { return Math.floor(window.innerHeight * 0.5); }
@@ -1149,14 +1134,15 @@ setTimeout(()=>{const h=document.getElementById('hint');if(h){h.style.opacity='0
   }
 
   function levelUp(cnt) {
-    const hel   = document.getElementById('lv-helmet');
-    const gun   = document.getElementById('lv-gun');
-    const boots = document.getElementById('lv-boots');
-    if(hel)   hel.style.display   = cnt >= 6  ? 'block' : 'none';
-    if(gun)   gun.style.display   = cnt >= 12 ? 'block' : 'none';
-    if(boots) boots.style.display = cnt >= 17 ? 'block' : 'none';
-    // 선글라스 — SVG 오버레이
-
+    // 홍 캐릭터에 장비 착용 (SVG opacity 제어) - 방탄모부터!
+    const helmet  = document.getElementById('g-helmet');
+    const uniform = document.getElementById('g-uniform');
+    const gun     = document.getElementById('g-gun');
+    const boots   = document.getElementById('g-boots');
+    if(helmet)  helmet.setAttribute('opacity',  cnt >= 4  ? '1' : '0');
+    if(uniform) uniform.setAttribute('opacity', cnt >= 9  ? '1' : '0');
+    if(gun)     gun.setAttribute('opacity',     cnt >= 13 ? '1' : '0');
+    if(boots)   boots.setAttribute('opacity',   cnt >= 17 ? '1' : '0');
   }
 
   
