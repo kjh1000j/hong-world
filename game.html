@@ -193,6 +193,16 @@ canvas{display:block;touch-action:none;}
   </div>
 </div>
 
+<!-- 진급 보상 선택 -->
+<div class="ovl" id="ovl-reward" style="display:none;">
+  <div class="card" style="border-color:rgba(245,158,11,.35);">
+    <div style="font-size:28px;margin-bottom:4px;">🎖️</div>
+    <h1 style="color:#f59e0b;" id="reward-title">상사 진급!</h1>
+    <p style="color:#888;">보상 하나를 선택하세요</p>
+    <div id="reward-choices" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;"></div>
+  </div>
+</div>
+
 <div id="ctrl">
   <div class="trk-wrap"><div class="trk"><div class="knb" id="knob"></div></div></div>
   <div id="skill-wrap">
@@ -417,6 +427,8 @@ let spawnET=0,spawnOT=0,spawnBT=0,spawnWT=0,spawnGT=0;
 let combo=0,comboTimer=0,skillCD=0;
 let particles=[],skillParticles=[],explosions=[],floatTexts=[];
 let curWeapon=null,weaponTimer=0; // 현재 장착 무기, 남은 시간
+// 진급 영구 보상 (누적)
+let upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0};
 let loopId=null;
 
 function getSt(){return STAGES[stIdx];}
@@ -432,6 +444,7 @@ function reset(){
   stIdx=0;score=0;stScore=0;totalTime=0;scroll=0;shake=0;lastShot=0;gameStart=0;lastTime=0;
   spawnET=0;spawnOT=0;spawnBT=0;spawnWT=4;spawnGT=0;combo=0;comboTimer=0;skillCD=30; // 무기 빨리 등장(4초 선충전)
   curWeapon=null;weaponTimer=0;
+  upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0};
   player={x:canvas.width/2,y:canvas.height-130,size:PS,hp:3,tx:canvas.width/2,inv:0,aura:0,dash:0};
   enemies=[];obstacles=[];projectiles=[];buffs=[];boss=null;particles=[];skillParticles=[];explosions=[];floatTexts=[];
   document.getElementById('bn').style.visibility='hidden';
@@ -472,7 +485,41 @@ function updateSkillBtn(){
   }
 }
 
-const OVLS=['ovl-start','ovl-go','ovl-win','ovl-lb'];
+const OVLS=['ovl-start','ovl-go','ovl-win','ovl-lb','ovl-reward'];
+
+// 진급 보상 정의
+const REWARDS=[
+  {key:'fireRate',emoji:'🔫',name:'발사 속도 강화',desc:'더 빠르게 연사'},
+  {key:'pierce',emoji:'💢',name:'관통탄',desc:'적을 1마리 더 관통'},
+  {key:'bulletSize',emoji:'🎯',name:'탄 크기 강화',desc:'명중 판정이 넓어짐'},
+  {key:'skillCd',emoji:'⚡',name:'필살기 충전↑',desc:'필살기 쿨타임 3초↓'},
+  {key:'magnet',emoji:'🧲',name:'자석',desc:'아이템을 끌어당김'},
+];
+const RANK_NAMES=['하사','중사','상사','원사','원사'];
+let pendingRewardCb=null;
+
+function showRewardScreen(nextStageIdx,cb){
+  pendingRewardCb=cb;
+  document.getElementById('reward-title').textContent=RANK_NAMES[nextStageIdx]+' 진급!';
+  // 5개 중 랜덤 3개
+  const pool=[...REWARDS].sort(()=>Math.random()-.5).slice(0,3);
+  const box=document.getElementById('reward-choices');
+  box.innerHTML='';
+  pool.forEach(r=>{
+    const lv=upg[r.key];
+    const btn=document.createElement('button');
+    btn.className='btn-g';
+    btn.style.cssText='text-align:left;padding:12px 14px;display:flex;align-items:center;gap:10px;';
+    btn.innerHTML=`<span style="font-size:22px;">${r.emoji}</span><span style="flex:1;"><span style="font-weight:800;font-size:13px;color:#f59e0b;">${r.name}${lv>0?` <span style="color:#6ee7b7;font-size:10px;">Lv.${lv+1}</span>`:''}</span><br><span style="font-size:11px;color:#999;">${r.desc}</span></span>`;
+    btn.onclick=()=>{
+      upg[r.key]++;sfx('item');
+      showOvl(null);
+      if(pendingRewardCb){const f=pendingRewardCb;pendingRewardCb=null;f();}
+    };
+    box.appendChild(btn);
+  });
+  showOvl('ovl-reward');
+}
 function showOvl(id){
   OVLS.forEach(s=>document.getElementById(s).style.display='none');
   hud.style.display='none';ctrl.style.display='none';
@@ -1289,29 +1336,26 @@ function spawnWeapon(){
 function fire(){
   const now=Date.now();
   let rate=172;
-  if(curWeapon==='rapid')rate=110;       // 연사 (기존 70 → 110)
-  else if(curWeapon==='triple')rate=185; // 3연발 약간 느리게
-  else if(curWeapon==='laser')rate=150;  // 레이저 (기존 110 → 150)
-  else if(curWeapon==='explode')rate=240;// 폭발탄 느리게
+  if(curWeapon==='rapid')rate=110;
+  else if(curWeapon==='triple')rate=185;
+  else if(curWeapon==='laser')rate=150;
+  else if(curWeapon==='explode')rate=240;
+  rate-=upg.fireRate*22; // 발사속도 보상 (단계당 22ms 단축)
   if(now-lastShot<rate)return;lastShot=now;sfx('shoot');
   const lbl=()=>PROJ_LABELS[Math.floor(Math.random()*PROJ_LABELS.length)];
   const py=player.y-30;
+  const before=projectiles.length;
   if(curWeapon==='triple'){
-    // 3연발 부채꼴 (각도 약간 좁힘)
     projectiles.push({x:player.x,y:py,size:20,label:lbl(),speed:580,vx:0});
     projectiles.push({x:player.x,y:py,size:20,label:lbl(),speed:560,vx:-180});
     projectiles.push({x:player.x,y:py,size:20,label:lbl(),speed:560,vx:180});
   }else if(curWeapon==='laser'){
-    // 레이저 - 관통 빔, 1데미지 (기존 2 → 1)
     projectiles.push({x:player.x,y:py,size:24,label:lbl(),speed:1000,pierce:true});
   }else if(curWeapon==='homing'){
-    // 유도탄 1발 (기존 2발 → 1발)
     projectiles.push({x:player.x,y:py,size:22,label:lbl(),speed:500,homing:true});
   }else if(curWeapon==='explode'){
-    // 폭발탄
     projectiles.push({x:player.x,y:py,size:26,label:lbl(),speed:520,explode:true});
   }else if(curWeapon==='rapid'){
-    // 연사 - 단발 (2발 → 1발, 대신 빠름)
     projectiles.push({x:player.x,y:py,size:22,label:lbl(),speed:600});
   }else{
     // 기본 공격 - 상사(ST3)부터 2줄 발사
@@ -1321,6 +1365,12 @@ function fire(){
     }else{
       projectiles.push({x:player.x,y:py,size:22,label:lbl(),speed:560});
     }
+  }
+  // 진급 보상 적용 - 새로 추가된 발사체에 관통/탄크기
+  for(let k=before;k<projectiles.length;k++){
+    const p=projectiles[k];
+    if(upg.bulletSize>0)p.size*=(1+upg.bulletSize*.25); // 단계당 25% 커짐
+    if(upg.pierce>0&&!p.pierce){p.pierceCount=upg.pierce;} // 관통 횟수
   }
 }
 
@@ -1335,7 +1385,7 @@ function tickSkill(){
 }
 
 function useSkill(){
-  sfx('skill');skillCD=30;shake=25;
+  sfx('skill');skillCD=Math.max(15,30-upg.skillCd*3);shake=25; // 쿨다운 보상 (단계당 3초↓, 최소 15초)
   spawnSkillParticles();
   const pts=(enemies.length*350)+(obstacles.length*200);
   score+=pts;stScore+=pts;
@@ -1467,7 +1517,9 @@ function loop(ts){
       const p=projectiles[pi];
       if(Math.hypot(e.x-p.x,e.y-p.y)<e.size/2+p.size/2){
         e.hp-=(p.dmg||1);
-        if(!p.pierce)projectiles.splice(pi,1); // 관통은 안 사라짐
+        if(p.pierce){/* 레이저 관통 */}
+        else if(p.pierceCount>0){p.pierceCount--;} // 보상 관통: 횟수 차감하고 유지
+        else projectiles.splice(pi,1);
         sfx('hit');spawnHitParticles(e.x,e.y,'#ef4444');
         if(p.explode){
           // 폭발탄 - 충격파 이펙트 + 범위 피해
@@ -1522,7 +1574,18 @@ function loop(ts){
 
   // 버프
   for(let i=buffs.length-1;i>=0;i--){
-    const b=buffs[i];b.y+=b.speed*dt;drawBuff(b);
+    const b=buffs[i];b.y+=b.speed*dt;
+    // 자석 보상 - 플레이어 쪽으로 끌어당김
+    if(upg.magnet>0){
+      const d=Math.hypot(b.x-player.x,b.y-player.y);
+      const range=120+upg.magnet*60;
+      if(d<range){
+        const ang=Math.atan2(player.y-b.y,player.x-b.x);
+        const pull=(120+upg.magnet*80)*dt;
+        b.x+=Math.cos(ang)*pull;b.y+=Math.sin(ang)*pull;
+      }
+    }
+    drawBuff(b);
     if(Math.hypot(b.x-player.x,b.y-player.y)<b.size/2+player.size/2){
       sfx('item');spawnHitParticles(b.x,b.y,b.type==='weapon'?'#06b6d4':'#10b981');
       if(b.type==='inv'){player.dash=350;player.inv=280;}
@@ -1600,7 +1663,10 @@ function onStageClear(){
     showRankUI('win-rank','win-na','win-out','win-lb',final);
   }else{
     stIdx++;GS='TRANSITION';
-    showStageBanner(()=>{lastTime=performance.now();GS='PLAYING';loopId=requestAnimationFrame(loop);startBGM();});
+    // 다음 스테이지 진급 → 보상 선택 → 배너 → 시작
+    showRewardScreen(stIdx,()=>{
+      showStageBanner(()=>{lastTime=performance.now();GS='PLAYING';loopId=requestAnimationFrame(loop);startBGM();});
+    });
   }
 }
 async function onGameOver(sec){
