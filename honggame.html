@@ -1,0 +1,2336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>재홍 원사의 군생활 위기 극복</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
+#app{position:fixed;inset:0;font-family:'Black Han Sans',sans-serif;}
+.pg{position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;display:none;}
+.pg.show{display:flex;}
+
+/* TITLE */
+#pg-title{overflow:hidden;}
+#bg-cv{position:absolute;inset:0;}
+.t-box{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;padding:0 24px;}
+.t-medal{font-size:clamp(58px,14vw,84px);animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 0 22px gold);}
+@keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.t-h1{font-size:clamp(24px,6vw,42px);color:#FFD700;text-shadow:0 0 28px #FF8C00,3px 3px 0 #7f0000;line-height:1.2;margin:10px 0 6px;}
+.t-sub{color:#90caf9;font-size:13px;font-family:'Noto Sans KR';margin-bottom:28px;}
+.big-btn{width:min(280px,80vw);padding:15px 0;border-radius:50px;border:3px solid;
+  font-size:clamp(17px,4.5vw,22px);font-family:'Black Han Sans';cursor:pointer;margin-bottom:12px;}
+.big-btn:active{transform:scale(.93);}
+.red-btn{background:linear-gradient(135deg,#e53935,#b71c1c);border-color:#ff8a80;color:#fff;box-shadow:0 5px 0 #5c0000;}
+.blue-btn{background:linear-gradient(135deg,#1565c0,#0d47a1);border-color:#90caf9;color:#fff;box-shadow:0 5px 0 #082050;}
+.sm-btn{padding:10px 26px;border-radius:30px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);
+  color:#fff;font-size:14px;font-family:'Black Han Sans';cursor:pointer;}
+.sm-btn:active{transform:scale(.93);}
+
+/* STAGE */
+#pg-stage{background:linear-gradient(180deg,#0d1b2a,#1a3060);gap:8px;padding:20px;overflow-y:auto;}
+.pg-ttl{color:#FFD700;font-size:clamp(20px,5vw,26px);}
+.sc-list{display:flex;flex-direction:column;gap:8px;width:100%;max-width:480px;}
+.sc{display:flex;align-items:center;gap:12px;padding:13px 15px;border-radius:16px;border:3px solid;cursor:pointer;}
+.sc:active:not(.sc-locked){transform:scale(.96);}
+.sc-locked{opacity:.25;filter:grayscale(1);cursor:not-allowed!important;}
+.sc-icon{font-size:clamp(26px,6.5vw,34px);min-width:40px;text-align:center;}
+.sc-name{font-size:clamp(14px,3.5vw,17px);color:#fff;}
+.sc-desc{font-size:10px;color:rgba(255,255,255,.55);font-family:'Noto Sans KR';}
+.sc-ok{margin-left:auto;font-size:18px;}
+.sc[data-n="1"]{background:linear-gradient(135deg,#1b5e20,#2e7d32);border-color:#66bb6a;}
+.sc[data-n="2"]{background:linear-gradient(135deg,#0d47a1,#1565c0);border-color:#42a5f5;}
+.sc[data-n="3"]{background:linear-gradient(135deg,#4a148c,#6a1b9a);border-color:#ce93d8;}
+.sc[data-n="4"]{background:linear-gradient(135deg,#bf360c,#e64a19);border-color:#ffa726;}
+.sc[data-n="5"]{background:linear-gradient(135deg,#7f0000,#b71c1c);border-color:#ef9a9a;}
+
+/* WEAPON — 반드시 flex column + overflow-y:auto */
+#pg-weapon{background:linear-gradient(180deg,#0d1b2a,#1a2040);padding:0;flex-direction:column;}
+#w-inner{flex:1 1 0;min-height:0;overflow-y:scroll;-webkit-overflow-scrolling:touch;
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  width:100%;padding:14px 14px 8px;}
+#w-footer{flex:0 0 auto;width:100%;padding:10px 14px 16px;
+  background:rgba(13,27,42,.97);border-top:1px solid rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;gap:8px;}
+.w-hd{color:#FFD700;font-size:clamp(17px,4.2vw,22px);}
+.w-sub{color:#90caf9;font-size:12px;font-family:'Noto Sans KR';}
+.wc{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:14px;
+  border:2.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);
+  width:100%;max-width:480px;cursor:pointer;}
+.wc:active{transform:scale(.96);}
+.wc-sel{border-color:#FFD700!important;background:rgba(255,215,0,.12)!important;box-shadow:0 0 14px rgba(255,215,0,.45);}
+.wc-locked{opacity:.45;filter:grayscale(.7);}
+.ammo-row-sel{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
+.ammo-btn{padding:5px 10px;border-radius:10px;font-size:11px;font-family:'Noto Sans KR';font-weight:700;
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.25);color:#ddd;cursor:pointer;}
+.ammo-btn:active{transform:scale(.94);}
+.ammo-sel{background:rgba(255,82,82,.25);border-color:#ff5252;color:#fff;box-shadow:0 0 8px rgba(255,82,82,.5);}
+.wc-locked .w-name{color:#888;}
+.w-ico{font-size:30px;min-width:38px;text-align:center;margin-top:2px;}
+.w-body{flex:1;}
+.w-name{color:#fff;font-size:clamp(13px,3.2vw,15px);}
+.w-eng{color:rgba(255,255,255,.4);font-size:10px;font-family:'Noto Sans KR';}
+.w-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
+.tag{padding:2px 7px;border-radius:20px;font-size:10px;font-family:'Noto Sans KR';font-weight:700;}
+.tr{background:rgba(244,67,54,.25);color:#ff8a80;}
+.tg{background:rgba(255,193,7,.2);color:#FFD700;}
+.tgr{background:rgba(76,175,80,.2);color:#a5d6a7;}
+.tp{background:rgba(156,39,176,.3);color:#e1bee7;}
+.to{background:rgba(255,152,0,.25);color:#ffcc80;}
+.tb{background:rgba(33,150,243,.25);color:#90caf9;}
+.w-spec{color:rgba(255,255,255,.38);font-size:10px;font-family:'Noto Sans KR';margin-top:3px;line-height:1.4;}
+.go-btn{width:100%;max-width:480px;padding:14px;border-radius:50px;border:3px solid #FFD700;
+  background:linear-gradient(135deg,#e53935,#b71c1c);color:#fff;font-size:clamp(17px,4.5vw,21px);
+  font-family:'Black Han Sans';cursor:pointer;box-shadow:0 5px 0 #5c0000;}
+
+/* GAME */
+#pg-game{padding:0;justify-content:flex-start;}
+#g-hud{flex:0 0 auto;width:100%;background:linear-gradient(180deg,rgba(0,0,0,.9),rgba(0,0,0,.5));padding:5px 12px 4px;}
+#hud-r1{display:flex;justify-content:space-between;align-items:center;}
+.hud-stage{color:#FFD700;font-size:12px;}
+.hud-score{color:#fff;font-size:12px;}
+#hud-r2{display:flex;justify-content:center;gap:10px;align-items:center;margin-top:2px;}
+#wind-el{color:#adf;font-size:11px;background:rgba(0,0,0,.45);padding:2px 9px;border-radius:20px;}
+#timer-el{color:#FFD700;font-size:17px;font-weight:700;background:rgba(0,0,0,.6);padding:3px 14px;border-radius:20px;font-family:'Black Han Sans';border:2px solid rgba(255,215,0,.5);}
+#timer-el.urg{color:#fff;background:rgba(244,67,54,.85);border-color:#fff;animation:bl .4s infinite;font-size:19px;}
+@keyframes bl{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.15);}}
+#combo-el{color:#FF4500;font-size:15px;text-shadow:0 0 10px #FF4500;min-height:17px;}
+#combo-el.pop{animation:pop .2s ease-out;}
+@keyframes pop{0%{transform:scale(1);}50%{transform:scale(1.6);}100%{transform:scale(1);}}
+#ammo-row{display:flex;gap:3px;justify-content:center;margin-top:2px;}
+.apip{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);}
+.apip.on{background:#FFD700;box-shadow:0 0 5px #FFD700;}
+
+#cv-wrap{flex:1 1 0;position:relative;width:100%;min-height:0;overflow:hidden;}
+#gc{display:block;width:100%;height:100%;}
+
+/* minimap */
+#mm{position:absolute;top:6px;right:6px;border:1px solid rgba(255,255,255,.3);border-radius:4px;
+  background:rgba(0,0,0,.6);pointer-events:none;z-index:15;}
+
+#g-ctrl{flex:0 0 auto;width:100%;background:linear-gradient(0deg,rgba(0,0,0,.92) 85%,transparent);padding:7px 12px 16px;}
+#aim-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+#aim-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR';white-space:nowrap;}
+#aim-sl{flex:1;-webkit-appearance:none;height:10px;border-radius:5px;background:linear-gradient(90deg,#1565c0,#e53935);outline:none;}
+#aim-sl::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:radial-gradient(#FFD700,#FF8C00);box-shadow:0 0 8px rgba(255,215,0,.9);cursor:grab;}
+#aim-deg{color:#FFD700;font-size:14px;min-width:36px;text-align:right;}
+#power-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+#power-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR';white-space:nowrap;}
+#power-bar{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid rgba(255,255,255,.2);}
+#power-fill{height:100%;width:0%;border-radius:7px;
+  background:linear-gradient(90deg,#4caf50,#FFD700,#f44336);transition:width .03s linear;}
+#power-pct{color:#FFD700;font-size:13px;min-width:38px;text-align:right;font-family:'Noto Sans KR';}
+#fire-btn.charging{border-color:#FFD700;animation:chargePulse .4s infinite;}
+@keyframes chargePulse{0%,100%{box-shadow:0 4px 0 #4a0000;}50%{box-shadow:0 4px 14px #FFD700;}}
+#ctrl-row{display:flex;gap:8px;}
+#ammo-sel-row{display:flex;gap:6px;justify-content:center;margin-bottom:7px;flex-wrap:wrap;}
+.gammo-btn{padding:6px 12px;border-radius:18px;font-size:12px;font-family:'Noto Sans KR';font-weight:700;
+  background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);color:#ddd;cursor:pointer;}
+.gammo-btn:active{transform:scale(.93);}
+.gammo-sel{background:rgba(255,82,82,.3);border-color:#ff5252;color:#fff;box-shadow:0 0 10px rgba(255,82,82,.6);}
+#fire-btn{flex:2;padding:12px;border-radius:14px;border:3px solid #ef9a9a;
+  background:linear-gradient(135deg,#c62828,#7f0000);color:#fff;font-size:17px;
+  font-family:'Black Han Sans';cursor:pointer;box-shadow:0 4px 0 #4a0000;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+#fire-btn:disabled{opacity:.3;cursor:not-allowed;box-shadow:none;}
+#move-l-btn,#move-r-btn{flex:.7;padding:12px 4px;border-radius:14px;border:2px solid rgba(102,187,106,.5);
+  background:linear-gradient(135deg,#2e7d32,#1b5e20);color:#fff;font-size:12px;
+  font-family:'Black Han Sans';cursor:pointer;text-align:center;line-height:1.3;}
+#move-l-btn:active,#move-r-btn:active{transform:scale(.93);}
+#move-l-btn:disabled,#move-r-btn:disabled{opacity:.3;}
+#wchg-btn{flex:1;padding:12px;border-radius:14px;border:2px solid rgba(255,215,0,.45);
+  background:linear-gradient(135deg,#4a1b6a,#280048);color:#fff;font-size:13px;
+  font-family:'Black Han Sans';cursor:pointer;text-align:center;line-height:1.4;}
+#w-thumb{font-size:18px;}
+#wpn-lbl{font-size:9px;color:#aaa;font-family:'Noto Sans KR';text-align:center;margin-top:2px;}
+
+#dlg-box{position:absolute;left:10px;right:10px;background:rgba(0,0,0,.9);border:2px solid #FFD700;
+  border-radius:12px;padding:7px 12px;pointer-events:none;z-index:20;transition:opacity .28s;}
+#dlg-box.hide{opacity:0;}
+#dlg-spk{color:#FFD700;font-size:11px;font-family:'Noto Sans KR';font-weight:700;margin-bottom:2px;}
+#dlg-txt{color:#fff;font-size:12px;font-family:'Noto Sans KR';line-height:1.5;}
+#eatk-el{position:absolute;top:28%;left:50%;transform:translate(-50%,-50%);
+  color:#f44336;font-size:18px;text-shadow:0 0 14px #f44336;pointer-events:none;
+  opacity:0;z-index:25;white-space:pre-line;text-align:center;}
+
+#result-box{position:absolute;inset:0;z-index:40;display:none;flex-direction:column;align-items:center;
+  justify-content:flex-start;background:rgba(0,0,0,.87);gap:10px;padding:20px 12px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.r-title{font-size:clamp(32px,8vw,48px);text-shadow:3px 3px 0 #000;margin-top:10px;}
+.r-win{color:#FFD700;}.r-lose{color:#f44336;}
+.r-score{color:#fff;font-size:17px;font-family:'Noto Sans KR';}
+.r-bd{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.07);border-radius:12px;padding:10px 16px;width:min(320px,88vw);}
+.r-row{display:flex;justify-content:space-between;font-family:'Noto Sans KR';font-size:12px;color:rgba(255,255,255,.8);}
+.r-row span:last-child{color:#FFD700;font-weight:700;}
+.r-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.r-btn{padding:11px 22px;border-radius:30px;border:none;font-size:15px;font-family:'Black Han Sans';cursor:pointer;}
+.r-next{background:linear-gradient(135deg,#FFD700,#FF8C00);color:#1a1a2e;}
+.r-retry{background:linear-gradient(135deg,#f44336,#b71c1c);color:#fff;}
+.r-menu{background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.28);}
+
+/* LB */
+#pg-lb{background:linear-gradient(180deg,#0d1b2a,#1a2040);padding:20px;gap:10px;overflow-y:auto;}
+#lb-list{width:100%;max-width:480px;display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow-y:auto;}
+.lb-row{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border-radius:10px;padding:9px 12px;}
+.lb-rank{font-size:19px;width:28px;text-align:center;}
+.lb-info{flex:1;}.lb-name{color:#fff;font-family:'Noto Sans KR';font-weight:700;font-size:14px;}
+.lb-detail{color:#888;font-size:10px;font-family:'Noto Sans KR';}
+.lb-sc{color:#FFD700;font-family:'Black Han Sans';font-size:16px;}
+
+.floaty{position:absolute;pointer-events:none;z-index:30;font-family:'Black Han Sans';animation:fup 1.1s ease-out forwards;}
+@keyframes fup{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(-55px);}}
+
+/* 가로모드 대응 */
+@media (orientation:landscape) and (max-height:500px){
+  #g-hud{padding:3px 12px 2px;}
+  #hud-r2{gap:8px;margin-top:1px;}
+  #ammo-row{margin-top:1px;}
+  .apip{width:10px;height:10px;}
+  #g-ctrl{padding:4px 12px 6px;}
+  #aim-row{margin-bottom:4px;}
+  #fire-btn,#wchg-btn{padding:8px;font-size:14px;}
+  #wpn-lbl{display:none;}
+  #mm{width:90px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- TITLE -->
+<div class="pg show" id="pg-title">
+  <canvas id="bg-cv"></canvas>
+  <div class="t-box">
+    <span class="t-medal">🏅</span>
+    <div class="t-h1">재홍 원사의<br>군생활 위기 극복</div>
+    <div class="t-sub">포병 원사의 전설적 생존기</div>
+    <button class="big-btn red-btn" id="btn-start">🎮 게임 시작</button>
+    <button class="big-btn blue-btn" id="btn-lb-t">🏆 명예의 전당</button>
+  </div>
+</div>
+
+<!-- STAGE -->
+<div class="pg" id="pg-stage">
+  <div class="pg-ttl">⚔️ 위기 선택</div>
+  <div style="color:rgba(255,255,255,.4);font-size:12px;font-family:'Noto Sans KR';">극복: <span id="clr-cnt">0</span>/5</div>
+  <div class="sc-list">
+    <div class="sc" data-n="1"><span class="sc-icon">👊</span><div><div class="sc-name">위기 1: 선임의 텃세</div><div class="sc-desc">HP 100 · 45초 · 바람 약</div></div><span class="sc-ok" id="ok-1"></span></div>
+    <div class="sc" data-n="2"><span class="sc-icon">🎩</span><div><div class="sc-name">위기 2: 진급 심사</div><div class="sc-desc">HP 150 · 40초 · 바람 중</div></div><span class="sc-ok" id="ok-2"></span></div>
+    <div class="sc" data-n="3"><span class="sc-icon">🚨</span><div><div class="sc-name">위기 3: 병사 사고</div><div class="sc-desc">HP 200 · 35초 · 바람 중강</div></div><span class="sc-ok" id="ok-3"></span></div>
+    <div class="sc" data-n="4"><span class="sc-icon">📎</span><div><div class="sc-name">위기 4: 감사 지옥</div><div class="sc-desc">HP 250 · 30초 · 바람 강</div></div><span class="sc-ok" id="ok-4"></span></div>
+    <div class="sc" data-n="5"><span class="sc-icon">🏛️</span><div><div class="sc-name">위기 5: 최후의 전역</div><div class="sc-desc">HP 320 · 25초 · 바람 초강</div></div><span class="sc-ok" id="ok-5"></span></div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:8px;">
+    <button class="sm-btn" id="btn-lb-s">🏆 명예의 전당</button>
+    <button class="sm-btn" id="btn-back-t">← 뒤로</button>
+  </div>
+</div>
+
+<!-- WEAPON -->
+<div class="pg" id="pg-weapon">
+  <div id="w-inner">
+    <div class="w-hd">⚙️ 화기 선택</div>
+    <div class="w-sub" id="w-sub">위기 1</div>
+    <div id="wlist" style="width:100%;max-width:480px;display:flex;flex-direction:column;gap:7px;"></div>
+  </div>
+  <div id="w-footer">
+    <button class="go-btn" id="btn-random" style="background:linear-gradient(135deg,#9c27b0,#e040fb);border-color:#e040fb;margin-bottom:7px;">🎲 랜덤 화기 (전설포 확률!)</button>
+    <button class="go-btn" id="btn-go">🔥 전투 개시!</button>
+    <button class="sm-btn" id="btn-back-s">← 위기 선택</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="pg" id="pg-game">
+  <div id="g-hud">
+    <div id="hud-r1">
+      <span class="hud-stage" id="hud-stage">위기 1</span>
+      <span class="hud-score">점수: <span id="hud-score">0</span></span>
+    </div>
+    <div id="hud-r2">
+      <div id="wind-el">💨 없음</div>
+      <div id="timer-el">⏱ 45</div>
+      <div id="combo-el"></div>
+    </div>
+    <div id="ammo-row"></div>
+  </div>
+  <div id="cv-wrap">
+    <canvas id="gc"></canvas>
+    <canvas id="mm" width="110" height="26"></canvas>
+    <div id="dlg-box" class="hide"><div id="dlg-spk"></div><div id="dlg-txt"></div></div>
+    <div id="eatk-el"></div>
+    <div id="result-box">
+      <div class="r-title" id="r-title"></div>
+      <div class="r-score" id="r-score"></div>
+      <div class="r-bd" id="r-bd"></div>
+      <div class="r-btns">
+        <button class="r-btn r-next" id="r-next">다음 →</button>
+        <button class="r-btn r-retry" id="r-retry">↺ 재도전</button>
+        <button class="r-btn r-menu" id="r-menu">목록</button>
+      </div>
+    </div>
+  </div>
+  <div id="g-ctrl">
+    <div id="aim-row">
+      <span id="aim-lbl">발사 각도</span>
+      <input type="range" id="aim-sl" min="-10" max="85" value="45">
+      <span id="aim-deg">45°</span>
+    </div>
+    <div id="power-row">
+      <span id="power-lbl">파워</span>
+      <div id="power-bar"><div id="power-fill"></div></div>
+      <span id="power-pct">0%</span>
+    </div>
+    <div id="ammo-sel-row"></div>
+    <div id="ctrl-row">
+      <button id="move-l-btn">◀<br>이동</button>
+      <button id="fire-btn"><span id="w-thumb">💨</span><span> 발사!</span></button>
+      <button id="move-r-btn">▶<br>이동</button>
+    </div>
+    <div id="wpn-lbl"></div>
+  </div>
+</div>
+
+<!-- LB -->
+<div class="pg" id="pg-lb">
+  <div class="pg-ttl">🏆 명예의 전당</div>
+  <div id="lb-list"></div>
+  <button class="sm-btn" id="btn-back-lb">← 뒤로</button>
+</div>
+
+</div>
+<script>
+'use strict';
+
+/* ══ WEAPONS — 각 무기 기본탄/특수탄 2종 ══
+   탄종 효과: blast=폭발반경, pierce=관통수, dig=지형파괴배율, kb=넉백, dmgMul=데미지배율
+══ */
+const WD=[
+  {id:'w105', name:'105mm 견인포', eng:'KH-178', ico:'💨',
+   dmg:[22,32],ammo:8, grav:.20,spd:18, wf:0.3, unlock:0, trail:'#cfe8ff', cd:1, mob:0.7, minAng:-5,
+   spec:'⚡연사·재장전 즉시·만능 입문',
+   ammos:[
+     {id:'basic',name:'기본 고폭탄',ico:'⚪',blast:20,pierce:0,dig:0.9,kb:1.0,dmgMul:1.0,crater:0.8,desc:'표준 폭발·작은 구멍'},
+     {id:'red',  name:'빨콩(고속탄)',ico:'🔴',blast:12,pierce:2,dig:0.6,kb:2.5,dmgMul:2.6,crater:0.5,trail:'#ff2020',desc:'작지만 직격 시 최강 데미지'}
+   ]},
+
+  {id:'w155', name:'155mm 견인포', eng:'KH-179', ico:'🌀',
+   dmg:[44,60],ammo:5, grav:.40,spd:16, wf:1.0, unlock:0, trail:'#b0bec5', cd:2, mob:0.5, minAng:5,
+   spec:'💢묵직한 곡사·균형형',
+   ammos:[
+     {id:'basic',name:'기본 곡사탄',ico:'⚪',blast:34,pierce:0,dig:1.1,kb:1.2,dmgMul:1.0,crater:1.0,desc:'중형 폭발·중간 구멍'},
+     {id:'cannon',name:'대포탄',ico:'💣',blast:58,pierce:0,dig:1.8,kb:1.8,dmgMul:1.3,crater:1.6,desc:'대형 폭발·큰 구멍·강력'}
+   ]},
+
+  {id:'k9', name:'K9 썬더', eng:'K9 자주포', ico:'🔥',
+   dmg:[50,68],ammo:4, grav:.30,spd:17, wf:0.7, unlock:0, trail:'#ff7043', cd:3, mob:1.2, minAng:0,
+   spec:'💥최강 단발 화력·느린 재장전',
+   ammos:[
+     {id:'basic',name:'기본 작렬탄',ico:'⚪',blast:44,pierce:0,dig:1.5,kb:1.3,dmgMul:1.0,crater:1.3,desc:'광역 작렬·넓은 구멍'},
+     {id:'cluster',name:'확산 클러스터',ico:'🌋',blast:40,pierce:0,dig:1.3,kb:1.1,dmgMul:0.85,crater:1.1,scatter:3,desc:'3발 확산·넓게 견제'}
+   ]},
+
+  {id:'k55', name:'K55A1 자주포', eng:'K55A1', ico:'⚡',
+   dmg:[42,56],ammo:5, grav:.16,spd:23, wf:0.6, unlock:0, trail:'#ffeb3b', cd:2, mob:1.3, minAng:-10,
+   spec:'🏹초고속 직사·관통/가스',
+   ammos:[
+     {id:'basic',name:'기본 철갑탄',ico:'⚪',blast:14,pierce:5,dig:1.0,kb:1.5,dmgMul:1.1,crater:0.6,desc:'고속 관통·좁은 터널'},
+     {id:'drill',name:'빵꾸탄(가스탄)',ico:'🕳️',blast:16,pierce:12,dig:1.4,kb:1.2,dmgMul:0.7,crater:0.8,gas:true,desc:'착탄지 독가스·적 강제 이동'}
+   ]},
+
+  {id:'mlrs', name:'K-MLRS 다연장', eng:'130mm', ico:'💥',
+   dmg:[30,42],ammo:6,grav:.22,spd:18, wf:1.6, unlock:0, trail:'#ce93d8', cd:3, mob:0.9, minAng:5,
+   spec:'🌧️산탄 폭우·광역 제압',
+   ammos:[
+     {id:'basic',name:'기본 4연장',ico:'⚪',blast:18,pierce:0,dig:0.9,kb:0.8,dmgMul:1.0,scatter:4,crater:0.7,desc:'4발 산탄·명중 쉬움'},
+     {id:'rain', name:'8연장 융단폭격',ico:'🌧️',blast:15,pierce:0,dig:1.1,kb:0.7,dmgMul:0.9,scatter:8,crater:0.6,desc:'8발 융단·초광역 제압'}
+   ]},
+
+  {id:'pungik', name:'풍익 차륜포', eng:'차륜형 105mm', ico:'🛞',
+   dmg:[38,52],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
+   spec:'🏃기동력 최강·바람 무시·근접 게릴라',
+   ammos:[
+     {id:'basic',name:'기본 유도탄',ico:'⚪',blast:28,pierce:0,dig:1.1,kb:1.2,dmgMul:1.15,crater:0.9,desc:'바람0·정밀·이동 2배'},
+     {id:'pierce',name:'관통 유도탄',ico:'🎯',blast:22,pierce:6,dig:1.2,kb:1.6,dmgMul:1.2,crater:0.8,desc:'바람0·다중 관통·고기동'}
+   ]},
+
+  {id:'legend', name:'원사의 전설포', eng:'8인치 M110', ico:'☄️',
+   dmg:[120,180],ammo:2,grav:.18,spd:24, wf:0.0, unlock:99, trail:'#FFD700', cd:4, mob:0.6, minAng:-5,
+   spec:'🌟히든 해금·초토화·전 스테이지 노미스 클리어 시',
+   ammos:[
+     {id:'basic',name:'전설 작렬탄',ico:'☄️',blast:90,pierce:6,dig:2.8,kb:2.5,dmgMul:1.0,crater:2.4,desc:'초토화·거대 구멍'},
+     {id:'nuke', name:'원사의 분노',ico:'☢️',blast:130,pierce:12,dig:3.6,kb:3.5,dmgMul:1.4,crater:3.2,gas:true,desc:'전 지형 초토화·핵폭발·가스'}
+   ]}
+];
+
+/* ══ STAGES ══ */
+const SD=[
+  {n:1,name:'선임의 텃세', eName:'선임 병장',  eHp:150,tl:45,wMax:.6, theme:'mountain',
+   wc:'#8B7355',wa:'#A08060',edMin:10,edMax:16,eShots:1,eAcc:.55,
+   eDlg:['야 이 신병아!','군기 잡아줄게!','빠져!'],
+   winMsg:'선임 제압!',loseMsg:'선임 눈치에 쓰러짐...',
+   sky1:'#87CEEB',sky2:'#B0E2FF',gr:'#5a8a3c'},
+  {n:2,name:'진급 심사',  eName:'심사위원단', eHp:240,tl:42,wMax:1.2, theme:'cloud',
+   wc:'#4a6741',wa:'#5c7d52',edMin:13,edMax:20,eShots:1,eAcc:.65,
+   eDlg:['진급 불가!','결격 사유!','탈락!'],
+   winMsg:'진급 통과!',loseMsg:'진급 탈락...',
+   sky1:'#a8c8e8',sky2:'#d0e4f5',gr:'#7a9a6c'},
+  {n:3,name:'병사 사고',  eName:'사고뭉치',   eHp:310,tl:40,wMax:1.8, theme:'swamp',
+   wc:'#4a5c2a',wa:'#5c6e38',edMin:16,edMax:24,eShots:1,eAcc:.72,
+   eDlg:['또 사고!','원사 책임!','도망!'],
+   winMsg:'사고 수습 완료!',loseMsg:'수습 실패...',
+   sky1:'#6a7a5c',sky2:'#8a9a7c',gr:'#3a4a1c'},
+  {n:4,name:'감사 지옥',  eName:'감사관',     eHp:380,tl:38,wMax:2.5, theme:'ice',
+   wc:'#8aafc4',wa:'#aacfe4',edMin:16,edMax:24,eShots:1,eAcc:.72,
+   eDlg:['지적 10개!','자료 내놔!','징계감!'],
+   winMsg:'감사 통과! 지적 ZERO.',loseMsg:'감사에 쓰러짐...',
+   sky1:'#b0d4e8',sky2:'#d8eef8',gr:'#c0d8e0'},
+  {n:5,name:'최후의 전역',eName:'군생활의 벽', eHp:480,tl:35,wMax:3.5, theme:'city',
+   wc:'#5a5a6a',wa:'#7a7a8a',edMin:18,edMax:28,eShots:2,eAcc:.80,
+   eDlg:['전역 없다!','버텨봐라!','최후 시험!'],
+   winMsg:'🎖️ 전설 달성!',loseMsg:'장렬히 싸웠다...',
+   sky1:'#3a4a6a',sky2:'#5a6a8a',gr:'#4a4a5a'}
+];
+
+/* ══ STATE ══ */
+const G={
+  cleared:[], // 매 세션 위기1부터 시작 (진행도 저장 안 함)
+  selStage:1,selWpnId:'w105',selAmmo:0,
+  stage:null,wpn:null,
+  angle:45,wind:0,
+  ammo:0,ammoMax:0,
+  pHp:100,pHpMax:100,eHp:0,eHpMax:0,
+  legendUnlocked:false, runNoMiss:true, totalScore:0,
+  score:0,combo:0,maxCombo:0,hits:0,shots:0,totalDmg:0,
+  timeLeft:0,timerID:null,
+  busy:false,gameOver:false,eMissed:0
+};
+
+/* ══ CANVAS / WORLD ══
+   핵심 설계:
+   - 월드 = 화면 너비 × 3 (충분히 넓음)
+   - 카메라 camX: 매 프레임 선형 보간
+   - 모든 오브젝트 월드 좌표(wx), 화면 변환 = wx - camX
+══ */
+let CV,CX,mmCV,mmCX,RAF,running=false;
+let ptcls=[],projs=[],exps=[];
+let blocks=[];
+let hillPts=[];   // 지형 y값 배열 (x는 인덱스로 계산)
+let groundCraters=[]; // 평지 분화구 {wx, r}
+let wallCraters=[];   // 성벽 원형 분화구 {wx, wy, r}
+let enemySpots=[];    // 적 점프 거점 [{x, trench}]
+let curSpotIdx=0;
+let cityBlocks=[];    // 도시 건물 장애물
+let gasZones=[];      // 가스탄 독가스 영역 [{wx,r,turns}]
+let extraHills=[];    // 추가 작은 언덕들
+let items=[];         // 하늘에서 떨어지는 아이템
+let itemTurnCount=0;
+let eX, eMoveMin, eMoveMax, eMoveTarget; // 적 위치/이동
+let pMoveTarget;      // 플레이어 부드러운 이동 목표
+let pDropY=0,eDropY=0,dropPhase=false; // 하늘 낙하 연출
+let hillMax=[];   // 원래 지형 높이 (복원 안함, 참조용)
+let bonusZones=[];// 미사일 증폭존 (지형 매립 관문)
+let fireIdCounter=0; // 발사 식별 ID
+let HILL_COLS;    // 지형 분할 수
+let HILL_X0,HILL_X1; // 지형 월드 X 범위
+let WORLD_W;
+let SCR_W,SCR_H;  // 화면 크기 (변하지 않는 참조용)
+let gY;           // 지면 Y (화면 좌표 = 월드 Y)
+let camX=0;       // 현재 카메라 X (월드 좌표)
+let camTX=0;      // 카메라 목표 X
+let camDrag=false,camDragX=0,camDragStart=0; // 드래그 상태
+let camFollowPlayer=false; // 이동 시 카메라 플레이어 추적
+let camFollowEnemy=false;  // 적 이동 시 카메라 적 추적
+let camLocked=false; // 발사/반격 중 드래그 잠금
+let pWX,pWY;      // 플레이어 월드 좌표
+let pMoveMin,pMoveMax; // 플레이어 이동 가능 범위
+let movedThisTurn=0;   // 이번 턴 이동량
+let firePower=0;       // 0~1 발사 파워
+let fireHolding=false; // 홀드 중
+let fireHoldStart=0;   // 홀드 시작 시각
+let powerRAF=null;
+let cWL,cWT,cWW,cWH; // 성 월드 좌표
+let camShake={x:0,y:0,d:0};
+let pHitT=0;
+let eKnock=0, eTilt=0; // 적 피격 넉백(밀림), 기울기
+// 배경 오브젝트 (월드 좌표)
+let bgClouds=[],bgMtns=[],bgTrees=[];
+let bgStyle=0; // 배경 스타일 (0산 1언덕 2도시 3사막 4숲)
+
+function initCV(){
+  const wrap=document.getElementById('cv-wrap');
+  CV=document.getElementById('gc');
+  mmCV=document.getElementById('mm');
+  SCR_W=wrap.clientWidth; SCR_H=wrap.clientHeight;
+  CV.width=SCR_W; CV.height=SCR_H;
+  CX=CV.getContext('2d');
+  mmCX=mmCV.getContext('2d');
+  gY=SCR_H*0.80;
+  WORLD_W=SCR_W*4.5;  // 전장 = 화면 4.5배 (매우 긴 맵)
+}
+
+function w2s(wx){return wx-camX;}  // 월드→화면 X 변환
+
+// 현재 cWL 위치에 성 블록 재생성 (trench면 낮게)
+function rebuildCastle(sd,trench){
+  // 기존 성 블록 제거 (floating 제외)
+  blocks=blocks.filter(b=>b.floating);
+  const baseTop = trench ? gY-cWH*0.55 : cWT; // 참호는 낮게
+  const useTop = trench ? baseTop : cWT;
+  const cols=4,rows=trench?5:8,bw=cWW/cols,bh=(gY-useTop)/rows;
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++)
+    blocks.push({x:cWL+c*bw+1,y:useTop+r*bh+1,w:bw-2,h:bh-2,hp:2,max:2,alive:true,wc:sd.wc,wa:sd.wa});
+  for(let i=0;i<5;i++){
+    const bw2=cWW/5;
+    blocks.push({x:cWL+i*bw2+3,y:useTop-gY*.05,w:bw2*.55,h:gY*.05,hp:1,max:1,alive:true,wc:sd.wc,wa:sd.wa,batt:true});
+  }
+}
+
+function buildLevel(sd){
+  blocks=[];
+  // 적: 성 없이 평지에서 시작 (우측) — 위치는 언덕 정의 후 확정
+  cWW=WORLD_W*0.10; cWH=0; cWT=gY;
+
+  // ══ 장애물(언덕): 스테이지별로 모양·크기 다양화 ══
+  HILL_X0=WORLD_W*(0.36+Math.random()*0.06);
+  HILL_X1=WORLD_W*(0.56+Math.random()*0.06);
+  HILL_COLS=70;
+  hillPts=[];
+  hillMax=[];
+  // 지형 프로파일 5종 중 랜덤 선택 (매 판 다르게)
+  const profiles=[
+    // 단일 큰 봉우리 (사다리꼴)
+    ()=>{const hPeak=SCR_H*(0.15+Math.random()*0.12);return(t)=>{let b;if(t<0.3)b=t/0.3;else if(t>0.7)b=(1-t)/0.3;else b=1;return gY-(gY-hPeak)*b;};},
+    // 쌍봉
+    ()=>{const hPeak=SCR_H*(0.25+Math.random()*0.1);return(t)=>{const b=Math.max(0,Math.sin(t*Math.PI*2.0))*(1-Math.abs(t-0.5)*1.5);return gY-(gY-hPeak)*Math.max(0,b);};},
+    // 들쭉날쭉 험준
+    ()=>{const hPeak=SCR_H*(0.35+Math.random()*0.15);return(t)=>{const wave=Math.sin(t*Math.PI*5)*0.3+Math.sin(t*Math.PI*3)*0.4+0.5;const env=Math.sin(t*Math.PI);return gY-(gY-hPeak)*env*Math.max(0.3,wave);};},
+    // 날카로운 삼각
+    ()=>{const hPeak=SCR_H*(0.08+Math.random()*0.12);return(t)=>{const b=1-Math.abs(t-0.5)*2;return gY-(gY-hPeak)*Math.max(0,b);};},
+    // 평평하고 낮음
+    ()=>{const hPeak=SCR_H*(0.45+Math.random()*0.15);return(t)=>{const b=Math.sin(t*Math.PI)*0.75;return gY-(gY-hPeak)*b;};},
+    // 비대칭 절벽
+    ()=>{const hPeak=SCR_H*(0.18+Math.random()*0.12);return(t)=>{const b=t<0.6?Math.pow(t/0.6,0.7):(1-t)/0.4;return gY-(gY-hPeak)*Math.max(0,Math.min(1,b));};},
+  ];
+  const terrainFn=profiles[Math.floor(Math.random()*profiles.length)]();
+  for(let i=0;i<=HILL_COLS;i++){
+    const t=i/HILL_COLS;
+    const top=terrainFn(t);
+    hillPts.push(top);
+    hillMax.push(top);
+  }
+
+  // ══ 분열존: 화면 곳곳 랜덤 배치 (통과 시 포탄 분열) ══
+  bonusZones=[];
+  const zoneCount=3+Math.floor(Math.random()*3); // 3~5개 랜덤
+  for(let z=0;z<zoneCount;z++){
+    // 맵 전체에 랜덤 (좌우 진영 사이 공중 위주)
+    const zx=WORLD_W*(0.15+Math.random()*0.7);
+    const zy=SCR_H*(0.20+Math.random()*0.45); // 공중 다양한 높이
+    const r=clamp(20,30,SCR_W*0.06);
+    const split=Math.random()<0.35?2:1; // 35%는 +2발(3발), 나머지 +1발(2발)
+    bonusZones.push({wx:zx, wy:zy, r, split});
+  }
+  fireIdCounter=0;
+  groundCraters=[];
+  wallCraters=[];
+  cityBlocks=[];
+  gasZones=[];
+  items=[];
+  itemTurnCount=0;
+
+  // ══ 작은 추가 언덕: 랜덤 개수·위치·모양 ══
+  extraHills=[];
+  const ehCount=2+Math.floor(Math.random()*3); // 2~4개
+  const ehShape=Math.floor(Math.random()*3); // 0:둥근 1:뾰족 2:둔덕
+  for(let e=0;e<ehCount;e++){
+    // 아군/적 지역에 분산
+    const side=e%2===0?(0.15+Math.random()*0.15):(0.68+Math.random()*0.12);
+    const x0=WORLD_W*side;
+    const x1=x0+WORLD_W*(0.05+Math.random()*0.03);
+    const peak=gY*(0.40+Math.random()*0.35);
+    const pts=[];
+    for(let i=0;i<=20;i++){
+      const t=i/20;
+      let bell;
+      if(ehShape===1) bell=1-Math.abs(t-0.5)*2; // 뾰족
+      else if(ehShape===2) bell=Math.sin(t*Math.PI)*0.8; // 둔덕
+      else bell=Math.sin(t*Math.PI); // 둥근
+      pts.push(gY-(gY-peak)*Math.max(0,bell));
+    }
+    extraHills.push({x0,x1,peak,pts});
+  }
+
+  // ══ 도시 테마: 언덕 사이에 건물/아파트 장애물 (부서짐) ══
+  if(sd.theme==='city'){
+    const bn=4; // 건물 4동
+    for(let b=0;b<bn;b++){
+      const bx=WORLD_W*(0.30+b*0.11)+Math.random()*WORLD_W*0.02;
+      const bh2=gY*(0.30+Math.random()*0.35);
+      const bw3=WORLD_W*0.05;
+      const floors=Math.floor(bh2/(gY*0.06));
+      for(let f=0;f<floors;f++){
+        cityBlocks.push({x:bx,y:gY-(f+1)*(gY*0.06),w:bw3,h:gY*0.06-2,
+          hp:2,max:2,alive:true,wc:'#6a6a7a',wa:'#8a8a9a',city:true});
+      }
+    }
+  }
+
+  // ══ 좌우 진영 랜덤 배치 (플레이어/적이 좌or우) ══
+  const playerOnLeft = Math.random()<0.5;
+  const leftMin=WORLD_W*0.04, leftMax=HILL_X0-SCR_W*0.10;
+  const rightMin=HILL_X1+SCR_W*0.10, rightMax=WORLD_W-SCR_W*0.06;
+  if(playerOnLeft){
+    // 플레이어 왼쪽, 적 오른쪽
+    pMoveMin=leftMin; pMoveMax=rightMax;
+    pWX=leftMin+(leftMax-leftMin)*(0.1+Math.random()*0.7);
+    eMoveMin=leftMin; eMoveMax=rightMax;
+    eX=rightMin+(rightMax-rightMin)*(0.1+Math.random()*0.7);
+  } else {
+    // 플레이어 오른쪽, 적 왼쪽
+    pMoveMin=leftMin; pMoveMax=rightMax;
+    pWX=rightMin+(rightMax-rightMin)*(0.1+Math.random()*0.7);
+    eMoveMin=leftMin; eMoveMax=rightMax;
+    eX=leftMin+(leftMax-leftMin)*(0.1+Math.random()*0.7);
+  }
+  cWL=eX;
+  eMoveTarget=eX;
+  pWY=gY-SCR_H*0.12;
+  movedThisTurn=0;
+  pMoveTarget=pWX;
+  pDropY=-SCR_H*0.6; eDropY=-SCR_H*0.6; dropPhase=true;
+  camX=0; camTX=0; camLocked=false;
+
+  bgClouds=[];
+  for(let i=0;i<16;i++)
+    bgClouds.push({wx:WORLD_W*(i/15),wy:SCR_H*(0.04+Math.random()*0.12),r:clamp(28,52,SCR_W*0.09)});
+  // 배경 스타일 랜덤: 0산 1언덕 2도시 3사막 4숲
+  bgStyle=Math.floor(Math.random()*5);
+  bgMtns=[];
+  for(let i=0;i<20;i++)
+    bgMtns.push({wx:WORLD_W*(i/19),wpk:gY*(0.30+Math.random()*0.28),ww:WORLD_W*0.08,h2:Math.random()});
+  bgTrees=[];
+  // 숲 스타일이면 나무 많이, 사막/도시면 적게
+  const treeCount=bgStyle===4?40:(bgStyle===2||bgStyle===3?8:28);
+  for(let i=0;i<treeCount;i++){
+    const tx=WORLD_W*(i/(treeCount-1));
+    if(tx>cWL-30&&tx<cWL+cWW+30) continue;
+    if(tx>=HILL_X0&&tx<=HILL_X1) continue;
+    bgTrees.push({wx:tx,wy:gY,s:clamp(9,18,SCR_W*0.04)});
+  }
+
+  G.wind=(Math.random()*2-1)*sd.wMax;
+}
+
+// 언덕 표면 Y (월드 X → 화면 Y)
+function hillY(wx){
+  if(wx<HILL_X0||wx>HILL_X1) return gY;
+  const t=(wx-HILL_X0)/(HILL_X1-HILL_X0);
+  const idx=Math.round(t*HILL_COLS);
+  return hillPts[Math.min(Math.max(0,idx),HILL_COLS)];
+}
+function hillX(wx){
+  if(wx<HILL_X0||wx>HILL_X1) return null;
+  return hillY(wx);
+}
+function inHill(wx,wy){
+  // 메인 언덕
+  if(wx>=HILL_X0&&wx<=HILL_X1&&wy>hillY(wx)&&wy<gY) return true;
+  // 추가 언덕
+  for(const h of extraHills){
+    if(wx>=h.x0&&wx<=h.x1){
+      const t=(wx-h.x0)/(h.x1-h.x0);
+      const idx=Math.round(t*20);
+      const hy=h.pts[Math.min(Math.max(0,idx),20)];
+      if(wy>hy&&wy<gY) return true;
+    }
+  }
+  return false;
+}
+
+/* ══ CAMERA ══ */
+function updateCamera(){
+  // 활성 포탄 우선 추적
+  let shell=projs.find(p=>!p.enemy&&!p.done);
+  if(!shell) shell=projs.find(p=>p.enemy&&!p.done);
+  if(shell){
+    camLocked=true;
+    camTX=shell.wx - SCR_W*0.45;
+    camTX=Math.max(0,Math.min(WORLD_W-SCR_W,camTX));
+    camX+=(camTX-camX)*0.12; // 부드럽게 (조금 더 빠름)
+  } else if(camFollowEnemy && eMoveTarget!==undefined && Math.abs(eX-eMoveTarget)>1){
+    // 적 이동 중: 적에게 포커스
+    camTX=eX - SCR_W*0.55;
+    camTX=Math.max(0,Math.min(WORLD_W-SCR_W,camTX));
+    camX+=(camTX-camX)*0.10;
+  } else if(camFollowEnemy){
+    camFollowEnemy=false; // 적 도착하면 해제
+  } else if(camFollowPlayer){
+    // 이동 버튼 누른 직후: 플레이어로 부드럽게 복귀
+    camTX=pWX - SCR_W*0.30; // 플레이어가 화면 30%에 위치
+    camTX=Math.max(0,Math.min(WORLD_W-SCR_W,camTX));
+    camX+=(camTX-camX)*0.10; // 부드러운 lerp
+    // 도착하면 follow 해제
+    if(Math.abs(camTX-camX)<2)camFollowPlayer=false;
+  } else if(camDrag){
+    camLocked=false;
+  } else {
+    camLocked=false;
+    camX=Math.max(0,Math.min(WORLD_W-SCR_W,camX));
+  }
+}
+
+/* ══ GAME LOOP ══ */
+function gameLoop(){
+  if(!running) return;
+  // 하늘 낙하 연출 (게임 시작 시)
+  if(dropPhase){
+    pDropY+=(0-pDropY)*0.12;
+    eDropY+=(0-eDropY)*0.12;
+    if(Math.abs(pDropY)<2&&Math.abs(eDropY)<2){
+      pDropY=0;eDropY=0;dropPhase=false;
+      // 착지 먼지
+      for(let k=0;k<14;k++){
+        ptcls.push({x:w2s(pWX+26),y:groundYAt(pWX+26),vx:(Math.random()-.5)*8,vy:-(Math.random()*5+1),color:'#c4a86a',sz:4,life:30,max:40});
+        ptcls.push({x:w2s(eX),y:groundYAt(eX),vx:(Math.random()-.5)*8,vy:-(Math.random()*5+1),color:'#c4a86a',sz:4,life:30,max:40});
+      }
+    }
+  }
+  // 적 부드러운 이동 (목표로 보간)
+  if(eMoveTarget!==undefined&&Math.abs(eX-eMoveTarget)>0.5){
+    eX+=(eMoveTarget-eX)*0.06;
+    enemyCheckItem();
+  }
+  // 플레이어 부드러운 이동
+  if(pMoveTarget!==undefined&&Math.abs(pWX-pMoveTarget)>0.5){
+    pWX+=(pMoveTarget-pWX)*0.10;
+    checkItemPickup();
+  }
+  // ── 낙사 체크: 발밑이 너무 깊게 파이면 추락 ──
+  if(!G.gameOver){
+    const pFoot=(groundYAt(pWX+12)+groundYAt(pWX+40))/2;
+    if(pFoot>=SCR_H-8){
+      G.gameOver=true;
+      floaty('💀 추락!',w2s(pWX+20),pWY,'#f44336');
+      say('재홍 원사','지형이 무너졌다!');
+      clearInterval(G.timerID);
+      G.pHp=0;
+      setTimeout(doLose,500);
+    }
+    if(G.eHp>0){
+      const eFoot=groundYAt(eX);
+      if(eFoot>=SCR_H-8){
+        floaty('💀 적 추락!',w2s(eX),eFoot-20,'#FFD700');
+        G.eHp=0;
+        G.gameOver=true;
+        clearInterval(G.timerID);
+        setTimeout(doWin,500);
+      }
+    }
+  }
+  // ── 가스 지속 데미지 ──
+  tickGasZones();
+  updateCamera();
+  CX.clearRect(0,0,SCR_W,SCR_H);
+  let sx=0,sy=0;
+  if(camShake.d>0){sx=(Math.random()-.5)*camShake.x;sy=(Math.random()-.5)*camShake.y;if(!--camShake.d)camShake.x=camShake.y=0;}
+  CX.save(); CX.translate(sx,sy);
+  drawBG();
+  drawHill();
+  drawGasZones();
+  drawCityBlocks();
+  drawEnemy();
+  drawPlayer();
+  tickItems();
+  drawItems();
+  if(!G.busy&&!G.gameOver) drawGuide();
+  tickProjs();
+  drawExps();
+  drawPtcls();
+  CX.restore();
+  drawOffscreenIndicator(); // 화면 밖 포탄 위치 표시
+  drawMM();
+  RAF=requestAnimationFrame(gameLoop);
+}
+function stopLoop(){running=false;if(RAF){cancelAnimationFrame(RAF);RAF=null;}}
+
+// 화면 위/옆으로 나간 포탄 표시 (포물선 정점 추적)
+function drawOffscreenIndicator(){
+  projs.forEach(p=>{
+    if(p.done)return;
+    const sx=w2s(p.wx);
+    // 위로 나간 경우만 (가장 흔한 케이스)
+    if(p.wy<10){
+      const ix=Math.max(15,Math.min(SCR_W-15,sx));
+      const alpha=0.85;
+      CX.save();
+      CX.globalAlpha=alpha;
+      CX.fillStyle=p.enemy?'#f44':'#FFD700';
+      // 위쪽 화살표
+      CX.beginPath();
+      CX.moveTo(ix,8);
+      CX.lineTo(ix-9,22);
+      CX.lineTo(ix+9,22);
+      CX.closePath();
+      CX.fill();
+      CX.strokeStyle='#fff';CX.lineWidth=1.5;CX.stroke();
+      // 높이 표시
+      const h=Math.round(-p.wy);
+      CX.fillStyle='#fff';CX.font='bold 10px Black Han Sans';CX.textAlign='center';
+      CX.fillText(`↑${h}`,ix,34);
+      CX.textAlign='left';
+      CX.restore();
+    }
+  });
+}
+
+/* ══ DRAW BG ══ */
+function drawBG(){
+  const sd=G.stage;
+  // 하늘
+  const sk=CX.createLinearGradient(0,0,0,gY);
+  sk.addColorStop(0,sd.sky1);sk.addColorStop(1,sd.sky2);
+  CX.fillStyle=sk;CX.fillRect(0,0,SCR_W,gY+2);
+
+  // 구름 — 패럴랙스 0.2: camX가 SCR_W 움직이면 구름은 SCR_W*0.2만 이동
+  bgClouds.forEach(c=>{
+    // 월드 내 상대 비율 → 화면 매핑 (패럴랙스)
+    const sx=c.wx*(SCR_W/WORLD_W*0.2 + 0.8) - camX*0.2;
+    // wrap: 화면 밖으로 나가면 반대편 출현
+    const wrapped=((sx%SCR_W)+SCR_W)%SCR_W;
+    drawCloud(wrapped,c.wy,c.r);
+  });
+
+  // 배경 실루엣 — 스타일별 (패럴랙스 0.45)
+  bgMtns.forEach((m,i)=>{
+    const sx=m.wx*(SCR_W/WORLD_W*0.55 + 0.45) - camX*0.45;
+    const wrapped=((sx%SCR_W)+SCR_W)%SCR_W;
+    const ww=m.ww*SCR_W/WORLD_W*2;
+    if(bgStyle===0){
+      // 뾰족한 산 + 설산
+      CX.fillStyle=i%2?dk(sd.gr,12):sd.gr;
+      CX.beginPath();CX.moveTo(wrapped-ww,gY);CX.lineTo(wrapped,m.wpk);CX.lineTo(wrapped+ww,gY);CX.closePath();CX.fill();
+      CX.fillStyle='rgba(255,255,255,.5)';
+      CX.beginPath();CX.moveTo(wrapped,m.wpk);CX.lineTo(wrapped-12,m.wpk+22);CX.lineTo(wrapped+12,m.wpk+22);CX.closePath();CX.fill();
+    } else if(bgStyle===1){
+      // 둥근 언덕
+      CX.fillStyle=i%2?dk(sd.gr,12):sd.gr;
+      CX.beginPath();CX.ellipse(wrapped,gY,ww*0.9,gY-m.wpk,0,Math.PI,0,true);CX.fill();
+    } else if(bgStyle===2){
+      // 도시 빌딩 실루엣
+      CX.fillStyle=i%2?'#3a3a4a':'#2a2a3a';
+      const bh=(gY-m.wpk)*(0.6+m.h2*0.6);
+      CX.fillRect(wrapped-ww*0.4,gY-bh,ww*0.8,bh);
+      // 창문
+      CX.fillStyle='rgba(255,230,120,.4)';
+      for(let wy=gY-bh+6;wy<gY-6;wy+=12)for(let wx=wrapped-ww*0.3;wx<wrapped+ww*0.3;wx+=8)CX.fillRect(wx,wy,4,6);
+    } else if(bgStyle===3){
+      // 사막 모래언덕 (낮고 둥근)
+      CX.fillStyle=i%2?'#d4a868':'#c49858';
+      const dh=(gY-m.wpk)*0.45;
+      CX.beginPath();CX.ellipse(wrapped,gY,ww*1.3,dh,0,Math.PI,0,true);CX.fill();
+    } else {
+      // 숲 (겹쳐진 둥근 나무 캐노피)
+      CX.fillStyle=i%2?'#2a5a2a':'#1a4a1a';
+      CX.beginPath();CX.arc(wrapped,gY-(gY-m.wpk)*0.5,ww*0.7,0,Math.PI*2);CX.fill();
+      CX.fillRect(wrapped-ww*0.7,gY-(gY-m.wpk)*0.5,ww*1.4,(gY-m.wpk)*0.5);
+    }
+  });
+
+  // 지면
+  const gg=CX.createLinearGradient(0,gY,0,SCR_H);
+  gg.addColorStop(0,'#5a8a3c');gg.addColorStop(1,'#3a5a1c');
+  CX.fillStyle=gg;CX.fillRect(0,gY,SCR_W,SCR_H-gY);
+  // 평지 분화구 (어둡게 파인 자국)
+  groundCraters.forEach(c=>{
+    const sx=w2s(c.wx);
+    if(sx<-c.r-10||sx>SCR_W+c.r+10)return;
+    CX.fillStyle='#3a5a1c';
+    CX.beginPath();CX.arc(sx,gY,c.r,Math.PI,0,true);CX.fill(); // 반원 구덩이
+    CX.fillStyle='rgba(0,0,0,.25)';
+    CX.beginPath();CX.arc(sx,gY,c.r*0.7,Math.PI,0,true);CX.fill();
+  });
+
+  // 나무 — 실제 월드 좌표
+  bgTrees.forEach(t=>drawTree(w2s(t.wx),t.wy,t.s));
+}
+
+// 평지 지면 깎기 — 같은 자리 반복 명중 시 점점 깊어짐 (낙사 유도)
+function digGround(wx,wy,r){
+  let merged=false;
+  for(const c of groundCraters){
+    if(Math.abs(c.wx-wx)<c.r*0.7){
+      c.wx=(c.wx+wx)/2;
+      c.r=Math.min(SCR_W*0.45, c.r+r*0.2); // 반복 명중 시 반경 천천히 증가
+      merged=true;
+      break;
+    }
+  }
+  if(!merged) groundCraters.push({wx,r:Math.min(SCR_W*0.55,r)});
+  if(groundCraters.length>30)groundCraters.shift();
+  for(let k=0;k<16;k++)
+    ptcls.push({x:w2s(wx)+(Math.random()-.5)*r*2,y:gY,vx:(Math.random()-.5)*10,vy:-(Math.random()*8+2),
+      color:`hsl(${ri(80,110)},40%,${ri(28,42)}%)`,sz:4+Math.random()*8,life:38+ri(0,22),max:60});
+}
+
+function drawCloud(x,y,r){
+  CX.fillStyle='rgba(255,255,255,.78)';
+  [[0,0,1],[r*.72,r*.22,.7],[r*-.5,r*.28,.65]].forEach(([dx,dy,f])=>{
+    CX.beginPath();CX.arc(x+dx,y+dy,r*f,0,Math.PI*2);CX.fill();
+  });
+}
+function drawTree(x,y,s){
+  CX.fillStyle='#3a6a2a';CX.beginPath();CX.moveTo(x,y-s*2.1);CX.lineTo(x-s,y);CX.lineTo(x+s,y);CX.closePath();CX.fill();
+  CX.fillStyle='#2a5a1a';CX.beginPath();CX.moveTo(x,y-s*2.7);CX.lineTo(x-s*.72,y-s*1.25);CX.lineTo(x+s*.72,y-s*1.25);CX.closePath();CX.fill();
+  CX.fillStyle='#5a3a0a';CX.fillRect(x-s*.22,y,s*.44,s*.85);
+}
+
+/* ══ DRAW HILL — 눈에 띄는 색 + 증폭존 ══ */
+function drawHill(){
+  if(!hillPts.length) return;
+  const top=Math.min.apply(null,hillPts);
+  // 흙 그라데이션 (배경과 확실히 구분되는 갈색)
+  const g=CX.createLinearGradient(0,top,0,gY);
+  g.addColorStop(0,'#a0703a');g.addColorStop(0.3,'#8B5A2B');g.addColorStop(1,'#5d3a1a');
+  CX.fillStyle=g;
+  CX.beginPath();
+  CX.moveTo(w2s(HILL_X0),gY);
+  for(let i=0;i<=HILL_COLS;i++){
+    const wx=HILL_X0+(HILL_X1-HILL_X0)*(i/HILL_COLS);
+    CX.lineTo(w2s(wx),hillPts[i]);
+  }
+  CX.lineTo(w2s(HILL_X1),gY);
+  CX.closePath();CX.fill();
+  // 풀 표면층 (초록 띠)
+  CX.strokeStyle='#5a9e3a';CX.lineWidth=5;CX.lineJoin='round';
+  CX.beginPath();
+  for(let i=0;i<=HILL_COLS;i++){
+    const wx=HILL_X0+(HILL_X1-HILL_X0)*(i/HILL_COLS);
+    const sx=w2s(wx);
+    i===0?CX.moveTo(sx,hillPts[i]):CX.lineTo(sx,hillPts[i]);
+  }
+  CX.stroke();
+  // 외곽 진한선
+  CX.strokeStyle='rgba(0,0,0,.3)';CX.lineWidth=1.5;
+  CX.beginPath();
+  for(let i=0;i<=HILL_COLS;i++){
+    const wx=HILL_X0+(HILL_X1-HILL_X0)*(i/HILL_COLS);
+    const sx=w2s(wx);
+    i===0?CX.moveTo(sx,hillPts[i]):CX.lineTo(sx,hillPts[i]);
+  }
+  CX.stroke();
+  // ══ 증폭존: 지형에 영구 매립 (흙에 가리면 흐릿, 파이면 선명) ══
+  bonusZones.forEach(z=>{
+    const sx=w2s(z.wx);
+    if(sx<-40||sx>SCR_W+40) return;
+    const pulse=0.6+0.4*Math.sin(Date.now()/250);
+    CX.globalAlpha=pulse;
+    const col=z.split===2?'#ff5252':'#4fc3f7';
+    CX.fillStyle=z.split===2?'rgba(255,80,80,.4)':'rgba(79,195,247,.4)';
+    CX.beginPath();CX.arc(sx,z.wy,z.r,0,Math.PI*2);CX.fill();
+    CX.strokeStyle=col;CX.lineWidth=3;CX.setLineDash([6,4]);
+    CX.beginPath();CX.arc(sx,z.wy,z.r,0,Math.PI*2);CX.stroke();
+    CX.setLineDash([]);
+    CX.globalAlpha=1;
+    CX.fillStyle='#fff';CX.font=`bold ${clamp(11,15,z.r*0.7)}px Black Han Sans`;CX.textAlign='center';
+    CX.fillText(`+${z.split}`,sx,z.wy+5);
+    CX.globalAlpha=1;
+  });
+  CX.textAlign='left';
+  // ── 추가 작은 언덕들 그리기 ──
+  extraHills.forEach(h=>{
+    const top=Math.min.apply(null,h.pts);
+    const g2=CX.createLinearGradient(0,top,0,gY);
+    g2.addColorStop(0,'#a0703a');g2.addColorStop(0.3,'#8B5A2B');g2.addColorStop(1,'#5d3a1a');
+    CX.fillStyle=g2;
+    CX.beginPath();
+    CX.moveTo(w2s(h.x0),gY);
+    for(let i=0;i<=20;i++){
+      const wx=h.x0+(h.x1-h.x0)*(i/20);
+      CX.lineTo(w2s(wx),h.pts[i]);
+    }
+    CX.lineTo(w2s(h.x1),gY);
+    CX.closePath();CX.fill();
+    // 풀 표면
+    CX.strokeStyle='#5a9e3a';CX.lineWidth=4;CX.lineJoin='round';
+    CX.beginPath();
+    for(let i=0;i<=20;i++){
+      const wx=h.x0+(h.x1-h.x0)*(i/20);
+      const sx=w2s(wx);
+      i===0?CX.moveTo(sx,h.pts[i]):CX.lineTo(sx,h.pts[i]);
+    }
+    CX.stroke();
+  });
+}
+
+/* ══ CASTLE ══ */
+function drawCityBlocks(){
+  cityBlocks.forEach(b=>{
+    if(!b.alive)return;
+    const sx=w2s(b.x);
+    if(sx<-b.w||sx>SCR_W+b.w)return;
+    CX.fillStyle='rgba(0,0,0,.2)';CX.fillRect(sx+2,b.y+2,b.w,b.h);
+    const g=CX.createLinearGradient(sx,b.y,sx+b.w,b.y);
+    g.addColorStop(0,b.wa);g.addColorStop(1,b.wc);
+    CX.fillStyle=g;CX.fillRect(sx,b.y,b.w,b.h);
+    CX.strokeStyle='rgba(0,0,0,.3)';CX.lineWidth=1;CX.strokeRect(sx,b.y,b.w,b.h);
+    // 창문
+    CX.fillStyle='rgba(255,235,150,.5)';
+    for(let wx=sx+4;wx<sx+b.w-4;wx+=10)for(let wy=b.y+4;wy<b.y+b.h-4;wy+=10)
+      CX.fillRect(wx,wy,5,6);
+  });
+}
+function drawCastle(){
+  // 적 거점 마커 (위기2+, 빈 거점에 표시)
+  enemySpots.forEach((sp,i)=>{
+    if(i===curSpotIdx)return; // 현재 거점은 성이 있으므로 생략
+    const sx=w2s(sp.x+cWW/2);
+    if(sx<-30||sx>SCR_W+30)return;
+    CX.globalAlpha=0.4;
+    CX.fillStyle=sp.trench?'#5d4037':'#78909c';
+    CX.strokeStyle='rgba(255,255,255,.4)';CX.lineWidth=1.5;CX.setLineDash([4,3]);
+    const my=sp.trench?gY-12:gY-40;
+    CX.fillRect(sx-cWW/2,my,cWW,gY-my);
+    CX.strokeRect(sx-cWW/2,my,cWW,gY-my);
+    CX.setLineDash([]);
+    CX.fillStyle='#fff';CX.font='9px Noto Sans KR';CX.textAlign='center';
+    CX.fillText(sp.trench?'참호':'고지',sx,my-4);
+    CX.globalAlpha=1;
+  });
+  CX.textAlign='left';
+  blocks.forEach(b=>{
+    if(!b.alive) return;
+    // 낙하 애니메이션
+    if(b.fallTo!==undefined&&b.y<b.fallTo){
+      b.y=Math.min(b.fallTo,b.y+6); // 중력 낙하
+      if(b.y>=b.fallTo){b.y=b.fallTo;delete b.fallTo;}
+    }
+    const sx=w2s(b.x),d=1-b.hp/b.max;
+    CX.fillStyle='rgba(0,0,0,.2)';CX.fillRect(sx+3,b.y+3,b.w,b.h);
+    const g=CX.createLinearGradient(sx,b.y,sx+b.w,b.y+b.h);
+    g.addColorStop(0,b.wa);g.addColorStop(1,b.wc);
+    CX.fillStyle=g;CX.fillRect(sx,b.y,b.w,b.h);
+    CX.strokeStyle='rgba(0,0,0,.22)';CX.lineWidth=1;CX.strokeRect(sx,b.y,b.w,b.h);
+    if(d>.3){CX.strokeStyle=`rgba(0,0,0,${d*.6})`;CX.lineWidth=1.5;
+      CX.beginPath();CX.moveTo(sx+b.w*.28,b.y+b.h*.1);CX.lineTo(sx+b.w*.52,b.y+b.h*.58);CX.lineTo(sx+b.w*.72,b.y+b.h*.9);CX.stroke();}
+  });
+  // 원형 분화구 그을음 — 포탄 맞은 자리에 둥근 검은 자국
+  wallCraters.forEach(c=>{
+    const sx=w2s(c.wx);
+    if(sx<-c.r-10||sx>SCR_W+c.r+10)return;
+    const rg=CX.createRadialGradient(sx,c.wy,0,sx,c.wy,c.r);
+    rg.addColorStop(0,'rgba(20,10,5,.55)');
+    rg.addColorStop(.6,'rgba(40,25,10,.3)');
+    rg.addColorStop(1,'rgba(0,0,0,0)');
+    CX.fillStyle=rg;
+    CX.beginPath();CX.arc(sx,c.wy,c.r,0,Math.PI*2);CX.fill();
+  });
+}
+
+/* ══ ENEMY 5종 ══ */
+function drawEnemy(){
+  if(G.eHp<=0) return;
+  const sd=G.stage,ratio=G.eHp/G.eHpMax;
+  const ex=eX; // 적 위치 (평지)
+  // 발밑 지면 (분화구 반영)
+  const gl=groundYAt(ex-16),gr=groundYAt(ex+16);
+  const ey=Math.max(gl,gr);
+  const etilt=Math.atan2(gr-gl,32);
+  const sz=clamp(34,55,SCR_W*0.13);
+  const shk=ratio<.25?Math.sin(Date.now()/36)*5:0;
+  eKnock*=0.85; if(Math.abs(eKnock)<0.3)eKnock=0;
+  eTilt*=0.82;  if(Math.abs(eTilt)<0.01)eTilt=0;
+  // 그림자
+  CX.fillStyle='rgba(0,0,0,.2)';CX.beginPath();CX.ellipse(w2s(ex),ey+3,22,7,0,0,Math.PI*2);CX.fill();
+  CX.save();
+  CX.translate(w2s(ex)+shk+eKnock, ey-sz*.05+eDropY);
+  CX.rotate(eTilt+etilt);
+  if(sd.n===1)en1(sz); else if(sd.n===2)en2(sz);
+  else if(sd.n===3)en3(sz); else if(sd.n===4)en4(sz); else en5(sz);
+  CX.restore();
+  // HP바 (적 머리 위)
+  const bw=clamp(70,SCR_W*0.24,130),bh=11,bx=w2s(ex)-bw/2,by=ey-sz-18;
+  CX.fillStyle='rgba(0,0,0,.55)';CX.fillRect(bx-2,by-2,bw+4,bh+4);
+  CX.fillStyle='#111';CX.fillRect(bx,by,bw,bh);
+  CX.fillStyle=ratio>.5?'#4caf50':ratio>.25?'#ff9800':'#f44336';CX.fillRect(bx,by,bw*ratio,bh);
+  CX.strokeStyle='rgba(255,255,255,.18)';CX.lineWidth=1;CX.strokeRect(bx,by,bw,bh);
+  CX.font='9px Noto Sans KR';CX.fillStyle='#fff';CX.textAlign='center';
+  CX.fillText(`${sd.eName} ${G.eHp}/${G.eHpMax}`,w2s(ex),by+bh-1);CX.textAlign='left';
+}
+function en1(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.55,s*.44,s*.6);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.64,s*.21,0,Math.PI*2);CX.fill();CX.fillStyle='#3a4a2a';CX.fillRect(-s*.24,-s*.88,s*.48,s*.24);CX.fillStyle='#e53935';CX.fillRect(-s*.22,-s*.24,s*.18,s*.09);CX.font=`${s*.07}px Noto Sans KR`;CX.fillStyle='#fff';CX.textAlign='center';CX.fillText('선임',-s*.13,-s*.17);CX.strokeStyle='#333';CX.lineWidth=2;CX.beginPath();CX.moveTo(-s*.14,-s*.7);CX.lineTo(-s*.06,-s*.66);CX.stroke();CX.beginPath();CX.moveTo(s*.14,-s*.7);CX.lineTo(s*.06,-s*.66);CX.stroke();CX.strokeStyle='#556B2F';CX.lineWidth=s*.09;CX.beginPath();CX.moveTo(-s*.22,-s*.32);CX.lineTo(s*.22,-s*.32);CX.stroke();CX.textAlign='left';}
+function en2(s){CX.fillStyle='#1a237e';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#f5f5f5';CX.fillRect(-s*.1,-s*.58,s*.2,s*.32);CX.fillStyle='#b71c1c';CX.beginPath();CX.moveTo(-s*.04,-s*.58);CX.lineTo(s*.04,-s*.58);CX.lineTo(s*.02,-s*.32);CX.lineTo(-s*.02,-s*.32);CX.closePath();CX.fill();CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.68,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#555';CX.lineWidth=1.5;CX.strokeRect(-s*.16,-s*.74,s*.12,s*.09);CX.strokeRect(s*.04,-s*.74,s*.12,s*.09);CX.fillStyle='#fff';CX.fillRect(s*.14,-s*.44,s*.24,s*.32);CX.fillStyle='#f44336';CX.font=`${s*.22}px Black Han Sans`;CX.textAlign='center';CX.fillText('✗',s*.26,-s*.38);CX.textAlign='left';}
+function en3(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.58,s*.44,s*.62);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.66,s*.2,0,Math.PI*2);CX.fill();CX.save();CX.rotate(.28);CX.fillStyle='#3a4a2a';CX.beginPath();CX.ellipse(0,-s*.72,s*.24,s*.15,0,Math.PI,0);CX.fill();CX.restore();CX.fillStyle='#42a5f5';[[s*.22,-s*.78],[s*.3,-s*.62]].forEach(([dx,dy])=>{CX.beginPath();CX.arc(dx,dy,s*.05,0,Math.PI*2);CX.fill();});CX.fillStyle='#FF4500';CX.font=`${s*.32}px Black Han Sans`;CX.textAlign='center';CX.fillText('!',s*.36,-s*.64);CX.textAlign='left';}
+function en4(s){CX.fillStyle='#424242';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.67,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#111';CX.lineWidth=2.5;CX.strokeRect(-s*.17,-s*.74,s*.13,s*.1);CX.strokeRect(s*.04,-s*.74,s*.13,s*.1);CX.strokeStyle='#FFD700';CX.lineWidth=2.5;CX.beginPath();CX.arc(s*.42,-s*.44,s*.13,0,Math.PI*2);CX.stroke();CX.fillStyle='#f44336';CX.fillRect(-s*.42,-s*.4,s*.28,s*.2);CX.fillStyle='#fff';CX.font=`${s*.1}px Noto Sans KR`;CX.textAlign='center';CX.fillText('지적!',-s*.28,-s*.24);CX.textAlign='left';}
+function en5(s){const sz=s*1.2;CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38,-sz*.72,sz*.76,sz*.77);CX.strokeStyle='rgba(255,255,255,.14)';CX.lineWidth=1;for(let r=0;r<4;r++)for(let c=0;c<3;c++)CX.strokeRect(-sz*.38+c*(sz*.76/3),-sz*.72+r*(sz*.77/4),sz*.76/3,sz*.77/4);for(let i=0;i<4;i++){CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38+i*(sz*.76/4),-sz*.88,sz*.15,sz*.18);}CX.fillStyle='#FF4500';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.fillStyle='#FFD700';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.fillStyle='#7f0000';CX.beginPath();CX.arc(0,-sz*.28,sz*.12,0,Math.PI);CX.fill();CX.strokeStyle='rgba(255,100,0,.6)';CX.lineWidth=2;CX.beginPath();CX.moveTo(-sz*.1,-sz*.72);CX.lineTo(sz*.05,-sz*.44);CX.lineTo(-sz*.08,-sz*.2);CX.stroke();CX.fillStyle='#FFD700';CX.font=`${sz*.12}px Black Han Sans`;CX.textAlign='center';CX.fillText('군생활의 벽',0,-sz*.92);CX.textAlign='left';}
+
+/* ══ PLAYER ══ */
+// 특정 월드 X의 지면 높이 (언덕 등반 + 분화구 반영)
+function groundYAt(wx){
+  let y=gY;
+  // 메인 언덕
+  if(wx>=HILL_X0&&wx<=HILL_X1){
+    y=hillY(wx);
+  }
+  // 추가 작은 언덕들
+  extraHills.forEach(h=>{
+    if(wx>=h.x0&&wx<=h.x1){
+      const t=(wx-h.x0)/(h.x1-h.x0);
+      const idx=Math.round(t*20);
+      const hy=h.pts[Math.min(Math.max(0,idx),20)];
+      if(hy<y)y=hy;
+    }
+  });
+  groundCraters.forEach(c=>{
+    const dx=Math.abs(wx-c.wx);
+    if(dx<c.r){
+      const dip=Math.sqrt(Math.max(0,1-(dx/c.r)*(dx/c.r)))*c.r*0.5; // 0.6→0.5 (강력탄도 한방 낙사는 어렵게)
+      y=Math.max(y,gY+dip);
+    }
+  });
+  return y;
+}
+
+// 무기별 외형 (body색·크기·바퀴·포신)
+const WPN_LOOK={
+  w105:  {body:'#5a6e3a',body2:'#46582c',barrel:'#2a3a1a',barrel2:'#1a2a0a',bw:15,bh:4,wr:7,wheels:2,track:false,barL:26,barW:6,muzzle:false,shadow:20}, // 견인포: 소형 2륜
+  w155:  {body:'#6a6e4a',body2:'#54583a',barrel:'#3a3a2a',barrel2:'#2a2a1a',bw:19,bh:6,wr:8,wheels:2,track:false,barL:34,barW:9,muzzle:true,shadow:26}, // 견인포: 대형 2륜·긴포신
+  k9:    {body:'#4a5a3a',body2:'#3a482c',barrel:'#2a3520',barrel2:'#1a2510',bw:22,bh:8,wr:6,track:true,barL:32,barW:8,muzzle:true,shadow:30}, // 자주포: 무한궤도·포탑
+  k55:   {body:'#6a6a3a',body2:'#54542c',barrel:'#3a3a1a',barrel2:'#2a2a0a',bw:20,bh:7,wr:6,track:true,barL:38,barW:6,muzzle:false,shadow:28}, // 자주포: 궤도·초장포신(고속)
+  mlrs:  {body:'#5a4a6a',body2:'#463854',barrel:'#3a2a4a',barrel2:'#2a1a3a',bw:21,bh:9,wr:7,track:true,barL:24,barW:14,muzzle:false,shadow:30}, // 다연장: 박스형 발사관
+  pungik:{body:'#3a6a6a',body2:'#2c5454',barrel:'#1a4a4a',barrel2:'#0a3a3a',bw:17,bh:5,wr:8,wheels:3,track:false,barL:28,barW:6,muzzle:false,shadow:24}, // 차륜포: 3륜·기동형
+  legend:{body:'#8a7a3a',body2:'#6a5a2a',barrel:'#FFD700',barrel2:'#bfa030',bw:24,bh:10,wr:7,track:true,barL:42,barW:12,muzzle:true,shadow:34}, // 전설포: 초대형·금색 거포
+};
+function drawPlayer(){
+  const shk=pHitT>0?(Math.random()-.5)*9:0;if(pHitT>0)pHitT--;
+  const sx=w2s(pWX);
+  const wid=G.wpn.id;
+  const S=WPN_LOOK[wid]||WPN_LOOK.w105;
+  // 차체 중심 기준 지면 (분화구 위면 내려감) + 양끝 평균으로 살짝 보정
+  const gC=groundYAt(pWX+26);
+  const gLe=groundYAt(pWX+26-S.bw*0.6), gRe=groundYAt(pWX+26+S.bw*0.6);
+  const footY=gC*0.6+(gLe+gRe)*0.2; // 중심 가중
+  const tilt=Math.max(-0.45,Math.min(0.45,Math.atan2(gRe-gLe,S.bw*1.2)));
+  const cx=sx+26, cy=footY-16+pDropY;
+  CX.fillStyle='rgba(0,0,0,.17)';CX.beginPath();CX.ellipse(cx,footY+3,S.shadow,7,0,0,Math.PI*2);CX.fill();
+  // ── 차체 (지형 기울기 적용) ──
+  CX.save();
+  CX.translate(cx,cy);
+  CX.rotate(tilt);
+  // 차체 몸통
+  CX.fillStyle=S.body;CX.fillRect(-S.bw,-S.bh,S.bw*2,S.bh+12);
+  CX.fillStyle=S.body2;CX.fillRect(-S.bw-4,8,S.bw*2+8,8);
+  // 바퀴/궤도
+  if(S.track){
+    // 자주포: 무한궤도 (여러 작은 바퀴)
+    CX.fillStyle='#1a1a0a';CX.fillRect(-S.bw-2,10,S.bw*2+4,10);
+    CX.fillStyle='#3a3a2a';
+    for(let wx=-S.bw;wx<=S.bw;wx+=7){CX.beginPath();CX.arc(wx,15,4,0,Math.PI*2);CX.fill();}
+  } else if(S.wheels===2){
+    [-S.bw*0.6,S.bw*0.6].forEach(wx=>{CX.fillStyle='#2a1a0a';CX.beginPath();CX.arc(wx,16,S.wr,0,Math.PI*2);CX.fill();CX.fillStyle='#555';CX.beginPath();CX.arc(wx,16,S.wr*0.4,0,Math.PI*2);CX.fill();});
+  } else {
+    // 차륜형: 여러 바퀴
+    [-S.bw*0.7,0,S.bw*0.7].forEach(wx=>{CX.fillStyle='#2a1a0a';CX.beginPath();CX.arc(wx,16,S.wr,0,Math.PI*2);CX.fill();CX.fillStyle='#666';CX.beginPath();CX.arc(wx,16,S.wr*0.4,0,Math.PI*2);CX.fill();});
+  }
+  CX.font=`${clamp(22,36,SCR_W*.09)}px serif`;CX.textAlign='center';CX.fillText('🪖',shk,-S.bh+2);
+  CX.font='10px serif';CX.fillText('⭐⭐⭐',0,4);
+  CX.restore();
+  // ── 포신: 발사 방향과 일치 (수평 기준 각도) ──
+  const ar=G.angle*Math.PI/180;
+  const pface=(eX>=pWX)?1:-1;
+  CX.save();
+  CX.translate(cx,cy-4);
+  // 포신을 발사 방향으로 회전: face=+1 오른쪽위, face=-1 왼쪽위
+  CX.rotate(pface*(Math.PI/2 - ar)); // 수평(0)~수직(90) 사이, 방향 반영
+  CX.fillStyle=S.barrel;CX.fillRect(-S.barW/2,-S.barL,S.barW,S.barL+2);
+  CX.fillStyle=S.barrel2;CX.fillRect(-S.barW/2-1,-S.barL,2,S.barL);
+  if(S.muzzle){CX.fillStyle='#0a0a0a';CX.fillRect(-S.barW/2-2,-S.barL,S.barW+4,5);}
+  CX.restore();
+  // HP 바
+  const bw=clamp(65,SCR_W*.22,130),bx=sx,by=gY+6;
+  CX.fillStyle='rgba(0,0,0,.5)';CX.fillRect(bx-1,by-1,bw+2,11);CX.fillStyle='#111';CX.fillRect(bx,by,bw,9);
+  const pr=G.pHp/G.pHpMax;
+  CX.fillStyle=pr>.5?'#4caf50':pr>.25?'#ff9800':'#f44336';CX.fillRect(bx,by,bw*pr,9);
+  CX.font='8px Noto Sans KR';CX.fillStyle='#fff';CX.textAlign='center';
+  CX.fillText(`원사 HP ${G.pHp}/${G.pHpMax}`,bx+bw/2,by+8);CX.textAlign='left';
+}
+
+/* ══ AIM GUIDE — 강화된 포물선 ══ */
+function drawGuide(){
+  const wep=G.wpn;
+  const power=fireHolding?firePower:0.7;
+  const pMul=0.55+power*0.9;
+  const FLY=0.78; // doFire와 동일한 비행 배율
+  const spd=wep.spd*pMul*FLY;
+  const gGrav=wep.grav*FLY*FLY;
+  const gface=(eX>=pWX)?1:-1; // 적 방향
+  let vx=Math.cos(G.angle*Math.PI/180)*spd*gface;
+  let vy=-Math.sin(G.angle*Math.PI/180)*spd;
+  const _GS=WPN_LOOK[wep.id]||WPN_LOOK.w105;
+  const gFootY=groundYAt(pWX+26)*0.6+(groundYAt(pWX+26-_GS.bw*0.6)+groundYAt(pWX+26+_GS.bw*0.6))*0.2;
+  let wx=pWX+26,wy=gFootY-20;
+  let landX=null,landY=null;
+  const pts=[];
+  for(let i=0;i<500;i++){
+    wx+=vx+G.wind*wep.wf; wy+=vy; vy+=gGrav;
+    pts.push([wx,wy]);
+    if(inHill(wx,wy)||wy>gY+8||wx>WORLD_W+60||wx<-60){landX=wx;landY=Math.min(wy,gY);break;}
+  }
+  // 굵은 점선 궤적 (확실히 보이게)
+  if(true){
+    // 흰 외곽선 + 노란 점 = 어떤 배경에서도 보임
+    pts.forEach((p,idx)=>{
+      if(idx%4!==0)return;
+      const sx=w2s(p[0]);
+      if(sx<-20||sx>SCR_W+20)return; // 화면 밖 스킵
+      const prog=idx/pts.length;
+      const r=Math.max(3,6-prog*2.5);
+      // 외곽 흰색
+      CX.globalAlpha=0.95;
+      CX.fillStyle='#fff';
+      CX.beginPath();CX.arc(sx,p[1],r+1.5,0,Math.PI*2);CX.fill();
+      // 내부 색상 (가까움=초록, 멀음=빨강)
+      const hue=120-prog*120;
+      CX.fillStyle=`hsl(${hue},95%,50%)`;
+      CX.beginPath();CX.arc(sx,p[1],r,0,Math.PI*2);CX.fill();
+    });
+    CX.globalAlpha=1;
+    // 착탄 십자선
+    if(landX!==null){
+      const lsx=w2s(landX);
+      if(lsx>-30&&lsx<SCR_W+30){
+        CX.strokeStyle='#ff2020';CX.lineWidth=3;
+        CX.beginPath();CX.arc(lsx,landY,14,0,Math.PI*2);CX.stroke();
+        CX.beginPath();CX.moveTo(lsx-20,landY);CX.lineTo(lsx+20,landY);
+        CX.moveTo(lsx,landY-20);CX.lineTo(lsx,landY+20);CX.stroke();
+        CX.fillStyle='rgba(255,32,32,.3)';CX.beginPath();CX.arc(lsx,landY,14,0,Math.PI*2);CX.fill();
+        CX.fillStyle='#fff';CX.font='bold 10px Noto Sans KR';CX.textAlign='center';
+        CX.fillText('착탄',lsx,landY-24);
+      }
+    }
+  }
+  // 3) 정보 텍스트 (각도/파워/바람)
+  CX.fillStyle='rgba(0,0,0,.55)';
+  const infoX=w2s(pWX+26),infoY=pWY-58;
+  CX.fillRect(infoX-4,infoY-12,168,46);
+  CX.fillStyle='#FFD700';CX.font='bold 12px Noto Sans KR';CX.textAlign='left';
+  CX.fillText(`📐 각도 ${G.angle}°  ⚡파워 ${Math.round(power*100)}%`,infoX,infoY);
+  CX.fillStyle='#90caf9';CX.font='11px Noto Sans KR';
+  CX.fillText(`💨${G.wind>0?'→':'←'} ${Math.abs(G.wind).toFixed(1)} (영향 ${Math.round(wep.wf*100)}%)`,infoX,infoY+15);
+  CX.fillStyle='#ff8a80';
+  CX.fillText(`${wep.ico} ${wep.name}`,infoX,infoY+30);
+}
+
+/* ══ PROJECTILES ══ */
+function tickProjs(){
+  projs=projs.filter(p=>{
+    const windFx=G.wind*(p.wf||0);
+    p.wx+=p.vx+windFx; p.wy+=p.vy; p.vy+=p.grav; p.life--;
+    p.age=(p.age||0)+1; // 발사 후 경과 프레임
+    if(p.life<=0||p.wy>SCR_H+30||p.wx<-100||p.wx>WORLD_W+100) return false;
+
+    // 증폭존 통과 체크 (아군 포탄만)
+    if(!p.enemy&&!p.done) checkBonusZones(p);
+
+    if(!p.done){
+      const am=p.am||{blast:30,pierce:0,dig:1};
+      // ── 도시 건물 충돌 ──
+      if(cityBlocks.length){
+        const cb=cityBlocks.find(b=>b.alive&&p.wx>b.x-2&&p.wx<b.x+b.w+2&&p.wy>b.y-2&&p.wy<b.y+b.h+2);
+        if(cb){
+          spawnExp(w2s(p.wx),p.wy,am.blast);
+          // 폭발 반경 내 건물 파괴
+          const br=Math.max(30,am.blast*1.5);
+          cityBlocks.forEach(b=>{
+            if(b.alive&&Math.hypot((b.x+b.w/2)-p.wx,(b.y+b.h/2)-p.wy)<br){
+              b.hp-=(am.pierce?3:2);
+              for(let k=0;k<6;k++)spawnDebris(w2s(b.x+b.w/2),b.y+b.h/2);
+              if(b.hp<=0)b.alive=false;
+            }
+          });
+          camShake.x=am.blast*0.15;camShake.y=am.blast*0.12;camShake.d=12;
+          // 관통탄은 통과
+          if(!(am.pierce>0&&(p.terrainPierce||0)<am.pierce)){
+            if(p.enemy){p.done=true;onEMiss();}
+            else{floaty('건물 파괴!',w2s(p.wx),p.wy-20,'#9a9aaa');G.combo=0;updCombo();p.done=true;onMiss(p);}
+            return false;
+          } else { p.terrainPierce=(p.terrainPierce||0)+1; }
+        }
+      }
+      // ── 지형 충돌 ──
+      if(inHill(p.wx,p.wy)){
+        // 관통탄: 지형 뚫고 지나감 (pierce 카운트 소모)
+        if(am.pierce>0 && (p.terrainPierce||0)<am.pierce){
+          p.terrainPierce=(p.terrainPierce||0)+1;
+          deformTerrain(p.wx,p.wy,am);  // 터널 파괴
+          spawnExp(w2s(p.wx),p.wy,am.blast*0.7);
+          // 관통 중엔 통과 (제거 안함)
+        } else {
+          // 비관통 or 관통 소진 → 폭발 정지
+          spawnExp(w2s(p.wx),p.wy,am.blast);
+          deformTerrain(p.wx,p.wy,am);
+          spawnDebris(w2s(p.wx),p.wy);
+          camShake.x=am.blast*0.15;camShake.y=am.blast*0.12;camShake.d=12;
+          if(p.enemy){floaty('막힘!',w2s(p.wx),p.wy-20,'#aaa');p.done=true;onEMiss();}
+          else {floaty('지형 관통중!',w2s(p.wx),p.wy-20,'#8d6e63');G.combo=0;updCombo();p.done=true;onMiss(p);}
+          return false;
+        }
+      }
+      // ── 지면 충돌 (분화구 깊이 반영 — 포탄이 구멍 안으로 들어감) ──
+      const gh=groundYAt(p.wx);
+      if(p.wy>=gh){
+        spawnExp(w2s(p.wx),gh,am.blast);
+        deformTerrain(p.wx,gh,am);
+        if(p.wx<HILL_X0||p.wx>HILL_X1){
+          const cr=(am.crater||1.0)*(am.enemy?0.9:1.0);
+          const craterR=Math.min(SCR_W*0.5, am.blast*1.6*cr);
+          digGround(p.wx,gh,craterR);
+        }
+        spawnPuff(w2s(p.wx),gh);
+        camShake.x=am.blast*0.12;camShake.y=am.blast*0.09;camShake.d=10;
+        if(!p.enemy){floaty('빗나감!',w2s(p.wx),gh-20,'#777');p.done=true;onMiss(p);}
+        else{p.done=true;onEMiss();}
+        return false;
+      }
+      // ── 적 몸체 직격 (아군/적 포탄 모두) ──
+      if(G.eHp>0){
+        const ey=groundYAt(eX);
+        const esz=clamp(34,55,SCR_W*0.13);
+        // 적 포탄의 적 자해는 발사 직후 제외 (age>20)
+        const canSelfHitE = !p.enemy || p.age>20;
+        if(canSelfHitE && p.wx>eX-esz*0.5&&p.wx<eX+esz*0.5&&p.wy>ey-esz&&p.wy<ey+6){
+          if(p.enemy){
+            G.eHp=Math.max(0,G.eHp-ri(8,16));
+            floaty('적 자해!',w2s(eX),ey-50,'#ff8800');
+            spawnExp(w2s(eX),ey,40);
+            p.done=true;onEMiss();
+            if(G.eHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doWin,500);}
+            return false;
+          } else {
+            p.done=true;onHit(p,p.wx,p.wy);return false;
+          }
+        }
+      }
+      // ── 플레이어 직격 (아군/적 포탄 모두) ──
+      {
+        const pFootY=(groundYAt(pWX+12)+groundYAt(pWX+40))/2;
+        const pTop=pFootY-SCR_H*0.12-5;
+        // 아군 포탄의 자해는 발사 직후 제외 (age>20)
+        const canSelfHitP = p.enemy || p.age>20;
+        if(canSelfHitP && p.wx>pWX-15&&p.wx<pWX+65&&p.wy>pTop&&p.wy<pFootY+8){
+          if(p.enemy){
+            p.done=true;onEHit(p);return false;
+          } else {
+            G.pHp=Math.max(0,G.pHp-ri(6,14));
+            G.runNoMiss=false;
+            floaty('자해!',w2s(pWX+10),pFootY-40,'#ff4444');
+            spawnExp(w2s(pWX+26),pFootY-10,32);
+            pHitT=18;G.combo=0;updCombo();
+            p.done=true;
+            if(G.pHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doLose,400);return false;}
+            if(!p.isScatter)setTimeout(()=>launchEnemy(),500);
+            return false;
+          }
+        }
+      }
+    }
+    // ── 그리기 ──
+    const sx=w2s(p.wx);
+    const tcol=p.trail||'#ff8c42';
+    if(p.trailPts){
+      p.trailPts.push([sx,p.wy]);
+      if(p.trailPts.length>8)p.trailPts.shift();
+      p.trailPts.forEach((tp,ti)=>{
+        CX.globalAlpha=(ti/p.trailPts.length)*.5;
+        CX.fillStyle=tcol;
+        CX.beginPath();CX.arc(tp[0],tp[1],2+ti*.6,0,Math.PI*2);CX.fill();
+      });
+      CX.globalAlpha=1;
+    } else { p.trailPts=[]; }
+    CX.save();CX.globalAlpha=Math.min(1,p.life/15);
+    // 분열 직후 반짝임
+    if(p.splitGlow>0){
+      p.splitGlow--;
+      CX.globalAlpha=Math.min(1,p.life/15)*(p.splitGlow/18);
+      CX.fillStyle='#fff';
+      CX.beginPath();CX.arc(sx,p.wy,p.sz*0.9,0,Math.PI*2);CX.fill();
+      CX.globalAlpha=Math.min(1,p.life/15);
+    }
+    CX.font=`${p.sz}px serif`;CX.textAlign='center';
+    CX.translate(sx,p.wy);CX.rotate(Math.atan2(p.vy,(p.vx||0)+G.wind*(p.wf||0)));
+    CX.fillText(p.ico,0,0);CX.restore();
+    return true;
+  });
+}
+
+function onMiss(p){
+  // 산탄(다련장)은 마지막 발만 적 턴 트리거 (doFire 타이머가 처리)
+  if(p&&p.isScatter)return;
+  setTimeout(()=>launchEnemy(),500);
+}
+function onHit(p,hx,hy){
+  if(G.gameOver)return;
+  const wep=WD.find(w=>w.id===p.wid)||WD[0];
+  const am=p.am||wep.ammos[0];
+  // 산탄: 발당 데미지를 발수로 나눔 + 볼리 누적 상한
+  const pellets=am.scatter||1;
+  const perShot=1/pellets;
+  let dmg=Math.max(1,Math.floor(ri(wep.dmg[0],wep.dmg[1])*am.dmgMul*perShot*(1+G.combo*.12)));
+  if(G.nextPower2){dmg*=2; if(!p.isScatter||p.volleyCounted===false)G.nextPower2=false;} // 강화 포탄 1회
+  // 산탄 볼리 총 데미지 상한 (한 발 단발 무기와 비슷하게 제한)
+  if(am.scatter){
+    p.volleyDmgCap = p.volleyDmgCap; // 표시용
+    if(G._volleyDmg===undefined||!p.volleyCounted)G._volleyDmg=0;
+    const maxVolley=Math.floor(wep.dmg[1]*am.dmgMul*1.2); // 8연장 볼리 최대 ~30
+    if(G._volleyDmg+dmg>maxVolley)dmg=Math.max(0,maxVolley-G._volleyDmg);
+    G._volleyDmg+=dmg;
+  }
+  if(dmg<=0){ // 상한 도달: 데미지 없이 이펙트만
+    hitBlocks(hx,hy,am);
+    if(p.isScatter)return; launchEnemy();return;
+  }
+  G.eHp=Math.max(0,G.eHp-dmg);
+  G.score+=dmg*12;G.totalDmg+=dmg;G.hits++;
+  if(!p.volleyCounted){G.combo++;if(G.combo>G.maxCombo)G.maxCombo=G.combo;}
+  document.getElementById('hud-score').textContent=((G.totalScore||0)+G.score).toLocaleString();
+  updCombo();floaty(`-${dmg}💥`,w2s(hx),hy,'#FF4500');
+  spawnExp(w2s(hx),hy,am.blast*1.2);
+  spawnExp(w2s(hx),hy,am.blast*0.6);
+  hitBlocks(hx,hy,am);
+  camShake.x=am.blast*0.22;camShake.y=am.blast*0.18;camShake.d=16;
+  say('재홍 원사',G.combo>=3?`${G.combo}콤보!`:'명중!');
+  const kb=am.kb||1.0;
+  eKnock=Math.sign(p.vx||1)*kb*12;
+  eTilt=Math.sign(p.vx||1)*kb*0.4;
+  if(G.eHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doWin,500);return;}
+  if(wep.id==='legend'){G.busy=false;document.getElementById('fire-btn').disabled=false;return;}
+  if(p.isScatter) return; // 산탄은 doFire 타이머가 적 턴 시작
+  launchEnemy();
+}
+
+function hitBlocks(hx,hy,am){
+  const blastR=Math.max(38,am.blast*2.0);
+  let destroyed=0;
+  // 원형 분화구 기록 (벽에 둥근 구멍)
+  wallCraters.push({wx:hx,wy:hy,r:blastR*0.85});
+  if(wallCraters.length>60)wallCraters.shift();
+  const alive=blocks.filter(b=>b.alive).map(b=>{
+    const bx=b.x+b.w/2,by=b.y+b.h/2;
+    return {b,bx,by,d:Math.hypot(hx-bx,hy-by)};
+  }).sort((a,z)=>a.d-z.d);
+  const maxDestroy=am.pierce?am.pierce+4:(am.blast>40?99:6);
+  alive.forEach(({b,bx,by,d})=>{
+    if(destroyed>=maxDestroy) return;
+    // 원형: 블록 중심이 폭발 반경 안이면 파괴
+    if(d<blastR*0.85){
+      b.alive=false;destroyed++;
+      for(let k=0;k<12;k++)spawnDebris(w2s(bx),by);
+      spawnExp(w2s(bx),by,18);
+    } else if(d<blastR){
+      // 가장자리는 데미지만
+      b.hp-=2;
+      spawnDebris(w2s(bx),by);
+      if(b.hp<=0){b.alive=false;destroyed++;for(let k=0;k<8;k++)spawnDebris(w2s(bx),by);}
+    }
+  });
+  if(destroyed>0){
+    collapseCastle();
+    floaty(`${destroyed}칸 파괴!`,w2s(hx),hy-35,'#ff5252');
+  }
+  deformTerrain(hx,hy,am);
+}
+
+// 성 붕괴 — 빈 칸 위 블록이 바닥/아래 블록 위로 정확히 쌓임
+function collapseCastle(){
+  const cols={};
+  blocks.filter(b=>!b.batt&&!b.floating&&b.alive).forEach(b=>{
+    const key=Math.round(b.x);
+    (cols[key]=cols[key]||[]).push(b);
+  });
+  Object.values(cols).forEach(col=>{
+    // 아래(y 큰)부터 정렬
+    col.sort((a,z)=>z.y-a.y);
+    let stackY=gY; // 바닥부터 시작
+    for(const b of col){
+      const target=stackY-b.h; // 이 블록이 놓일 Y
+      if(b.y<target-1){
+        b.fallTo=target; // 아래로 떨어뜨림
+      } else {
+        b.fallTo=undefined;
+        b.y=target; // 이미 자리잡음
+      }
+      stackY=target; // 다음 블록은 이 블록 위에
+    }
+  });
+  // 흉벽(batt)도 최상단 블록 위로 재배치
+  const topByCol={};
+  blocks.filter(b=>!b.batt&&!b.floating&&b.alive).forEach(b=>{
+    const key=Math.round(b.x);
+    const ty=b.fallTo!==undefined?b.fallTo:b.y;
+    if(topByCol[key]===undefined||ty<topByCol[key])topByCol[key]=ty;
+  });
+}
+
+// ══ 지형 초강력 파괴 — 탄종 dig 배율 적용 ══
+function deformTerrain(hx,hy,am){
+  if(!hillPts.length) return;
+  const blast=(am.blast||30);
+  const cr=(am.crater||1.0)*(am.enemy?0.9:1.0); // 탄별 구멍 크기 배율
+  // 반경/깊이 = 탄종 crater 배율로 14종 모두 다름
+  const blastR=Math.min(SCR_W*0.5, blast*1.6*cr);
+  const depth=blast*1.4*cr;
+  let dug=false;
+  for(let i=0;i<=HILL_COLS;i++){
+    const wx2=HILL_X0+(HILL_X1-HILL_X0)*(i/HILL_COLS);
+    const dx=Math.abs(hx-wx2);
+    if(dx<blastR){
+      const ratio=dx/blastR;
+      const crater=Math.sqrt(Math.max(0,1-ratio*ratio))*depth;
+      hillPts[i]=Math.min(gY-2,hillPts[i]+crater);
+      dug=true;
+    }
+  }
+  // 추가 언덕들도 깎임
+  extraHills.forEach(h=>{
+    for(let i=0;i<=20;i++){
+      const wx2=h.x0+(h.x1-h.x0)*(i/20);
+      const dx=Math.abs(hx-wx2);
+      if(dx<blastR){
+        const ratio=dx/blastR;
+        const crater=Math.sqrt(Math.max(0,1-ratio*ratio))*depth;
+        h.pts[i]=Math.min(gY-2,h.pts[i]+crater);
+        dug=true;
+      }
+    }
+  });
+  if(dug){
+    // 흙먼지 대량 분출 (타격감)
+    for(let k=0;k<22;k++)
+      ptcls.push({x:w2s(hx)+(Math.random()-.5)*blastR,y:hy+(Math.random()-.5)*25,
+        vx:(Math.random()-.5)*11,vy:-(Math.random()*9+2),
+        color:`hsl(${ri(26,46)},48%,${ri(26,44)}%)`,sz:4+Math.random()*10,life:40+ri(0,24),max:64});
+  }
+  // ── 가스탄: 독가스 영역 생성 ──
+  if(am.gas){
+    gasZones.push({wx:hx, r:blastR*1.4, turns:5, fromEnemy:!!am.enemy});
+    floaty('☠️ 가스 살포!',w2s(hx),hy-30,'#7cb342');
+  }
+}
+
+// 가스 영역 지속 데미지 (매 프레임 체크 → 영역 안에 있으면 데미지)
+function tickGasZones(){
+  if(!gasZones.length||G.gameOver)return;
+  gasZones.forEach(z=>{
+    if(z.turns<=0)return;
+    // 가스 파티클
+    if(Math.random()<0.5){
+      ptcls.push({x:w2s(z.wx)+(Math.random()-.5)*z.r*1.6,y:groundYAt(z.wx)-5-Math.random()*30,
+        vx:(Math.random()-.5)*0.8,vy:-(Math.random()*1.5+0.3),
+        color:'rgba(140,200,80,0.5)',sz:6+Math.random()*8,life:50,max:60});
+    }
+    // 플레이어가 영역 안 → 데미지 (60프레임=1초마다)
+    if(!G._gasTick)G._gasTick=0;
+  });
+  G._gasTick=(G._gasTick||0)+1;
+  if(G._gasTick>=45){ // 0.75초마다
+    G._gasTick=0;
+    gasZones.forEach(z=>{
+      if(z.turns<=0)return;
+      // 플레이어
+      if(Math.abs((pWX+26)-z.wx)<z.r){
+        G.pHp=Math.max(0,G.pHp-2);
+        floaty('-2☠️',w2s(pWX+10),pWY-12,'#7cb342');
+        if(G.pHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doLose,400);}
+      }
+      // 적
+      if(G.eHp>0&&Math.abs(eX-z.wx)<z.r){
+        G.eHp=Math.max(0,G.eHp-3);
+        floaty('-3☠️',w2s(eX),groundYAt(eX)-50,'#7cb342');
+        if(G.eHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doWin,500);}
+      }
+    });
+  }
+}
+
+// 가스 영역 시각화 (drawHill에서 호출)
+function drawGasZones(){
+  gasZones.forEach(z=>{
+    if(z.turns<=0)return;
+    const sx=w2s(z.wx);
+    if(sx<-z.r-20||sx>SCR_W+z.r+20)return;
+    const surfY=groundYAt(z.wx);
+    const pulse=0.4+0.2*Math.sin(Date.now()/300);
+    CX.globalAlpha=pulse;
+    const rg=CX.createRadialGradient(sx,surfY-20,5,sx,surfY-20,z.r*1.2);
+    rg.addColorStop(0,'rgba(140,200,80,0.6)');
+    rg.addColorStop(1,'rgba(140,200,80,0)');
+    CX.fillStyle=rg;
+    CX.beginPath();CX.ellipse(sx,surfY-15,z.r*1.3,z.r*0.7,0,0,Math.PI*2);CX.fill();
+    CX.globalAlpha=1;
+    CX.fillStyle='#7cb342';CX.font='10px Noto Sans KR';CX.textAlign='center';
+    CX.fillText(`☠️ 가스 (${z.turns}턴)`,sx,surfY-z.r*0.5);
+    CX.textAlign='left';
+  });
+}
+
+// ══ 증폭존 통과 체크 (포탄이 관문 통과 시 분열) ══
+function checkBonusZones(p){
+  if(p.enemy) return; // 아군 포탄만 분열
+  bonusZones.forEach(z=>{
+    if(p.zonesPassed&&p.zonesPassed.includes(z)) return;
+    if(Math.hypot(p.wx-z.wx,p.wy-z.wy)<z.r){
+      (p.zonesPassed=p.zonesPassed||[]).push(z);
+      const totalShots=z.split+1; // split:1→2발, split:2→3발
+      // 현재 포탄을 분열 (눈에 띄게 부채꼴로 벌어짐)
+      for(let m=1;m<totalShots;m++){
+        const spread=(m-(totalShots-1)/2)*1.6; // 더 넓게 벌어짐 (0.5→1.6)
+        projs.push({...p,
+          vx:p.vx+spread,
+          vy:p.vy-Math.abs(spread)*0.5,
+          zonesPassed:[...(p.zonesPassed||[])],
+          trailPts:[], age:p.age||0,
+          splitGlow:18 // 분열 직후 반짝임
+        });
+      }
+      // 원본 포탄도 약간 위로 (퍼지는 느낌)
+      if(totalShots>1){p.vy-=0.3; p.splitGlow=18;}
+      floaty(`💥 ${totalShots}발 분열!`,w2s(z.wx),z.wy-12,z.split===2?'#ff5252':'#4fc3f7');
+      // 큰 폭발 링 효과
+      for(let k=0;k<26;k++){
+        const a=(k/26)*Math.PI*2;
+        ptcls.push({x:w2s(z.wx),y:z.wy,vx:Math.cos(a)*8,vy:Math.sin(a)*8,
+          color:z.split===2?`hsl(${ri(0,15)},95%,60%)`:`hsl(${ri(185,205)},95%,62%)`,
+          sz:4+Math.random()*5,life:40+ri(0,20),max:60});
+      }
+    }
+  });
+}
+
+/* ══ ENEMY FIRE — 강화 ══ */
+function launchEnemy(){
+  if(G.gameOver)return;
+  // 내 포탄이 아직 날아가는 중이면 대기 (착탄 후 적 턴)
+  const myShell=projs.find(p=>!p.enemy&&!p.done);
+  if(myShell){
+    setTimeout(()=>launchEnemy(),250);
+    return;
+  }
+  G.busy=true;G.eMissed=0;G._enemyTurnDmg=0;
+  document.getElementById('fire-btn').disabled=true;
+  const sd=G.stage;
+  const eatk=document.getElementById('eatk-el');
+  // ── 적 회피 이동: 가스 안에 있으면 위기1에서도 무조건 회피 ──
+  const inGasNow=gasZones.some(z=>z.turns>0&&Math.abs(eX-z.wx)<z.r);
+  if(sd.n>=2 || inGasNow){
+    moveEnemyEvade();
+    eatk.textContent=inGasNow?`☠️ ${sd.eName} 가스 회피!`:`🏃 ${sd.eName} 진지 변경...`;
+    eatk.style.opacity='1';
+  }
+  say(sd.eName,sd.eDlg[ri(0,sd.eDlg.length-1)]);
+  const totalShots=sd.eShots+(G.extraEnemyShots||0);
+  G.eTotalShots=totalShots;
+  G._enemyShotIdx=0;
+  G._enemyShotsToFire=totalShots;
+  // 이동 후 조준 시작 (이동 애니메이션 볼 시간)
+  const moveDelay=(sd.n>=2||inGasNow)?1700:300;
+  setTimeout(()=>{
+    if(G.gameOver)return;
+    eatk.textContent=`⚠️ ${sd.eName} 조준 중...`;
+    scheduleNextEnemyShot(sd);
+  },moveDelay);
+}
+
+// 적 회피 이동 — 가스 영역/위험 피해서 이동
+function moveEnemyEvade(){
+  let inGas=gasZones.some(z=>z.turns>0&&Math.abs(eX-z.wx)<z.r);
+  const range=eMoveMax-eMoveMin;
+  const maxStep=SCR_W*0.18; // 적 한 턴 이동 한계 (천천히)
+  let target;
+  if(inGas){
+    // 가스 밖 안전 지점 탐색 — 현재 위치 근처 우선
+    let best=eX,bestScore=-9999;
+    for(let k=0;k<=20;k++){
+      const cand=eMoveMin+range*(k/20);
+      if(Math.abs(cand-eX)>maxStep) continue; // 이동 한계 밖 제외
+      const activeGas=gasZones.filter(z=>z.turns>0);
+      const minGasDist=Math.min(...activeGas.map(z=>Math.abs(cand-z.wx)-z.r),9999);
+      if(minGasDist>bestScore){bestScore=minGasDist;best=cand;}
+    }
+    // 한계 내에 가스 밖 지점이 없으면 한계만큼 무조건 도망
+    if(bestScore<=0){
+      const gasCenter=gasZones[0]?gasZones[0].wx:eX;
+      const escapeDir=eX>gasCenter?1:-1;
+      best=Math.max(eMoveMin,Math.min(eMoveMax,eX+maxStep*escapeDir));
+    }
+    target=best;
+    say(G.stage.eName,'가스다! 피해야 해!');
+  } else {
+    const dir=Math.random()<0.5?-1:1;
+    const dist=maxStep*(0.4+Math.random()*0.6)*dir; // 한 턴 한계 안에서
+    target=Math.max(eMoveMin,Math.min(eMoveMax,eX+dist));
+  }
+  eMoveTarget=Math.max(eMoveMin,Math.min(eMoveMax,target));
+  camFollowEnemy=true;
+  floaty('적 이동!',w2s(eMoveTarget),groundYAt(eMoveTarget)-70,'#90caf9');
+}
+
+function scheduleNextEnemyShot(sd){
+  if(G.gameOver)return;
+  if(G._enemyShotIdx>=G._enemyShotsToFire)return;
+  const eatk=document.getElementById('eatk-el');
+  // 적 포탄이 아직 비행 중이면 대기
+  const activeEnemyShell=projs.find(p=>p.enemy&&!p.done);
+  if(activeEnemyShell){
+    setTimeout(()=>scheduleNextEnemyShot(sd),200);
+    return;
+  }
+  // 다음 발사까지 텀
+  setTimeout(()=>{
+    if(G.gameOver)return;
+    G._enemyShotIdx++;
+    eatk.textContent=`💥 ${sd.eName} 발사! (${G._enemyShotIdx}/${G._enemyShotsToFire})`;
+    fireEnemyBallistic(sd);
+    // 다음 발 예약 (착탄 후 추가 발사용)
+    setTimeout(()=>scheduleNextEnemyShot(sd),300);
+  },1200); // 발사 간 1.2초 텀
+}
+
+// 포물선 정밀 조준 — 고정 비행시간 방식 (거리 무관 명중)
+function fireEnemyBallistic(sd){
+  const ex=eX, ey=groundYAt(eX)-clamp(34,55,SCR_W*0.13)*0.5;
+  let tx=pWX+26, ty=pWY+10;
+  // 정확도에 따른 조준 오차 (acc 낮으면 크게 빗맞음)
+  const errPx=(1-sd.eAcc)*SCR_W*0.9; // 위기1≈158px, 위기5≈70px
+  tx+=(Math.random()-.5)*errPx*2;
+  const dx=tx-ex, dy=ty-ey;
+  const g=0.30;
+  // 비행시간 T 고정 — 천천히 날아가서 카메라가 따라가며 보기 좋게
+  let T=Math.max(130, Math.min(230, Math.abs(dx)/5.5));
+  T=Math.round(T);
+  // 이산 시뮬레이션 정확 해: 위치 = Σ vx, Σ(vy+i*g)
+  // X: dx = vx*T  → vx=dx/T
+  // Y: dy = vy*T + g*(T*(T-1)/2)  → vy=(dy - g*T*(T-1)/2)/T
+  const vx=dx/T;
+  const vy=(dy - g*(T*(T-1)/2))/T;
+  // 위기별 적 포탄 종류 (저위기=소형, 고위기=대형/관통)
+  const enemyAmmos=[
+    {ico:'🔴',blast:30,pierce:0,dig:2.0,kb:1.2,name:'고폭탄'},      // 위기1
+    {ico:'🟠',blast:42,pierce:0,dig:2.4,kb:1.4,name:'대구경 고폭탄'},// 위기2
+    {ico:'🟣',blast:38,pierce:3,dig:2.6,kb:1.5,name:'철갑 관통탄'},  // 위기3
+    {ico:'🔵',blast:55,pierce:0,dig:3.0,kb:1.8,name:'중포 작렬탄'},  // 위기4
+    {ico:'⚫',blast:70,pierce:4,dig:3.5,kb:2.2,name:'궤멸포'}        // 위기5
+  ];
+  const et=enemyAmmos[Math.min(sd.n-1,4)];
+  const eam={blast:et.blast,pierce:et.pierce,dig:et.dig,kb:et.kb,dmgMul:1,enemy:true};
+  projs.push({wx:ex,wy:ey, vx, vy,
+    grav:g,life:Math.ceil(T)+40,ico:et.ico,sz:24,wid:'enemy',am:eam,wf:0,done:false,phase:0,
+    enemy:true,trail:'#ff3030',trailPts:[]});
+}
+function onEMiss(){G.eMissed++;if(G.eMissed>=(G.eTotalShots||G.stage.eShots))endEnemy();}
+function onEHit(p){
+  if(G.gameOver)return;
+  // 방탄 보급 아이템: 1회 피해 무효
+  if(G.shield){
+    G.shield=false;
+    floaty('🛡️ 방어!',w2s(pWX+10),pWY-12,'#2196f3');
+    spawnExp(w2s(pWX+26),pWY+10,20);
+    G.eMissed++;
+    if(G.eMissed>=(G.eTotalShots||G.stage.eShots))endEnemy();
+    return;
+  }
+  let pdmg=ri(G.stage.edMin,G.stage.edMax);
+  // 한 턴 적 데미지 상한: HP의 45%까지만 (여러 발 맞아도 즉사 방지)
+  const turnCap=Math.floor(G.pHpMax*0.45);
+  if(G._enemyTurnDmg===undefined)G._enemyTurnDmg=0;
+  if(G._enemyTurnDmg+pdmg>turnCap)pdmg=Math.max(0,turnCap-G._enemyTurnDmg);
+  G._enemyTurnDmg+=pdmg;
+  if(pdmg>0)G.runNoMiss=false; // 피격 시 노미스 깨짐
+  G.pHp=Math.max(0,G.pHp-pdmg);
+  spawnExp(w2s(pWX+26),pWY+10,32);
+  spawnExp(w2s(pWX+26),pWY+10,18);
+  const eBlast=(p.am&&p.am.blast)||30;
+  digGround(pWX+26,gY,Math.min(SCR_W*0.12,eBlast*0.7)); // 발밑 분화구 축소 (즉시 낙사 방지)
+  pHitT=18;G.combo=0;updCombo();
+  camShake.x=10;camShake.y=8;camShake.d=18;
+  if(pdmg>0)floaty(`-${pdmg}❤️`,w2s(pWX+10),pWY-12,'#f44336');
+  G.eMissed++;
+  if(G.pHp<=0){G.gameOver=true;clearInterval(G.timerID);setTimeout(doLose,400);return;}
+  if(G.eMissed>=(G.eTotalShots||G.stage.eShots))endEnemy();
+}
+function endEnemy(){
+  setTimeout(()=>{
+    if(G.gameOver)return;
+    movedThisTurn=0; pMoveTarget=pWX; // 새 턴 이동량 리셋
+    // 가스 영역 턴 감소
+    gasZones.forEach(z=>{if(z.turns>0)z.turns--;});
+    gasZones=gasZones.filter(z=>z.turns>0);
+    G.extraEnemyShots=0; G.eMissed=0; // 패널티 리셋
+    document.getElementById('eatk-el').style.opacity='0';
+    camFollowEnemy=false;
+    // 탄약은 매 턴 리필하지 않음 (총 보유량, 턴당 1발씩 소모)
+    if(G.ammo<=0){G.ammo=1;G.ammoMax=Math.max(G.ammoMax,1);} // 바닥나면 최소 1발 보장
+    updAmmo();
+    G.wind=(Math.random()*2-1)*G.stage.wMax;updWind();
+    // 내 턴 시작 → 제한시간 리셋 + 타이머 재시작
+    G.timeLeft=G.stage.tl;
+    document.getElementById('timer-el').textContent='⏱ '+G.timeLeft;
+    document.getElementById('timer-el').classList.remove('urg');
+    startTimer();
+    say('재홍 원사','다음 발사 준비!');
+    spawnItem(); // 턴마다 하늘에서 아이템 투하
+    G.busy=false;document.getElementById('fire-btn').disabled=false;
+  },400);
+}
+
+// 적 부드러운 이동 (목표 위치 설정 → gameLoop에서 보간)
+function moveEnemy(){
+  const range=eMoveMax-eMoveMin;
+  const dir=Math.random()<0.5?-1:1;
+  const dist=SCR_W*(0.15+Math.random()*0.25)*dir;
+  eMoveTarget=Math.max(eMoveMin,Math.min(eMoveMax,eX+dist));
+  floaty('적 이동!',w2s(eMoveTarget),groundYAt(eMoveTarget)-70,'#90caf9');
+}
+// 적이 아이템 먹는 체크
+function enemyCheckItem(){
+  items.forEach(it=>{
+    if(it.taken||!it.landed)return;
+    if(Math.abs(eX-it.wx)<32){
+      it.taken=true;
+      // 적이 먹으면 적에게 효과 (HP회복 위주)
+      if(it.type.id==='heal'){G.eHp=Math.min(G.eHpMax,G.eHp+25);floaty('적 회복!',w2s(eX),groundYAt(eX)-70,'#f44336');}
+      else floaty('적이 보급 획득',w2s(eX),groundYAt(eX)-70,'#aaa');
+      for(let k=0;k<12;k++)ptcls.push({x:w2s(eX),y:groundYAt(eX),vx:(Math.random()-.5)*8,vy:-(Math.random()*7+2),color:it.type.color,sz:4,life:40,max:50});
+    }
+  });
+}
+
+/* ══ PARTICLES ══ */
+function drawExps(){exps=exps.filter(e=>{e.life--;if(!e.life)return false;const t=1-e.life/e.max,r=e.radius*t;const g=CX.createRadialGradient(e.x,e.y,0,e.x,e.y,r);g.addColorStop(0,`rgba(255,230,60,${(1-t)*.95})`);g.addColorStop(.45,`rgba(255,90,0,${(1-t)*.75})`);g.addColorStop(1,'rgba(60,30,0,0)');CX.beginPath();CX.arc(e.x,e.y,r,0,Math.PI*2);CX.fillStyle=g;CX.fill();return true;});}
+function drawPtcls(){ptcls=ptcls.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.38;p.vx*=.93;p.life--;if(!p.life)return false;CX.globalAlpha=p.life/p.max;CX.fillStyle=p.color;CX.fillRect(p.x,p.y,p.sz,p.sz);CX.globalAlpha=1;return true;});}
+function spawnExp(sx,sy,r=28){exps.push({x:sx,y:sy,radius:r,life:26,max:26});for(let i=0;i<9;i++)ptcls.push({x:sx,y:sy,vx:(Math.random()-.5)*10,vy:-(Math.random()*8+2),color:`hsl(${20+ri(0,35)},70%,${28+ri(0,22)}%)`,sz:3+Math.random()*8,life:36+ri(0,22),max:58});}
+function spawnDebris(sx,sy){for(let i=0;i<8;i++)ptcls.push({x:sx,y:sy,vx:(Math.random()-.5)*11,vy:-(Math.random()*9+3),color:`hsl(${ri(25,45)},50%,${ri(22,38)}%)`,sz:4+Math.random()*9,life:42+ri(0,22),max:64});}
+function spawnPuff(sx,sy){for(let i=0;i<5;i++)ptcls.push({x:sx,y:sy,vx:(Math.random()-.5)*4,vy:-(Math.random()*3+1),color:'rgba(175,175,175,.65)',sz:3+Math.random()*4,life:18,max:18});}
+
+/* ══ MINIMAP ══ */
+function drawMM(){
+  const W=mmCV.width,H=mmCV.height;
+  mmCX.clearRect(0,0,W,H);
+  mmCX.fillStyle='rgba(0,0,0,.7)';mmCX.fillRect(0,0,W,H);
+  const sc=W/WORLD_W;
+  // 지형
+  mmCX.fillStyle='#4a7a2c';
+  mmCX.beginPath();mmCX.moveTo(HILL_X0*sc,H);
+  for(let i=0;i<=HILL_COLS;i++){const wx=HILL_X0+(HILL_X1-HILL_X0)*(i/HILL_COLS);mmCX.lineTo(wx*sc,hillPts[i]*H/gY);}
+  mmCX.lineTo(HILL_X1*sc,H);mmCX.closePath();mmCX.fill();
+  // 성
+  mmCX.fillStyle='#8B7355';mmCX.fillRect(cWL*sc,0,cWW*sc,H);
+  // 플레이어
+  mmCX.fillStyle='#FFD700';mmCX.fillRect(pWX*sc-2,H*.3,4,H*.7);
+  // 카메라 뷰 (파란 박스)
+  mmCX.strokeStyle='rgba(100,180,255,.9)';mmCX.lineWidth=1.5;
+  mmCX.strokeRect(camX*sc,0,SCR_W*sc,H);
+  // 드래그 힌트 텍스트
+  mmCX.fillStyle='rgba(255,255,255,.6)';mmCX.font='8px sans-serif';mmCX.textAlign='left';
+  mmCX.fillText('← 드래그 →',2,H-2);
+  // 포탄
+  projs.forEach(p=>{mmCX.fillStyle=p.enemy?'#f44':'#0f0';mmCX.beginPath();mmCX.arc(p.wx*sc,H*.5,2,0,Math.PI*2);mmCX.fill();});
+}
+
+/* ══ TIMER ══ */
+function startTimer(){
+  clearInterval(G.timerID);
+  const el=document.getElementById('timer-el');
+  G.timerID=setInterval(()=>{
+    if(!running){clearInterval(G.timerID);return;}
+    G.timeLeft--;el.textContent='⏱ '+G.timeLeft;el.classList.toggle('urg',G.timeLeft<=10);
+    if(G.timeLeft<=0&&!G.gameOver){
+      clearInterval(G.timerID);say('시스템','시간 초과! 적 총공격!');
+      G.busy=true;document.getElementById('fire-btn').disabled=true;
+      setTimeout(()=>launchEnemy(),500);
+    }
+  },1000);
+}
+
+/* ══ UI ══ */
+function updAmmo(){const bar=document.getElementById('ammo-row');bar.innerHTML='';for(let i=0;i<G.ammoMax;i++){const d=document.createElement('div');d.className='apip'+(i<G.ammo?' on':'');bar.appendChild(d);}}
+// 게임화면 탄종 선택 버튼 렌더
+function renderGameAmmo(){
+  const row=document.getElementById('ammo-sel-row');
+  row.innerHTML='';
+  const wep=G.wpn; if(!wep)return;
+  wep.ammos.forEach((a,ai)=>{
+    const b=document.createElement('button');
+    b.className='gammo-btn'+(G.selAmmo===ai?' gammo-sel':'');
+    b.textContent=`${a.ico} ${a.name}`;
+    b.addEventListener('click',()=>{
+      G.selAmmo=ai;
+      document.getElementById('w-thumb').textContent=a.ico;
+      document.getElementById('wpn-lbl').textContent=wep.name+' · '+a.name;
+      renderGameAmmo();
+    });
+    row.appendChild(b);
+  });
+}
+function updCombo(){const el=document.getElementById('combo-el');if(G.combo>=2){el.textContent=`${G.combo}콤보 x${(1+G.combo*.12).toFixed(1)}`;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');}else el.textContent='';}
+function updWind(){const w=G.wind,dir=w>0?'→':'←',str=Math.abs(w);document.getElementById('wind-el').textContent=`💨 ${dir} ${'▪'.repeat(Math.min(4,Math.ceil(str)))} ${str.toFixed(1)}`;}
+let sayT;
+function say(spk,txt){const box=document.getElementById('dlg-box'),ctrl=document.getElementById('g-ctrl');box.style.bottom=(ctrl.offsetHeight+6)+'px';box.classList.remove('hide');document.getElementById('dlg-spk').textContent=spk;document.getElementById('dlg-txt').textContent=txt;clearTimeout(sayT);sayT=setTimeout(()=>box.classList.add('hide'),3800);}
+function floaty(txt,sx,sy,col='#FFD700'){const wrap=document.getElementById('cv-wrap');const d=document.createElement('div');d.className='floaty';d.style.cssText=`left:${Math.max(8,sx-20)}px;top:${Math.max(40,sy)}px;color:${col};font-size:clamp(13px,4vw,17px);`;d.textContent=txt;wrap.appendChild(d);setTimeout(()=>d.remove(),1200);}
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function clamp(mn,mx,v){return Math.max(mn,Math.min(mx,v));}
+function dk(h,a){try{return '#'+[0,2,4].map(i=>Math.max(0,parseInt(h.slice(1+i,3+i),16)-a).toString(16).padStart(2,'0')).join('');}catch{return h;}}
+
+/* ══ WIN / LOSE ══ */
+function doWin(){
+  stopLoop();
+  const acc=G.shots>0?Math.round(G.hits/G.shots*100):0;
+  // 점수 정비: 기본(데미지) + 보너스들 × 스테이지 난이도 배수
+  const stageMul=1+(G.selStage-1)*0.3; // 위기1=1.0 ~ 위기5=2.2배
+  const tB=G.timeLeft*30;                // 잔여시간
+  const cB=G.maxCombo*200;               // 최대 콤보
+  const aB=Math.floor(acc*15);           // 정확도 (%당 15)
+  const hB=G.pHp*10;                     // 생존 HP
+  const clearB=2000;                     // 클리어 기본 보너스
+  const subtotal=G.score+tB+cB+aB+hB+clearB;
+  const stageTotal=Math.floor(subtotal*stageMul);
+  G.totalScore=(G.totalScore||0)+stageTotal; // 누적
+  const total=G.totalScore;
+  if(!G.cleared.includes(G.selStage)){G.cleared.push(G.selStage);} // 메모리만 (다음 스테이지 잠금 해제용)
+  document.getElementById('r-title').textContent='🏆 승리!';document.getElementById('r-title').className='r-title r-win';
+  document.getElementById('r-score').textContent='누적 점수: '+total.toLocaleString();
+  document.getElementById('r-bd').innerHTML=
+    `<div class="r-row"><span>💥 누적 데미지</span><span>${G.score.toLocaleString()}</span></div>
+     <div class="r-row"><span>🎖️ 클리어 보너스</span><span>+${clearB}</span></div>
+     <div class="r-row"><span>⏱ 잔여시간 ${G.timeLeft}초</span><span>+${tB}</span></div>
+     <div class="r-row"><span>🎯 정확도 ${acc}%</span><span>+${aB}</span></div>
+     <div class="r-row"><span>🔥 최대콤보 ${G.maxCombo}회</span><span>+${cB}</span></div>
+     <div class="r-row"><span>❤️ 생존 HP ${G.pHp}</span><span>+${hB}</span></div>
+     <div class="r-row"><span>⚔️ 위기${G.selStage} 난이도</span><span>×${stageMul.toFixed(1)}</span></div>
+     <div class="r-row"><span>📊 이번 스테이지</span><span>+${stageTotal.toLocaleString()}</span></div>
+     <div class="r-row" style="border-top:1px solid rgba(255,215,0,.3);margin-top:4px;padding-top:4px;"><span style="color:#FFD700">누적 합계</span><span style="color:#FFD700">${total.toLocaleString()}</span></div>`;
+  document.getElementById('r-next').style.display=G.selStage<5?'inline-block':'none';
+  // 전설포 히든 해금: 위기5를 노미스로 클리어
+  if(G.selStage===5 && G.runNoMiss && !G.legendUnlocked){
+    G.legendUnlocked=true;
+    setTimeout(()=>{
+      document.getElementById('r-title').textContent='🌟 전설포 해금!';
+      say('재홍 원사','무피해 완전제패! 원사의 전설포 획득!');
+    },800);
+  }
+  document.getElementById('result-box').style.display='flex';
+  say('재홍 원사',G.stage.winMsg);saveLB(total);
+}
+function doLose(){
+  stopLoop();
+  const totalSoFar=(G.totalScore||0)+G.score;
+  document.getElementById('r-title').textContent='💀 패배...';document.getElementById('r-title').className='r-title r-lose';
+  document.getElementById('r-score').textContent='누적 점수: '+totalSoFar.toLocaleString();
+  document.getElementById('r-bd').innerHTML=
+    `<div class="r-row"><span>📊 위기 ${G.selStage}에서 전사</span><span></span></div>
+     <div class="r-row" style="border-top:1px solid rgba(255,215,0,.3);margin-top:4px;padding-top:4px;"><span style="color:#FFD700">누적 점수</span><span style="color:#FFD700">${totalSoFar.toLocaleString()}</span></div>`;
+  document.getElementById('r-next').style.display='none';
+  document.getElementById('result-box').style.display='flex';
+  say('재홍 원사',G.stage.loseMsg);
+  saveLB(totalSoFar); // 패배해도 누적 점수 기록
+}
+
+/* ══ WEAPON RENDER (탄종 선택 포함) ══ */
+function renderWeapons(){
+  const container=document.getElementById('wlist');
+  container.innerHTML='';
+  WD.forEach(w=>{
+    // 전설포는 히든 해금 플래그로만 사용 가능
+    const isLegend = w.id==='legend';
+    const locked = isLegend ? !G.legendUnlocked : (w.unlock>0 && G.selStage < w.unlock);
+    const lockMsg = isLegend ? '🔒 히든: 전 스테이지 노미스 클리어 시 해금' : `🔒 위기 ${w.unlock} 부터 사용 가능`;
+    const sel=G.selWpnId===w.id;
+    const div=document.createElement('div');
+    // 탄종 버튼 HTML (선택된 무기일 때만 활성)
+    const ammoBtns=w.ammos.map((a,ai)=>{
+      const aSel=sel&&G.selAmmo===ai;
+      return `<span class="ammo-btn${aSel?' ammo-sel':''}" data-wid="${w.id}" data-ai="${ai}">${a.ico} ${a.name}</span>`;
+    }).join('');
+    div.innerHTML=`
+      <div class="w-ico">${w.ico}</div>
+      <div class="w-body">
+        <div class="w-name">${w.name}${locked?' 🔒':''}</div>
+        <div class="w-eng">${w.eng}</div>
+        <div class="w-tags">
+          <span class="tag tr">💥 ${w.dmg[0]}~${w.dmg[1]}</span>
+          <span class="tag tg">탄수 ${w.ammo}</span>
+          <span class="tag tgr">속도 ${w.spd}</span>
+          <span class="tag tb">바람 ${Math.round(w.wf*100)}%</span>
+          ${w.cd>1?`<span class="tag to">적반격 +${w.cd-1}</span>`:'<span class="tag tgr">즉시재장전</span>'}
+        </div>
+        ${locked?`<div class="w-spec">${lockMsg}</div>`:`
+        <div class="ammo-row-sel">${ammoBtns}</div>
+        <div class="w-spec" id="aspec-${w.id}">${w.ammos[sel?G.selAmmo:0].desc}</div>`}
+      </div>`;
+    div.className='wc'+(sel?' wc-sel':'')+(locked?' wc-locked':'');
+    div.dataset.wid=w.id;
+    if(!locked){
+      // 무기 카드 클릭 → 무기 선택
+      div.addEventListener('click',function(e){
+        if(e.target.classList.contains('ammo-btn')) return; // 탄종 버튼은 별도
+        G.selWpnId=w.id; G.selAmmo=0;
+        renderWeapons();
+        document.getElementById('w-thumb').textContent=w.ico;
+        document.getElementById('wpn-lbl').textContent=w.name+' · '+w.ammos[0].name;
+      });
+      // 탄종 버튼 클릭
+      div.querySelectorAll('.ammo-btn').forEach(btn=>{
+        btn.addEventListener('click',function(e){
+          e.stopPropagation();
+          G.selWpnId=w.id;
+          G.selAmmo=parseInt(btn.dataset.ai);
+          renderWeapons();
+          document.getElementById('w-thumb').textContent=w.ico;
+          document.getElementById('wpn-lbl').textContent=w.name+' · '+w.ammos[G.selAmmo].name;
+        });
+      });
+    }
+    container.appendChild(div);
+  });
+  const cur=WD.find(w=>w.id===G.selWpnId);
+  if(cur && cur.unlock>0 && G.selStage<cur.unlock){
+    G.selWpnId='w105'; G.selAmmo=0;
+  }
+}
+
+/* ══ STAGE / NAV ══ */
+function renderStages(){
+  document.getElementById('clr-cnt').textContent=G.cleared.length;
+  document.querySelectorAll('.sc').forEach(el=>{
+    const n=parseInt(el.dataset.n);
+    const ok=n===1||G.cleared.includes(n-1);
+    el.classList.toggle('sc-locked',!ok);
+    document.getElementById(`ok-${n}`).textContent=G.cleared.includes(n)?'✅':'';
+    el.onclick=ok?()=>goWeapon(n):null;
+  });
+}
+function goWeapon(n){
+  G.selStage=n;G.stage=SD[n-1];
+  document.getElementById('w-sub').textContent=`위기 ${n}: ${G.stage.name}`;
+  renderWeapons();
+  showPg('pg-weapon');
+  document.getElementById('w-inner').scrollTop=0;
+}
+function showPg(id){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('show'));document.getElementById(id).classList.add('show');}
+
+/* ══ START GAME ══ */
+function startGame(){
+  G.wpn=WD.find(w=>w.id===G.selWpnId)||WD[0];
+  if(G.selStage===1){ G.runNoMiss=true; G.totalScore=0; } // 새 도전 시작 시 누적점수/노미스 리셋
+  Object.assign(G,{score:0,combo:0,maxCombo:0,hits:0,shots:0,totalDmg:0,
+    pHp:100,pHpMax:100,eHp:G.stage.eHp,eHpMax:G.stage.eHp,
+    ammo:G.wpn.ammo,ammoMax:G.wpn.ammo,busy:false,gameOver:false,timeLeft:G.stage.tl,eMissed:0,extraEnemyShots:0,eTotalShots:0,nextPower2:false,shield:false});
+  curSpotIdx=0;
+  showPg('pg-game');
+  requestAnimationFrame(()=>{
+    initCV();buildLevel(G.stage);
+    ptcls=[];projs=[];exps=[];pHitT=0;
+    document.getElementById('hud-stage').textContent=`위기 ${G.selStage}: ${G.stage.name}`;
+    document.getElementById('hud-score').textContent=(G.totalScore||0).toLocaleString();
+    document.getElementById('combo-el').textContent='';
+    document.getElementById('result-box').style.display='none';
+    document.getElementById('w-thumb').textContent=G.wpn.ico;
+    document.getElementById('wpn-lbl').textContent=G.wpn.name+' · '+(G.wpn.ammos[G.selAmmo]||G.wpn.ammos[0]).name;
+    // 무기별 최소 발사각 적용 (직사 가능 여부)
+    const minA=(G.wpn.minAng!==undefined)?G.wpn.minAng:5;
+    const sl=document.getElementById('aim-sl');
+    sl.min=minA;
+    if(G.angle<minA){G.angle=Math.max(minA,30);sl.value=G.angle;document.getElementById('aim-deg').textContent=G.angle+'°';}
+    document.getElementById('timer-el').textContent='⏱ '+G.timeLeft;
+    document.getElementById('timer-el').classList.remove('urg');
+    document.getElementById('eatk-el').style.opacity='0';
+    document.getElementById('dlg-box').classList.add('hide');
+    document.getElementById('fire-btn').disabled=false;
+    updAmmo();updWind();renderGameAmmo();
+    say('재홍 원사','발사 버튼 길게=멀리, 짧게=가까이! ←→드래그로 적 확인!');
+    setupDrag();
+    running=true;gameLoop();startTimer();
+  });
+}
+
+/* ══ DRAG CAMERA ══ */
+let dragSetup=false;
+function setupDrag(){
+  if(dragSetup) return; // 한 번만 등록 (중복 방지)
+  dragSetup=true;
+  const el=document.getElementById('gc');
+  let dragLastX=0;
+  el.addEventListener('pointerdown',function(e){
+    if(camLocked) return;
+    camFollowPlayer=false; // 드래그 시작하면 플레이어 추적 해제
+    camDrag=true;
+    dragLastX=e.clientX;
+    try{el.setPointerCapture(e.pointerId);}catch(_){}
+  },{passive:true});
+  el.addEventListener('pointermove',function(e){
+    if(!camDrag) return;
+    // 캔버스 표시 크기 → 실제 SCR_W 변환 (스케일링 보정)
+    const rect=el.getBoundingClientRect();
+    const scale=SCR_W/rect.width;
+    const dx=(e.clientX-dragLastX)*scale;
+    dragLastX=e.clientX;
+    camX=Math.max(0,Math.min(WORLD_W-SCR_W, camX-dx));
+  },{passive:true});
+  el.addEventListener('pointerup',function(e){camDrag=false;},{passive:true});
+  el.addEventListener('pointercancel',function(e){camDrag=false;},{passive:true});
+  el.addEventListener('pointerleave',function(e){camDrag=false;},{passive:true});
+}
+
+/* ══ 플레이어 이동 (부드럽게, 등반 가능, 한 턴 제한) ══ */
+function movePlayer(dir){
+  if(G.gameOver||G.busy) return;
+  const mob=G.wpn.mob||1.0; // 무기 기동력
+  const step=SCR_W*0.06*mob; // 이동 폭 (한 번에 조금씩)
+  const limit=SCR_W*0.30*mob; // 한 턴 최대 이동 (무기별)
+  if(Math.abs(movedThisTurn+dir*step)>limit){
+    say('재홍 원사','이동 한계! (한 턴 제한)');
+    return;
+  }
+  const cur=pMoveTarget!==undefined?pMoveTarget:pWX;
+  const nx=Math.max(pMoveMin,Math.min(pMoveMax,cur+dir*step));
+  movedThisTurn+=(nx-cur);
+  pMoveTarget=nx;
+  camFollowPlayer=true;
+}
+
+/* ══ 아이템 시스템 (하늘에서 투하 → 이동해서 먹기) ══ */
+const ITEM_TYPES=[
+  {id:'heal', ico:'❤️', name:'보급 의무', color:'#f44336', desc:'HP +30'},
+  {id:'ammo', ico:'📦', name:'탄약 보급', color:'#ff9800', desc:'탄약 +2'},
+  {id:'power',ico:'⚡', name:'강화 포탄', color:'#FFD700', desc:'다음 발 2배'},
+  {id:'shield',ico:'🛡️',name:'방탄 보급', color:'#2196f3', desc:'1회 피해 무효'},
+];
+function spawnItem(){
+  if(G.gameOver)return;
+  // 플레이어 이동 가능 범위 내 랜덤 위치로 낙하
+  const tx=pMoveMin+Math.random()*(pMoveMax-pMoveMin);
+  const t=ITEM_TYPES[Math.floor(Math.random()*ITEM_TYPES.length)];
+  items.push({wx:tx, wy:-30, vy:0, type:t, landed:false, taken:false});
+  say('재홍 원사',`보급 투하! ${t.ico} ${t.name} — 이동해서 획득!`);
+}
+function tickItems(){
+  items.forEach(it=>{
+    if(it.taken)return;
+    if(!it.landed){
+      it.vy+=0.3; it.wy+=it.vy;
+      const gh=groundYAt(it.wx);
+      if(it.wy>=gh-12){it.wy=gh-12;it.landed=true;it.vy=0;}
+    }
+  });
+  items=items.filter(it=>!it.taken);
+}
+function checkItemPickup(){
+  items.forEach(it=>{
+    if(it.taken||!it.landed)return;
+    if(Math.abs((pWX+26)-it.wx)<32){
+      it.taken=true;
+      applyItem(it.type);
+    }
+  });
+}
+function applyItem(t){
+  if(t.id==='heal'){G.pHp=Math.min(G.pHpMax,G.pHp+30);}
+  else if(t.id==='ammo'){G.ammo+=2;G.ammoMax+=2;updAmmo();}
+  else if(t.id==='power'){G.nextPower2=true;}
+  else if(t.id==='shield'){G.shield=true;}
+  floaty(`${t.ico} ${t.desc}!`,w2s(pWX+26),pWY-30,t.color);
+  say('재홍 원사',`${t.name} 획득! ${t.desc}`);
+  // 획득 이펙트
+  for(let k=0;k<16;k++)
+    ptcls.push({x:w2s(pWX+26),y:pWY,vx:(Math.random()-.5)*10,vy:-(Math.random()*9+2),
+      color:t.color,sz:4+Math.random()*5,life:40+ri(0,20),max:60});
+}
+function drawItems(){
+  items.forEach(it=>{
+    if(it.taken)return;
+    const sx=w2s(it.wx);
+    if(sx<-30||sx>SCR_W+30)return;
+    // 낙하산
+    if(!it.landed){
+      CX.fillStyle='rgba(255,255,255,.85)';
+      CX.beginPath();CX.arc(sx,it.wy-18,16,Math.PI,0);CX.fill();
+      CX.strokeStyle='rgba(255,255,255,.6)';CX.lineWidth=1;
+      CX.beginPath();CX.moveTo(sx-14,it.wy-18);CX.lineTo(sx-4,it.wy);
+      CX.moveTo(sx+14,it.wy-18);CX.lineTo(sx+4,it.wy);CX.stroke();
+    } else {
+      // 착지 후 깜빡이는 빛
+      const pulse=0.6+0.4*Math.sin(Date.now()/200);
+      CX.globalAlpha=pulse;
+      CX.fillStyle=it.type.color;
+      CX.beginPath();CX.arc(sx,it.wy,18,0,Math.PI*2);CX.fill();
+      CX.globalAlpha=1;
+    }
+    // 아이콘 박스
+    CX.fillStyle='rgba(0,0,0,.35)';CX.fillRect(sx-13,it.wy-13,26,26);
+    CX.font='20px serif';CX.textAlign='center';CX.fillText(it.type.ico,sx,it.wy+7);
+    CX.textAlign='left';
+  });
+}
+
+/* ══ FIRE (파워 + 탄종 적용) ══ */
+function doFire(pw){
+  if(G.gameOver||G.busy) return;
+  if(G.ammo<=0){say('시스템','탄약 소진!');return;}
+  const power=(typeof pw==='number')?pw:0.7;
+  const pMul=0.55+power*0.9;
+  G.ammo--;G.shots++;updAmmo();
+  // 화력 패널티: 강한 무기일수록 적 반격 증가(주) + 시간 약간 차감(부)
+  const cd=G.wpn.cd||1;
+  G.extraEnemyShots=Math.min(1,Math.max(0,cd-1)); // 최대 +1발
+  if(cd>1){
+    G.timeLeft=Math.max(3,G.timeLeft-(cd-1)); // cd당 −1초 (완만)
+    document.getElementById('timer-el').textContent='⏱ '+G.timeLeft;
+    floaty(`적반격 +${cd-1}`,w2s(pWX+26),pWY-40,'#ff9800');
+  }
+  G.busy=true;document.getElementById('fire-btn').disabled=true;
+  clearInterval(G.timerID); // 발사 후 적 턴 동안 타이머 정지
+  const wep=G.wpn,ar=G.angle*Math.PI/180;
+  const am=wep.ammos[G.selAmmo]||wep.ammos[0]; // 선택 탄종
+  const FLY=0.78; // 비행 속도 배율 (낮을수록 천천히)
+  const spd=wep.spd*pMul*FLY;
+  const grav=wep.grav*FLY*FLY; // 중력도 같은 비율 (궤적 모양 유지)
+  const face=(eX>=pWX)?1:-1; // 적이 오른쪽이면 +1, 왼쪽이면 -1
+  const _S=WPN_LOOK[wep.id]||WPN_LOOK.w105;
+  const footY=groundYAt(pWX+26)*0.6+(groundYAt(pWX+26-_S.bw*0.6)+groundYAt(pWX+26+_S.bw*0.6))*0.2;
+  const ox=pWX+26,oy=footY-20; // 포신 위치 (차체 중심 기준)
+  fireIdCounter++;
+  const base={wid:wep.id,am:am,ico:wep.ico,done:false,phase:0,enemy:false,
+    wf:wep.wf,trail:am.trail||wep.trail,trailPts:[],fid:fireIdCounter,zonesPassed:[]};
+  const scatter=am.scatter||0;
+  if(scatter){
+    G._volleyDmg=0; // 볼리 데미지 누적 초기화
+    for(let i=0;i<scatter;i++) setTimeout(()=>{
+      if(G.gameOver)return;
+      const spreadMax=0.012; // 더 좁게 (0.025→0.012, 착탄 밀집)
+      const frac=scatter>1?(i/(scatter-1))-0.5:0;
+      const sc=frac*spreadMax*2 + (Math.random()-.5)*0.005;
+      projs.push({...base,zonesPassed:[],trailPts:[],wx:ox,wy:oy,
+        isScatter:true, volleyCounted:(i>0),
+        vx:(Math.cos(ar)+sc)*spd*face,vy:(-Math.sin(ar))*spd*(1+frac*0.015),
+        grav:grav,life:420,sz:20});
+    },i*80);
+    setTimeout(()=>{if(!G.gameOver&&G.busy)launchEnemy();},scatter*80+1800);
+    return;
+  }
+  projs.push({...base,wx:ox,wy:oy,vx:Math.cos(ar)*spd*face,vy:-Math.sin(ar)*spd,
+    grav:grav,life:440,sz:clamp(20,28,SCR_W*.065)});
+  setTimeout(()=>{if(!G.gameOver&&G.busy)launchEnemy();},360*16+700);
+}
+
+/* ══ 발사 버튼 홀드 차징 ══ */
+function startCharge(){
+  if(G.gameOver||G.busy) return;
+  fireHolding=true;
+  fireHoldStart=Date.now();
+  firePower=0;
+  document.getElementById('fire-btn').classList.add('charging');
+  function tick(){
+    if(!fireHolding) return;
+    const held=(Date.now()-fireHoldStart)/1000; // 초
+    // 1.2초 홀드 = 풀파워, 핑퐁(왕복) 게이지
+    const cycle=2.4; // 더 천천히 (반응 여유)
+    const t=(held%(cycle*2))/cycle;
+    firePower=t<=1?t:(2-t); // 0→1→0 왕복
+    const pct=Math.round(firePower*100);
+    document.getElementById('power-fill').style.width=pct+'%';
+    document.getElementById('power-pct').textContent=pct+'%';
+    powerRAF=requestAnimationFrame(tick);
+  }
+  tick();
+}
+function releaseCharge(){
+  if(!fireHolding) return;
+  fireHolding=false; // 즉시 잠금 (중복 호출 차단)
+  if(powerRAF)cancelAnimationFrame(powerRAF);
+  document.getElementById('fire-btn').classList.remove('charging');
+  if(G.busy||G.gameOver) return; // 이미 발사 중이면 무시
+  const power=firePower>0.05?firePower:0.5;
+  doFire(power);
+  setTimeout(()=>{
+    document.getElementById('power-fill').style.width='0%';
+    document.getElementById('power-pct').textContent='0%';
+  },200);
+}
+
+/* ══ TITLE BG ══ */
+let bgRAF,bgStars=[];
+function titleBG(){
+  const c=document.getElementById('bg-cv');c.width=window.innerWidth;c.height=window.innerHeight;
+  const x=c.getContext('2d');
+  bgStars=Array.from({length:70},()=>({x:Math.random()*c.width,y:Math.random()*c.height*.8,r:Math.random()*1.6+.4,t:Math.random()*Math.PI*2}));
+  function f(){x.clearRect(0,0,c.width,c.height);const g=x.createLinearGradient(0,0,0,c.height);g.addColorStop(0,'#040c16');g.addColorStop(.7,'#091c12');g.addColorStop(1,'#122406');x.fillStyle=g;x.fillRect(0,0,c.width,c.height);bgStars.forEach(s=>{s.t+=.024;x.globalAlpha=.32+.68*Math.abs(Math.sin(s.t));x.fillStyle='#fff';x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fill();});x.globalAlpha=1;bgRAF=requestAnimationFrame(f);}
+  if(bgRAF)cancelAnimationFrame(bgRAF);f();
+}
+
+/* ══ LB ══ */
+const LB='https://api.jsonbin.io/v3/b/683ef0e08960c979a599e2fb';
+const LK='$2a$10$GhNdj.lNGWEr5GqHlq4cQuxAfZMJ8eZwi0wT0xVS.G7C5r8lqL9oW';
+async function saveLB(total){try{const nm=localStorage.getItem('pname')||'재홍 원사';const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm,score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,10);await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});}catch(e){console.log('LB fail',e);}}
+async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();const bd=Array.isArray(raw)?raw:(raw.record||[]);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
+
+/* ══ EVENTS ══ */
+document.getElementById('btn-start').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('btn-lb-t').onclick=()=>{showPg('pg-lb');loadLB();};
+document.getElementById('btn-lb-s').onclick=()=>{showPg('pg-lb');loadLB();};
+document.getElementById('btn-back-t').onclick=()=>showPg('pg-title');
+document.getElementById('btn-back-s').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('btn-back-lb').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('btn-go').onclick=startGame;
+document.getElementById('btn-random').onclick=()=>{
+  // 15% 확률로 전설포, 아니면 일반 6종 — 선택 화면 안 보여주고 바로 전투 시작
+  const legendChance=0.15;
+  if(Math.random()<legendChance){
+    G.legendUnlocked=true;
+    G.selWpnId='legend';
+  } else {
+    const pool=WD.filter(w=>w.id!=='legend');
+    G.selWpnId=pool[Math.floor(Math.random()*pool.length)].id;
+  }
+  G.selAmmo=0;
+  G._randomReveal=true; // 전장에서 어떤 포인지 공개
+  startGame();
+};
+document.getElementById('move-l-btn').onclick=()=>movePlayer(-1);
+document.getElementById('move-r-btn').onclick=()=>movePlayer(1);
+
+(function(){
+  const fb=document.getElementById('fire-btn');
+  fb.addEventListener('pointerdown',function(e){e.preventDefault();startCharge();});
+  fb.addEventListener('pointerup',function(e){e.preventDefault();releaseCharge();});
+  fb.addEventListener('pointerleave',function(e){if(fireHolding)releaseCharge();});
+  fb.addEventListener('pointercancel',function(e){if(fireHolding)releaseCharge();});
+})();
+document.getElementById('aim-sl').addEventListener('input',function(){G.angle=parseInt(this.value);document.getElementById('aim-deg').textContent=G.angle+'°';});
+document.getElementById('r-next').onclick=()=>{
+  // 다음 스테이지로 — 첫 판에 고른 장비 그대로 유지
+  G.selStage=G.selStage+1;
+  G.stage=SD[G.selStage-1];
+  startGame();
+};
+document.getElementById('r-retry').onclick=()=>{
+  G.selStage=1;
+  G.stage=SD[0];
+  G.cleared=[]; // 진행도 초기화
+  localStorage.removeItem('clr');
+  goWeapon(1); // 무기 다시 선택 후 시작
+};
+document.getElementById('r-menu').onclick=()=>{showPg('pg-stage');renderStages();};
+function onResize(){
+  if(document.getElementById('pg-title').classList.contains('show'))titleBG();
+  if(running){
+    const oldStage=G.stage;
+    initCV();
+    buildLevel(oldStage);
+  }
+}
+window.addEventListener('resize',onResize);
+window.addEventListener('orientationchange',()=>setTimeout(onResize,300));
+titleBG();
+</script>
+</body>
+</html>
