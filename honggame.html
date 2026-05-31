@@ -11,7 +11,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
-#app{position:fixed;inset:0;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
+#app{position:fixed;inset:0;font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;}
 .pg{position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;display:none;}
 .pg.show{display:flex;}
 
@@ -21,8 +21,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 .t-box{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center;padding:0 24px;}
 .t-medal{font-size:clamp(58px,14vw,84px);animation:bob 3s ease-in-out infinite;filter:drop-shadow(0 0 22px gold);}
 @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
-.t-h1{font-size:clamp(24px,6vw,42px);color:#FFD700;text-shadow:0 0 28px #FF8C00,3px 3px 0 #7f0000;line-height:1.2;margin:10px 0 6px;}
-.t-sub{color:#90caf9;font-size:13px;font-family:'Noto Sans KR';margin-bottom:28px;}
+.t-h1{font-family:'Black Han Sans','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:clamp(24px,6vw,42px);color:#FFD700;text-shadow:0 0 28px #FF8C00,3px 3px 0 #7f0000;line-height:1.2;margin:10px 0 6px;}
+.t-sub{color:#90caf9;font-size:13px;font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;margin-bottom:28px;}
 .big-btn{width:min(280px,80vw);padding:15px 0;border-radius:50px;border:3px solid;
   font-size:clamp(17px,4.5vw,22px);font-family:'Black Han Sans','Noto Sans KR',sans-serif;cursor:pointer;margin-bottom:12px;}
 .big-btn:active{transform:scale(.93);}
@@ -41,7 +41,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 .sc-locked{opacity:.25;filter:grayscale(1);cursor:not-allowed!important;}
 .sc-icon{font-size:clamp(26px,6.5vw,34px);min-width:40px;text-align:center;}
 .sc-name{font-size:clamp(14px,3.5vw,17px);color:#fff;}
-.sc-desc{font-size:10px;color:rgba(255,255,255,.55);font-family:'Noto Sans KR';}
+.sc-desc{font-size:10px;color:rgba(255,255,255,.55);font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 .sc-ok{margin-left:auto;font-size:18px;}
 .sc[data-n="1"]{background:linear-gradient(135deg,#1b5e20,#2e7d32);border-color:#66bb6a;}
 .sc[data-n="2"]{background:linear-gradient(135deg,#0d47a1,#1565c0);border-color:#42a5f5;}
@@ -58,7 +58,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
   background:rgba(13,27,42,.97);border-top:1px solid rgba(255,255,255,.1);
   display:flex;flex-direction:column;align-items:center;gap:8px;}
 .w-hd{color:#FFD700;font-size:clamp(17px,4.2vw,22px);}
-.w-sub{color:#90caf9;font-size:12px;font-family:'Noto Sans KR';}
+.w-sub{color:#90caf9;font-size:12px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 .wc{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:14px;
   border:2.5px solid rgba(255,255,255,.15);background:rgba(255,255,255,.04);
   width:100%;max-width:480px;cursor:pointer;}
@@ -66,7 +66,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 .wc-sel{border-color:#FFD700!important;background:rgba(255,215,0,.12)!important;box-shadow:0 0 14px rgba(255,215,0,.45);}
 .wc-locked{opacity:.45;filter:grayscale(.7);}
 .ammo-row-sel{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;}
-.ammo-btn{padding:5px 10px;border-radius:10px;font-size:11px;font-family:'Noto Sans KR';font-weight:700;
+.ammo-btn{padding:5px 10px;border-radius:10px;font-size:11px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:700;
   background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.25);color:#ddd;cursor:pointer;}
 .ammo-btn:active{transform:scale(.94);}
 .ammo-sel{background:rgba(255,82,82,.25);border-color:#ff5252;color:#fff;box-shadow:0 0 8px rgba(255,82,82,.5);}
@@ -74,16 +74,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 .w-ico{font-size:30px;min-width:38px;text-align:center;margin-top:2px;}
 .w-body{flex:1;}
 .w-name{color:#fff;font-size:clamp(13px,3.2vw,15px);}
-.w-eng{color:rgba(255,255,255,.4);font-size:10px;font-family:'Noto Sans KR';}
+.w-eng{color:rgba(255,255,255,.4);font-size:10px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 .w-tags{display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;}
-.tag{padding:2px 7px;border-radius:20px;font-size:10px;font-family:'Noto Sans KR';font-weight:700;}
+.tag{padding:2px 7px;border-radius:20px;font-size:10px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:700;}
 .tr{background:rgba(244,67,54,.25);color:#ff8a80;}
 .tg{background:rgba(255,193,7,.2);color:#FFD700;}
 .tgr{background:rgba(76,175,80,.2);color:#a5d6a7;}
 .tp{background:rgba(156,39,176,.3);color:#e1bee7;}
 .to{background:rgba(255,152,0,.25);color:#ffcc80;}
 .tb{background:rgba(33,150,243,.25);color:#90caf9;}
-.w-spec{color:rgba(255,255,255,.38);font-size:10px;font-family:'Noto Sans KR';margin-top:3px;line-height:1.4;}
+.w-spec{color:rgba(255,255,255,.38);font-size:10px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;margin-top:3px;line-height:1.4;}
 .go-btn{width:100%;max-width:480px;padding:14px;border-radius:50px;border:3px solid #FFD700;
   background:linear-gradient(135deg,#e53935,#b71c1c);color:#fff;font-size:clamp(17px,4.5vw,21px);
   font-family:'Black Han Sans','Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 5px 0 #5c0000;}
@@ -115,21 +115,21 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 
 #g-ctrl{flex:0 0 auto;width:100%;background:linear-gradient(0deg,rgba(0,0,0,.92) 85%,transparent);padding:7px 12px 16px;}
 #aim-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
-#aim-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR';white-space:nowrap;}
+#aim-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;white-space:nowrap;}
 #aim-sl{flex:1;-webkit-appearance:none;height:10px;border-radius:5px;background:linear-gradient(90deg,#1565c0,#e53935);outline:none;}
 #aim-sl::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:radial-gradient(#FFD700,#FF8C00);box-shadow:0 0 8px rgba(255,215,0,.9);cursor:grab;}
 #aim-deg{color:#FFD700;font-size:14px;min-width:36px;text-align:right;}
 #power-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-#power-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR';white-space:nowrap;}
+#power-lbl{color:#aaa;font-size:11px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;white-space:nowrap;}
 #power-bar{flex:1;height:14px;border-radius:7px;background:rgba(255,255,255,.12);overflow:hidden;border:1px solid rgba(255,255,255,.2);}
 #power-fill{height:100%;width:0%;border-radius:7px;
   background:linear-gradient(90deg,#4caf50,#FFD700,#f44336);transition:width .03s linear;}
-#power-pct{color:#FFD700;font-size:13px;min-width:38px;text-align:right;font-family:'Noto Sans KR';}
+#power-pct{color:#FFD700;font-size:13px;min-width:38px;text-align:right;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 #fire-btn.charging{border-color:#FFD700;animation:chargePulse .4s infinite;}
 @keyframes chargePulse{0%,100%{box-shadow:0 4px 0 #4a0000;}50%{box-shadow:0 4px 14px #FFD700;}}
 #ctrl-row{display:flex;gap:8px;}
 #ammo-sel-row{display:flex;gap:6px;justify-content:center;margin-bottom:7px;flex-wrap:wrap;}
-.gammo-btn{padding:6px 12px;border-radius:18px;font-size:12px;font-family:'Noto Sans KR';font-weight:700;
+.gammo-btn{padding:6px 12px;border-radius:18px;font-size:12px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:700;
   background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);color:#ddd;cursor:pointer;}
 .gammo-btn:active{transform:scale(.93);}
 .gammo-sel{background:rgba(255,82,82,.3);border-color:#ff5252;color:#fff;box-shadow:0 0 10px rgba(255,82,82,.6);}
@@ -147,13 +147,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
   background:linear-gradient(135deg,#4a1b6a,#280048);color:#fff;font-size:13px;
   font-family:'Black Han Sans','Noto Sans KR',sans-serif;cursor:pointer;text-align:center;line-height:1.4;}
 #w-thumb{font-size:18px;}
-#wpn-lbl{font-size:9px;color:#aaa;font-family:'Noto Sans KR';text-align:center;margin-top:2px;}
+#wpn-lbl{font-size:9px;color:#aaa;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;text-align:center;margin-top:2px;}
 
 #dlg-box{position:absolute;left:10px;right:10px;background:rgba(0,0,0,.9);border:2px solid #FFD700;
   border-radius:12px;padding:7px 12px;pointer-events:none;z-index:20;transition:opacity .28s;}
 #dlg-box.hide{opacity:0;}
-#dlg-spk{color:#FFD700;font-size:11px;font-family:'Noto Sans KR';font-weight:700;margin-bottom:2px;}
-#dlg-txt{color:#fff;font-size:12px;font-family:'Noto Sans KR';line-height:1.5;}
+#dlg-spk{color:#FFD700;font-size:11px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:700;margin-bottom:2px;}
+#dlg-txt{color:#fff;font-size:12px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;line-height:1.5;}
 #eatk-el{position:absolute;top:28%;left:50%;transform:translate(-50%,-50%);
   color:#f44336;font-size:18px;text-shadow:0 0 14px #f44336;pointer-events:none;
   opacity:0;z-index:25;white-space:pre-line;text-align:center;}
@@ -162,9 +162,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
   justify-content:flex-start;background:rgba(0,0,0,.87);gap:10px;padding:20px 12px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .r-title{font-size:clamp(32px,8vw,48px);text-shadow:3px 3px 0 #000;margin-top:10px;}
 .r-win{color:#FFD700;}.r-lose{color:#f44336;}
-.r-score{color:#fff;font-size:17px;font-family:'Noto Sans KR';}
+.r-score{color:#fff;font-size:17px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 .r-bd{display:flex;flex-direction:column;gap:4px;background:rgba(255,255,255,.07);border-radius:12px;padding:10px 16px;width:min(320px,88vw);}
-.r-row{display:flex;justify-content:space-between;font-family:'Noto Sans KR';font-size:12px;color:rgba(255,255,255,.8);}
+.r-row{display:flex;justify-content:space-between;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:12px;color:rgba(255,255,255,.8);}
 .r-row span:last-child{color:#FFD700;font-weight:700;}
 .r-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
 .r-btn{padding:11px 22px;border-radius:30px;border:none;font-size:15px;font-family:'Black Han Sans','Noto Sans KR',sans-serif;cursor:pointer;}
@@ -177,8 +177,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 #lb-list{width:100%;max-width:480px;display:flex;flex-direction:column;gap:7px;max-height:65vh;overflow-y:auto;}
 .lb-row{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border-radius:10px;padding:9px 12px;}
 .lb-rank{font-size:19px;width:28px;text-align:center;}
-.lb-info{flex:1;}.lb-name{color:#fff;font-family:'Noto Sans KR';font-weight:700;font-size:14px;}
-.lb-detail{color:#888;font-size:10px;font-family:'Noto Sans KR';}
+.lb-info{flex:1;}.lb-name{color:#fff;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-weight:700;font-size:14px;}
+.lb-detail{color:#888;font-size:10px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;}
 .lb-sc{color:#FFD700;font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-size:16px;}
 
 .floaty{position:absolute;pointer-events:none;z-index:30;font-family:'Black Han Sans','Noto Sans KR',sans-serif;animation:fup 1.1s ease-out forwards;}
@@ -216,7 +216,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
 <!-- STAGE -->
 <div class="pg" id="pg-stage">
   <div class="pg-ttl">⚔️ 위기 선택</div>
-  <div style="color:rgba(255,255,255,.4);font-size:12px;font-family:'Noto Sans KR';">극복: <span id="clr-cnt">0</span>/5</div>
+  <div style="color:rgba(255,255,255,.4);font-size:12px;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;">극복: <span id="clr-cnt">0</span>/5</div>
   <div class="sc-list">
     <div class="sc" data-n="1"><span class="sc-icon">👊</span><div><div class="sc-name">위기 1: 선임의 텃세</div><div class="sc-desc">HP 100 · 45초 · 바람 약</div></div><span class="sc-ok" id="ok-1"></span></div>
     <div class="sc" data-n="2"><span class="sc-icon">🎩</span><div><div class="sc-name">위기 2: 진급 심사</div><div class="sc-desc">HP 150 · 40초 · 바람 중</div></div><span class="sc-ok" id="ok-2"></span></div>
@@ -269,9 +269,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
       <div class="r-bd" id="r-bd"></div>
       <div id="r-register" style="display:flex;flex-direction:column;gap:8px;align-items:center;width:min(320px,88vw);background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:12px;">
         <div style="color:#FFD700;font-family:'Black Han Sans','Noto Sans KR',sans-serif;font-size:15px;">🏆 명예의 전당 등록</div>
-        <input type="text" id="r-name-input" maxlength="10" placeholder="이름/별명 (최대 10자)" style="width:100%;padding:10px;border-radius:8px;border:2px solid rgba(255,215,0,.4);background:#1a1a2e;color:#fff;font-family:'Noto Sans KR';font-size:15px;text-align:center;outline:none;">
+        <input type="text" id="r-name-input" maxlength="10" placeholder="이름/별명 (최대 10자)" style="width:100%;padding:10px;border-radius:8px;border:2px solid rgba(255,215,0,.4);background:#1a1a2e;color:#fff;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:15px;text-align:center;outline:none;">
         <button class="r-btn" id="r-submit" style="background:linear-gradient(135deg,#FFD700,#FF8C00);color:#1a1a2e;width:100%;">📝 점수 등록</button>
-        <div id="r-submit-msg" style="font-family:'Noto Sans KR';font-size:12px;color:#aaa;min-height:16px;"></div>
+        <div id="r-submit-msg" style="font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:12px;color:#aaa;min-height:16px;"></div>
       </div>
       <div class="r-btns">
         <button class="r-btn r-next" id="r-next">다음 →</button>
@@ -785,7 +785,7 @@ function drawOffscreenIndicator(){
       CX.strokeStyle='#fff';CX.lineWidth=1.5;CX.stroke();
       // 높이 표시
       const h=Math.round(-p.wy);
-      CX.fillStyle='#fff';CX.font="bold 10px 'Noto Sans KR'";CX.textAlign='center';
+      CX.fillStyle='#fff';CX.font="bold 10px sans-serif";CX.textAlign='center';
       CX.fillText(`↑${h}`,ix,34);
       CX.textAlign='left';
       CX.restore();
@@ -991,7 +991,7 @@ function drawHill(){
       CX.fillStyle=bg;CX.beginPath();CX.arc(0,0,r,0,Math.PI*2);CX.fill();
       CX.shadowBlur=0;
       CX.strokeStyle='rgba(255,255,255,0.85)';CX.lineWidth=2;CX.stroke();
-      CX.fillStyle='#fff';CX.font=`bold ${Math.round(r*1.1)}px 'Noto Sans KR'`;
+      CX.fillStyle='#fff';CX.font=`bold ${Math.round(r*1.1)}px sans-serif`;
       CX.textAlign='center';CX.textBaseline='middle';
       CX.fillText(txt,0,1);
       CX.restore();
@@ -1057,7 +1057,7 @@ function drawCastle(){
     CX.fillRect(sx-cWW/2,my,cWW,gY-my);
     CX.strokeRect(sx-cWW/2,my,cWW,gY-my);
     CX.setLineDash([]);
-    CX.fillStyle='#fff';CX.font='9px Noto Sans KR';CX.textAlign='center';
+    CX.fillStyle='#fff';CX.font='9px sans-serif';CX.textAlign='center';
     CX.fillText(sp.trench?'참호':'고지',sx,my-4);
     CX.globalAlpha=1;
   });
@@ -1118,14 +1118,14 @@ function drawEnemy(){
   CX.fillStyle='#111';CX.fillRect(bx,by,bw,bh);
   CX.fillStyle=ratio>.5?'#4caf50':ratio>.25?'#ff9800':'#f44336';CX.fillRect(bx,by,bw*ratio,bh);
   CX.strokeStyle='rgba(255,255,255,.18)';CX.lineWidth=1;CX.strokeRect(bx,by,bw,bh);
-  CX.font='9px Noto Sans KR';CX.fillStyle='#fff';CX.textAlign='center';
+  CX.font='9px sans-serif';CX.fillStyle='#fff';CX.textAlign='center';
   CX.fillText(`${sd.eName} ${G.eHp}/${G.eHpMax}`,w2s(ex),by+bh-1);CX.textAlign='left';
 }
-function en1(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.55,s*.44,s*.6);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.64,s*.21,0,Math.PI*2);CX.fill();CX.fillStyle='#3a4a2a';CX.fillRect(-s*.24,-s*.88,s*.48,s*.24);CX.fillStyle='#e53935';CX.fillRect(-s*.22,-s*.24,s*.18,s*.09);CX.font=`${s*.07}px Noto Sans KR`;CX.fillStyle='#fff';CX.textAlign='center';CX.fillText('선임',-s*.13,-s*.17);CX.strokeStyle='#333';CX.lineWidth=2;CX.beginPath();CX.moveTo(-s*.14,-s*.7);CX.lineTo(-s*.06,-s*.66);CX.stroke();CX.beginPath();CX.moveTo(s*.14,-s*.7);CX.lineTo(s*.06,-s*.66);CX.stroke();CX.strokeStyle='#556B2F';CX.lineWidth=s*.09;CX.beginPath();CX.moveTo(-s*.22,-s*.32);CX.lineTo(s*.22,-s*.32);CX.stroke();CX.textAlign='left';}
-function en2(s){CX.fillStyle='#1a237e';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#f5f5f5';CX.fillRect(-s*.1,-s*.58,s*.2,s*.32);CX.fillStyle='#b71c1c';CX.beginPath();CX.moveTo(-s*.04,-s*.58);CX.lineTo(s*.04,-s*.58);CX.lineTo(s*.02,-s*.32);CX.lineTo(-s*.02,-s*.32);CX.closePath();CX.fill();CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.68,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#555';CX.lineWidth=1.5;CX.strokeRect(-s*.16,-s*.74,s*.12,s*.09);CX.strokeRect(s*.04,-s*.74,s*.12,s*.09);CX.fillStyle='#fff';CX.fillRect(s*.14,-s*.44,s*.24,s*.32);CX.fillStyle='#f44336';CX.font=`${s*.22}px 'Noto Sans KR'`;CX.textAlign='center';CX.fillText('✗',s*.26,-s*.38);CX.textAlign='left';}
-function en3(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.58,s*.44,s*.62);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.66,s*.2,0,Math.PI*2);CX.fill();CX.save();CX.rotate(.28);CX.fillStyle='#3a4a2a';CX.beginPath();CX.ellipse(0,-s*.72,s*.24,s*.15,0,Math.PI,0);CX.fill();CX.restore();CX.fillStyle='#42a5f5';[[s*.22,-s*.78],[s*.3,-s*.62]].forEach(([dx,dy])=>{CX.beginPath();CX.arc(dx,dy,s*.05,0,Math.PI*2);CX.fill();});CX.fillStyle='#FF4500';CX.font=`${s*.32}px 'Noto Sans KR'`;CX.textAlign='center';CX.fillText('!',s*.36,-s*.64);CX.textAlign='left';}
-function en4(s){CX.fillStyle='#424242';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.67,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#111';CX.lineWidth=2.5;CX.strokeRect(-s*.17,-s*.74,s*.13,s*.1);CX.strokeRect(s*.04,-s*.74,s*.13,s*.1);CX.strokeStyle='#FFD700';CX.lineWidth=2.5;CX.beginPath();CX.arc(s*.42,-s*.44,s*.13,0,Math.PI*2);CX.stroke();CX.fillStyle='#f44336';CX.fillRect(-s*.42,-s*.4,s*.28,s*.2);CX.fillStyle='#fff';CX.font=`${s*.1}px Noto Sans KR`;CX.textAlign='center';CX.fillText('지적!',-s*.28,-s*.24);CX.textAlign='left';}
-function en5(s){const sz=s*1.2;CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38,-sz*.72,sz*.76,sz*.77);CX.strokeStyle='rgba(255,255,255,.14)';CX.lineWidth=1;for(let r=0;r<4;r++)for(let c=0;c<3;c++)CX.strokeRect(-sz*.38+c*(sz*.76/3),-sz*.72+r*(sz*.77/4),sz*.76/3,sz*.77/4);for(let i=0;i<4;i++){CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38+i*(sz*.76/4),-sz*.88,sz*.15,sz*.18);}CX.fillStyle='#FF4500';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.fillStyle='#FFD700';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.fillStyle='#7f0000';CX.beginPath();CX.arc(0,-sz*.28,sz*.12,0,Math.PI);CX.fill();CX.strokeStyle='rgba(255,100,0,.6)';CX.lineWidth=2;CX.beginPath();CX.moveTo(-sz*.1,-sz*.72);CX.lineTo(sz*.05,-sz*.44);CX.lineTo(-sz*.08,-sz*.2);CX.stroke();CX.fillStyle='#FFD700';CX.font=`${sz*.12}px 'Noto Sans KR'`;CX.textAlign='center';CX.fillText('군생활의 벽',0,-sz*.92);CX.textAlign='left';}
+function en1(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.55,s*.44,s*.6);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.64,s*.21,0,Math.PI*2);CX.fill();CX.fillStyle='#3a4a2a';CX.fillRect(-s*.24,-s*.88,s*.48,s*.24);CX.fillStyle='#e53935';CX.fillRect(-s*.22,-s*.24,s*.18,s*.09);CX.font=`${s*.07}px sans-serif`;CX.fillStyle='#fff';CX.textAlign='center';CX.fillText('선임',-s*.13,-s*.17);CX.strokeStyle='#333';CX.lineWidth=2;CX.beginPath();CX.moveTo(-s*.14,-s*.7);CX.lineTo(-s*.06,-s*.66);CX.stroke();CX.beginPath();CX.moveTo(s*.14,-s*.7);CX.lineTo(s*.06,-s*.66);CX.stroke();CX.strokeStyle='#556B2F';CX.lineWidth=s*.09;CX.beginPath();CX.moveTo(-s*.22,-s*.32);CX.lineTo(s*.22,-s*.32);CX.stroke();CX.textAlign='left';}
+function en2(s){CX.fillStyle='#1a237e';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#f5f5f5';CX.fillRect(-s*.1,-s*.58,s*.2,s*.32);CX.fillStyle='#b71c1c';CX.beginPath();CX.moveTo(-s*.04,-s*.58);CX.lineTo(s*.04,-s*.58);CX.lineTo(s*.02,-s*.32);CX.lineTo(-s*.02,-s*.32);CX.closePath();CX.fill();CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.68,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#555';CX.lineWidth=1.5;CX.strokeRect(-s*.16,-s*.74,s*.12,s*.09);CX.strokeRect(s*.04,-s*.74,s*.12,s*.09);CX.fillStyle='#fff';CX.fillRect(s*.14,-s*.44,s*.24,s*.32);CX.fillStyle='#f44336';CX.font=`${s*.22}px sans-serif`;CX.textAlign='center';CX.fillText('✗',s*.26,-s*.38);CX.textAlign='left';}
+function en3(s){CX.fillStyle='#556B2F';CX.fillRect(-s*.22,-s*.58,s*.44,s*.62);CX.fillStyle='#D2A679';CX.beginPath();CX.arc(0,-s*.66,s*.2,0,Math.PI*2);CX.fill();CX.save();CX.rotate(.28);CX.fillStyle='#3a4a2a';CX.beginPath();CX.ellipse(0,-s*.72,s*.24,s*.15,0,Math.PI,0);CX.fill();CX.restore();CX.fillStyle='#42a5f5';[[s*.22,-s*.78],[s*.3,-s*.62]].forEach(([dx,dy])=>{CX.beginPath();CX.arc(dx,dy,s*.05,0,Math.PI*2);CX.fill();});CX.fillStyle='#FF4500';CX.font=`${s*.32}px sans-serif`;CX.textAlign='center';CX.fillText('!',s*.36,-s*.64);CX.textAlign='left';}
+function en4(s){CX.fillStyle='#424242';CX.fillRect(-s*.24,-s*.58,s*.48,s*.63);CX.fillStyle='#c8a96e';CX.beginPath();CX.arc(0,-s*.67,s*.2,0,Math.PI*2);CX.fill();CX.strokeStyle='#111';CX.lineWidth=2.5;CX.strokeRect(-s*.17,-s*.74,s*.13,s*.1);CX.strokeRect(s*.04,-s*.74,s*.13,s*.1);CX.strokeStyle='#FFD700';CX.lineWidth=2.5;CX.beginPath();CX.arc(s*.42,-s*.44,s*.13,0,Math.PI*2);CX.stroke();CX.fillStyle='#f44336';CX.fillRect(-s*.42,-s*.4,s*.28,s*.2);CX.fillStyle='#fff';CX.font=`${s*.1}px sans-serif`;CX.textAlign='center';CX.fillText('지적!',-s*.28,-s*.24);CX.textAlign='left';}
+function en5(s){const sz=s*1.2;CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38,-sz*.72,sz*.76,sz*.77);CX.strokeStyle='rgba(255,255,255,.14)';CX.lineWidth=1;for(let r=0;r<4;r++)for(let c=0;c<3;c++)CX.strokeRect(-sz*.38+c*(sz*.76/3),-sz*.72+r*(sz*.77/4),sz*.76/3,sz*.77/4);for(let i=0;i<4;i++){CX.fillStyle='#1a1a3a';CX.fillRect(-sz*.38+i*(sz*.76/4),-sz*.88,sz*.15,sz*.18);}CX.fillStyle='#FF4500';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.1,0,Math.PI*2);CX.fill();CX.fillStyle='#FFD700';CX.beginPath();CX.arc(-sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.beginPath();CX.arc(sz*.14,-sz*.44,sz*.05,0,Math.PI*2);CX.fill();CX.fillStyle='#7f0000';CX.beginPath();CX.arc(0,-sz*.28,sz*.12,0,Math.PI);CX.fill();CX.strokeStyle='rgba(255,100,0,.6)';CX.lineWidth=2;CX.beginPath();CX.moveTo(-sz*.1,-sz*.72);CX.lineTo(sz*.05,-sz*.44);CX.lineTo(-sz*.08,-sz*.2);CX.stroke();CX.fillStyle='#FFD700';CX.font=`${sz*.12}px sans-serif`;CX.textAlign='center';CX.fillText('군생활의 벽',0,-sz*.92);CX.textAlign='left';}
 
 /* ══ PLAYER ══ */
 // 특정 월드 X의 지면 높이 (언덕 등반 + 분화구 반영)
@@ -1214,7 +1214,7 @@ function drawPlayer(){
   CX.fillStyle='rgba(0,0,0,.5)';CX.fillRect(bx-1,by-1,bw+2,11);CX.fillStyle='#111';CX.fillRect(bx,by,bw,9);
   const pr=G.pHp/G.pHpMax;
   CX.fillStyle=pr>.5?'#4caf50':pr>.25?'#ff9800':'#f44336';CX.fillRect(bx,by,bw*pr,9);
-  CX.font='8px Noto Sans KR';CX.fillStyle='#fff';CX.textAlign='center';
+  CX.font='8px sans-serif';CX.fillStyle='#fff';CX.textAlign='center';
   CX.fillText(`원사 HP ${G.pHp}/${G.pHpMax}`,bx+bw/2,by+8);CX.textAlign='left';
 }
 
@@ -1267,7 +1267,7 @@ function drawGuide(){
         CX.beginPath();CX.moveTo(lsx-20,landY);CX.lineTo(lsx+20,landY);
         CX.moveTo(lsx,landY-20);CX.lineTo(lsx,landY+20);CX.stroke();
         CX.fillStyle='rgba(255,32,32,.3)';CX.beginPath();CX.arc(lsx,landY,14,0,Math.PI*2);CX.fill();
-        CX.fillStyle='#fff';CX.font='bold 10px Noto Sans KR';CX.textAlign='center';
+        CX.fillStyle='#fff';CX.font='bold 10px sans-serif';CX.textAlign='center';
         CX.fillText('착탄',lsx,landY-24);
       }
     }
@@ -1276,9 +1276,9 @@ function drawGuide(){
   CX.fillStyle='rgba(0,0,0,.55)';
   const infoX=w2s(pWX+26),infoY=pWY-58;
   CX.fillRect(infoX-4,infoY-12,168,46);
-  CX.fillStyle='#FFD700';CX.font='bold 12px Noto Sans KR';CX.textAlign='left';
+  CX.fillStyle='#FFD700';CX.font='bold 12px sans-serif';CX.textAlign='left';
   CX.fillText(`📐 각도 ${G.angle}°  ⚡파워 ${Math.round(power*100)}%`,infoX,infoY);
-  CX.fillStyle='#90caf9';CX.font='11px Noto Sans KR';
+  CX.fillStyle='#90caf9';CX.font='11px sans-serif';
   CX.fillText(`💨${G.wind>0?'→':'←'} ${Math.abs(G.wind).toFixed(1)} (영향 ${Math.round(wep.wf*100)}%)`,infoX,infoY+15);
   CX.fillStyle='#ff8a80';
   CX.fillText(`${wep.ico} ${wep.name}`,infoX,infoY+30);
@@ -1652,7 +1652,7 @@ function drawGasZones(){
     CX.fillStyle=rg;
     CX.beginPath();CX.ellipse(sx,surfY-15,z.r*1.3,z.r*0.7,0,0,Math.PI*2);CX.fill();
     CX.globalAlpha=1;
-    CX.fillStyle='#d0d0d8';CX.font='10px Noto Sans KR';CX.textAlign='center';
+    CX.fillStyle='#d0d0d8';CX.font='10px sans-serif';CX.textAlign='center';
     CX.fillText(`🔥 백린 (${z.turns}턴)`,sx,surfY-z.r*0.5);
     CX.textAlign='left';
   });
