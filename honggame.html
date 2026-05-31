@@ -320,56 +320,56 @@ const WD=[
    dmg:[22,32],ammo:8, grav:.20,spd:18, wf:0.3, unlock:0, trail:'#cfe8ff', cd:1, mob:0.7, minAng:-5,
    spec:'⚡연사·재장전 즉시·만능 입문',
    ammos:[
-     {id:'basic',name:'기본 고폭탄',ico:'⚪',blast:20,pierce:0,dig:0.9,kb:1.0,dmgMul:1.0,crater:0.8,desc:'표준 폭발·작은 구멍'},
-     {id:'red',  name:'빨콩(고속탄)',ico:'🔴',blast:12,pierce:2,dig:0.6,kb:2.5,dmgMul:2.6,crater:0.5,trail:'#ff2020',desc:'작지만 직격 시 최강 데미지'}
+     {id:'basic',name:'기본 고폭탄',ico:'⚪',st:'he105',blast:20,pierce:0,dig:0.9,kb:1.0,dmgMul:1.0,crater:0.8,desc:'표준 폭발·작은 구멍'},
+     {id:'red',  name:'빨콩(고속탄)',ico:'🔴',st:'redbean',blast:12,pierce:2,dig:0.6,kb:2.5,dmgMul:2.6,crater:0.5,trail:'#ff2020',desc:'작지만 직격 시 최강 데미지'}
    ]},
 
   {id:'w155', name:'155미리 견인포', eng:'', ico:'🌀',
    dmg:[44,60],ammo:5, grav:.40,spd:16, wf:1.0, unlock:0, trail:'#b0bec5', cd:2, mob:0.5, minAng:5,
    spec:'💢묵직한 곡사·균형형',
    ammos:[
-     {id:'basic',name:'기본 곡사탄',ico:'⚪',blast:34,pierce:0,dig:1.1,kb:1.2,dmgMul:1.0,crater:1.0,desc:'중형 폭발·중간 구멍'},
-     {id:'cannon',name:'대포탄',ico:'💣',blast:58,pierce:0,dig:1.8,kb:1.8,dmgMul:1.3,crater:1.6,desc:'대형 폭발·큰 구멍·강력'}
+     {id:'basic',name:'기본 곡사탄',ico:'⚪',st:'how155',blast:34,pierce:0,dig:1.1,kb:1.2,dmgMul:1.0,crater:1.0,desc:'중형 폭발·중간 구멍'},
+     {id:'cannon',name:'대포탄',ico:'💣',st:'cannon',blast:58,pierce:0,dig:1.8,kb:1.8,dmgMul:1.3,crater:1.6,desc:'대형 폭발·큰 구멍·강력'}
    ]},
 
   {id:'k9', name:'K9 자주포', eng:'', ico:'🔥',
    dmg:[50,68],ammo:4, grav:.30,spd:17, wf:0.7, unlock:0, trail:'#ff7043', cd:3, mob:1.2, minAng:0,
    spec:'💥최강 단발 화력·느린 재장전',
    ammos:[
-     {id:'basic',name:'기본 작렬탄',ico:'⚪',blast:44,pierce:0,dig:1.5,kb:1.3,dmgMul:1.0,crater:1.3,desc:'광역 작렬·넓은 구멍'},
-     {id:'cluster',name:'확산 클러스터',ico:'🌋',blast:40,pierce:0,dig:1.3,kb:1.1,dmgMul:0.85,crater:1.1,scatter:3,desc:'3발 확산·넓게 견제'}
+     {id:'basic',name:'기본 작렬탄',ico:'⚪',st:'burst',blast:44,pierce:0,dig:1.5,kb:1.3,dmgMul:1.0,crater:1.3,desc:'광역 작렬·넓은 구멍'},
+     {id:'cluster',name:'확산 클러스터',ico:'🌋',st:'cluster',blast:40,pierce:0,dig:1.3,kb:1.1,dmgMul:0.85,crater:1.1,scatter:3,desc:'3발 확산·넓게 견제'}
    ]},
 
   {id:'k55', name:'K55 자주포', eng:'', ico:'⚡',
    dmg:[42,56],ammo:5, grav:.16,spd:23, wf:0.6, unlock:0, trail:'#ffeb3b', cd:2, mob:1.3, minAng:-10,
    spec:'🏹초고속 직사·관통/가스',
    ammos:[
-     {id:'basic',name:'기본 철갑탄',ico:'⚪',blast:14,pierce:5,dig:1.0,kb:1.5,dmgMul:1.1,crater:0.6,desc:'고속 관통·좁은 터널'},
-     {id:'drill',name:'백린탄',ico:'🕳️',blast:16,pierce:12,dig:1.4,kb:1.2,dmgMul:0.7,crater:0.8,gas:true,desc:'착탄지 백린 연막·적 강제 이동'}
+     {id:'basic',name:'기본 철갑탄',ico:'⚪',st:'ap',blast:14,pierce:5,dig:1.0,kb:1.5,dmgMul:1.1,crater:0.6,desc:'고속 관통·좁은 터널'},
+     {id:'drill',name:'백린탄',ico:'🕳️',st:'wp',blast:16,pierce:12,dig:1.4,kb:1.2,dmgMul:0.7,crater:0.8,gas:true,desc:'착탄지 백린 연막·적 강제 이동'}
    ]},
 
   {id:'mlrs', name:'다련장', eng:'', ico:'💥',
    dmg:[30,42],ammo:6,grav:.22,spd:18, wf:1.6, unlock:0, trail:'#ce93d8', cd:3, mob:0.9, minAng:5,
    spec:'🌧️산탄 폭우·광역 제압',
    ammos:[
-     {id:'basic',name:'기본 4연장',ico:'⚪',blast:18,pierce:0,dig:0.9,kb:0.8,dmgMul:1.0,scatter:4,crater:0.7,desc:'4발 산탄·명중 쉬움'},
-     {id:'rain', name:'8연장 융단폭격',ico:'🌧️',blast:15,pierce:0,dig:1.1,kb:0.7,dmgMul:0.9,scatter:8,crater:0.6,desc:'8발 융단·초광역 제압'}
+     {id:'basic',name:'기본 4연장',ico:'⚪',st:'mlrs4',blast:18,pierce:0,dig:0.9,kb:0.8,dmgMul:1.0,scatter:4,crater:0.7,desc:'4발 산탄·명중 쉬움'},
+     {id:'rain', name:'8연장 융단폭격',ico:'🌧️',st:'mlrs8',blast:15,pierce:0,dig:1.1,kb:0.7,dmgMul:0.9,scatter:8,crater:0.6,desc:'8발 융단·초광역 제압'}
    ]},
 
   {id:'pungik', name:'풍익', eng:'', ico:'🛞',
-   dmg:[20,30],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
-   spec:'🏃기동력 최강·바람 무시·유도·약한 화력',
+   dmg:[26,38],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
+   spec:'🏃기동력 최강·바람 무시·특수탄 유도',
    ammos:[
-     {id:'basic',name:'기본 유도탄',ico:'⚪',blast:20,pierce:0,dig:0.8,kb:1.0,dmgMul:0.75,crater:0.6,desc:'바람0·자동 유도·약한 폭발'},
-     {id:'pierce',name:'관통 유도탄',ico:'🎯',blast:16,pierce:6,dig:0.9,kb:1.3,dmgMul:0.8,crater:0.6,desc:'바람0·다중 관통·유도'}
+     {id:'basic',name:'기본 직사탄',ico:'⚪',st:'direct',blast:26,pierce:0,dig:1.0,kb:1.2,dmgMul:1.0,crater:0.8,desc:'바람0·직사·일반 폭발'},
+     {id:'pierce',name:'관통 유도탄',ico:'🎯',st:'homing',blast:16,pierce:6,dig:0.9,kb:1.3,dmgMul:0.7,crater:0.6,homing:true,desc:'바람0·자동 유도·관통·약한 화력'}
    ]},
 
   {id:'legend', name:'원사의 전설포', eng:'', ico:'☄️',
    dmg:[42,58],ammo:3,grav:.18,spd:22, wf:0.0, unlock:99, trail:'#FFD700', cd:4, mob:0.6, minAng:-5,
    spec:'🌟히든 해금·강력 화력·전 스테이지 노미스 클리어 시',
    ammos:[
-     {id:'basic',name:'전설 작렬탄',ico:'☄️',blast:38,pierce:2,dig:1.3,kb:1.6,dmgMul:1.0,crater:1.2,desc:'강력 폭발·큰 구멍'},
-     {id:'nuke', name:'원사의 분노',ico:'☢️',blast:48,pierce:4,dig:1.6,kb:2.0,dmgMul:1.15,crater:1.5,gas:true,desc:'광역 폭발·가스'}
+     {id:'basic',name:'전설 작렬탄',ico:'☄️',st:'legend',blast:38,pierce:2,dig:1.3,kb:1.6,dmgMul:1.0,crater:1.2,desc:'강력 폭발·큰 구멍'},
+     {id:'nuke', name:'원사의 분노',ico:'☢️',st:'nuke',blast:48,pierce:4,dig:1.6,kb:2.0,dmgMul:1.15,crater:1.5,gas:true,desc:'광역 폭발·가스'}
    ]}
 ];
 
@@ -561,19 +561,20 @@ function buildLevel(sd){
     extraHills.push({x0,x1,peak,pts});
   }
 
-  // ══ 도시 테마: 언덕 사이에 건물/아파트 장애물 (부서짐) ══
+  // ══ 도시 테마: 메인 언덕 양옆 평지에 건물/아파트 (언덕과 안 겹침) ══
   if(sd.theme==='city'){
-    const bn=4; // 건물 4동
-    for(let b=0;b<bn;b++){
-      const bx=WORLD_W*(0.30+b*0.11)+Math.random()*WORLD_W*0.02;
-      const bh2=gY*(0.30+Math.random()*0.35);
-      const bw3=WORLD_W*0.05;
-      const floors=Math.floor(bh2/(gY*0.06));
+    // 언덕(HILL_X0~X1) 피해서 좌/우 평지 구역에만 배치
+    const slots=[0.16,0.24,0.72,0.80]; // 월드 비율 (언덕 밖)
+    slots.forEach(sl=>{
+      const bx=WORLD_W*sl+Math.random()*WORLD_W*0.015;
+      const bw3=WORLD_W*0.045;
+      const bh2=gY*(0.28+Math.random()*0.32);
+      const floors=Math.max(3,Math.floor(bh2/(gY*0.06)));
       for(let f=0;f<floors;f++){
         cityBlocks.push({x:bx,y:gY-(f+1)*(gY*0.06),w:bw3,h:gY*0.06-2,
           hp:2,max:2,alive:true,wc:'#6a6a7a',wa:'#8a8a9a',city:true});
       }
-    }
+    });
   }
 
   // ══ 좌우 진영 랜덤 배치 (플레이어/적이 좌or우) ══
@@ -613,14 +614,14 @@ function buildLevel(sd){
   bgClouds=[];
   for(let i=0;i<16;i++)
     bgClouds.push({wx:WORLD_W*(i/15),wy:SCR_H*(0.04+Math.random()*0.12),r:clamp(28,52,SCR_W*0.09)});
-  // 배경 스타일 랜덤: 0산 1언덕 2도시 3사막 4숲
-  bgStyle=Math.floor(Math.random()*5);
+  // 배경 스타일 랜덤: 0산 1언덕 2도시 3사막 4숲 5늪
+  bgStyle=Math.floor(Math.random()*6);
   bgMtns=[];
   for(let i=0;i<20;i++)
     bgMtns.push({wx:WORLD_W*(i/19),wpk:gY*(0.30+Math.random()*0.28),ww:WORLD_W*0.08,h2:Math.random()});
   bgTrees=[];
-  // 숲 스타일이면 나무 많이, 사막/도시면 적게
-  const treeCount=bgStyle===4?40:(bgStyle===2||bgStyle===3?8:28);
+  // 스타일별 전경 요소 개수
+  const treeCount=bgStyle===4?40:(bgStyle===5?22:(bgStyle===2||bgStyle===3?6:26));
   for(let i=0;i<treeCount;i++){
     const tx=WORLD_W*(i/(treeCount-1));
     if(tx>cWL-30&&tx<cWL+cWW+30) continue;
@@ -838,24 +839,49 @@ function drawBG(){
       CX.fillStyle=i%2?'#d4a868':'#c49858';
       const dh=(gY-m.wpk)*0.45;
       CX.beginPath();CX.ellipse(wrapped,gY,ww*1.3,dh,0,Math.PI,0,true);CX.fill();
-    } else {
+    } else if(bgStyle===4){
       // 숲 (겹쳐진 둥근 나무 캐노피)
       CX.fillStyle=i%2?'#2a5a2a':'#1a4a1a';
       CX.beginPath();CX.arc(wrapped,gY-(gY-m.wpk)*0.5,ww*0.7,0,Math.PI*2);CX.fill();
       CX.fillRect(wrapped-ww*0.7,gY-(gY-m.wpk)*0.5,ww*1.4,(gY-m.wpk)*0.5);
+    } else {
+      // 늪 — 죽은 나무 실루엣 + 안개층
+      CX.strokeStyle=i%2?'#3a4a3a':'#2a3a2a';CX.lineWidth=ww*0.12;
+      const th=(gY-m.wpk)*0.8;
+      CX.beginPath();CX.moveTo(wrapped,gY);CX.lineTo(wrapped,gY-th);
+      CX.moveTo(wrapped,gY-th*0.7);CX.lineTo(wrapped-ww*0.3,gY-th*0.9);
+      CX.moveTo(wrapped,gY-th*0.5);CX.lineTo(wrapped+ww*0.3,gY-th*0.75);CX.stroke();
     }
   });
 
-  // 지면
+  // 지면 — 배경 스타일별 색
+  let g1='#5a8a3c',g2='#3a5a1c'; // 기본 잔디
+  if(bgStyle===3){g1='#d4b878';g2='#b89858';}       // 사막 모래
+  else if(bgStyle===4){g1='#3a6a2a';g2='#214a16';}  // 숲 진녹
+  else if(bgStyle===5){g1='#4a5a3a';g2='#2a3a22';}  // 늪 탁한 녹갈
+  else if(bgStyle===2){g1='#6a7a4c';g2='#46582c';}  // 도시 외곽 잔디
   const gg=CX.createLinearGradient(0,gY,0,SCR_H);
-  gg.addColorStop(0,'#5a8a3c');gg.addColorStop(1,'#3a5a1c');
+  gg.addColorStop(0,g1);gg.addColorStop(1,g2);
   CX.fillStyle=gg;CX.fillRect(0,gY,SCR_W,SCR_H-gY);
+  // 늪: 지면에 물웅덩이 반사
+  if(bgStyle===5){
+    CX.fillStyle='rgba(80,120,90,0.35)';
+    for(let px=0;px<SCR_W;px+=70){
+      const ox=((px - camX*0.3)%SCR_W+SCR_W)%SCR_W;
+      CX.beginPath();CX.ellipse(ox,gY+18,26,5,0,0,Math.PI*2);CX.fill();
+    }
+  }
+  // 사막: 모래 결
+  if(bgStyle===3){
+    CX.strokeStyle='rgba(180,150,90,0.4)';CX.lineWidth=1;
+    for(let py=gY+12;py<SCR_H;py+=14){CX.beginPath();CX.moveTo(0,py);CX.lineTo(SCR_W,py+4);CX.stroke();}
+  }
   // 평지 분화구 (어둡게 파인 자국)
   groundCraters.forEach(c=>{
     const sx=w2s(c.wx);
     if(sx<-c.r-10||sx>SCR_W+c.r+10)return;
-    CX.fillStyle='#3a5a1c';
-    CX.beginPath();CX.arc(sx,gY,c.r,Math.PI,0,true);CX.fill(); // 반원 구덩이
+    CX.fillStyle=g2;
+    CX.beginPath();CX.arc(sx,gY,c.r,Math.PI,0,true);CX.fill();
     CX.fillStyle='rgba(0,0,0,.25)';
     CX.beginPath();CX.arc(sx,gY,c.r*0.7,Math.PI,0,true);CX.fill();
   });
@@ -1284,6 +1310,134 @@ function drawGuide(){
   CX.fillText(`${wep.ico} ${wep.name}`,infoX,infoY+30);
 }
 
+/* ══ 탄종별 커스텀 그래픽 (진행방향=+X 기준) ══ */
+function drawShell(st, sz){
+  const s=sz/20;
+  CX.lineWidth=1.5;
+  switch(st){
+    case 'he105': {
+      CX.fillStyle='#3a5a3a';CX.strokeStyle='#9be7c0';
+      CX.beginPath();CX.ellipse(0,0,11*s,6*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#ffe082';CX.fillRect(8*s,-2*s,4*s,4*s);
+      CX.fillStyle='#1a3a1a';CX.fillRect(-11*s,-4*s,3*s,8*s);
+      break;
+    }
+    case 'redbean': {
+      CX.fillStyle='#ff2020';CX.strokeStyle='#ffd0d0';
+      CX.beginPath();CX.ellipse(0,0,7*s,4*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#ffaa00';CX.beginPath();
+      CX.moveTo(-7*s,0);CX.lineTo(-15*s,-3*s);CX.lineTo(-13*s,0);CX.lineTo(-15*s,3*s);CX.closePath();CX.fill();
+      break;
+    }
+    case 'how155': {
+      CX.fillStyle='#6a6e4a';CX.strokeStyle='#cfd0a0';
+      CX.beginPath();CX.ellipse(0,0,13*s,8*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#4a4e2a';CX.fillRect(-13*s,-5*s,4*s,10*s);
+      CX.strokeStyle='#8a8e6a';CX.beginPath();CX.moveTo(-2*s,-7*s);CX.lineTo(-2*s,7*s);CX.stroke();
+      break;
+    }
+    case 'cannon': {
+      CX.fillStyle='#2a2a2a';CX.strokeStyle='#666';
+      CX.beginPath();CX.arc(0,0,10*s,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#555';CX.beginPath();CX.arc(-3*s,-3*s,3*s,0,Math.PI*2);CX.fill();
+      CX.strokeStyle='#8a5a2a';CX.lineWidth=2*s;CX.beginPath();CX.moveTo(8*s,-6*s);CX.lineTo(12*s,-10*s);CX.stroke();
+      CX.fillStyle='#ffcc00';CX.beginPath();CX.arc(12*s,-10*s,2.5*s,0,Math.PI*2);CX.fill();
+      break;
+    }
+    case 'burst': {
+      CX.fillStyle='#d2691e';CX.strokeStyle='#ffd0a0';
+      CX.beginPath();CX.ellipse(0,0,12*s,7*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#ff4500';CX.fillRect(-2*s,-7*s,4*s,14*s);
+      CX.fillStyle='#ffe082';CX.fillRect(9*s,-2*s,4*s,4*s);
+      break;
+    }
+    case 'cluster': {
+      CX.fillStyle='#8a4a2a';CX.strokeStyle='#ffb080';
+      CX.beginPath();CX.ellipse(0,0,11*s,7*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#ffcc00';
+      [[-3,-2],[3,-2],[0,2],[-3,3],[3,3]].forEach(d=>{CX.beginPath();CX.arc(d[0]*s,d[1]*s,2*s,0,Math.PI*2);CX.fill();});
+      break;
+    }
+    case 'ap': {
+      CX.fillStyle='#aab0b8';CX.strokeStyle='#e0e6f0';
+      CX.beginPath();
+      CX.moveTo(14*s,0);CX.lineTo(4*s,-5*s);CX.lineTo(-10*s,-5*s);CX.lineTo(-10*s,5*s);CX.lineTo(4*s,5*s);CX.closePath();
+      CX.fill();CX.stroke();
+      CX.fillStyle='#dde4f0';CX.beginPath();CX.moveTo(14*s,0);CX.lineTo(6*s,-3*s);CX.lineTo(6*s,3*s);CX.closePath();CX.fill();
+      break;
+    }
+    case 'wp': {
+      CX.fillStyle='#d8d8e0';CX.strokeStyle='#fff';
+      CX.beginPath();CX.ellipse(0,0,10*s,6*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.globalAlpha*=0.6;CX.fillStyle='#fff';
+      CX.beginPath();CX.arc(-9*s,-2*s,4*s,0,Math.PI*2);CX.arc(-13*s,1*s,3*s,0,Math.PI*2);CX.fill();
+      CX.globalAlpha/=0.6;
+      break;
+    }
+    case 'mlrs4': {
+      CX.fillStyle='#5a7a9a';CX.strokeStyle='#b0d0f0';
+      CX.beginPath();CX.moveTo(12*s,0);CX.lineTo(6*s,-4*s);CX.lineTo(-10*s,-4*s);CX.lineTo(-10*s,4*s);CX.lineTo(6*s,4*s);CX.closePath();CX.fill();CX.stroke();
+      CX.fillStyle='#2a4a6a';CX.beginPath();CX.moveTo(-10*s,-4*s);CX.lineTo(-14*s,-7*s);CX.lineTo(-10*s,0);CX.lineTo(-14*s,7*s);CX.lineTo(-10*s,4*s);CX.closePath();CX.fill();
+      CX.fillStyle='#ff8800';CX.beginPath();CX.arc(-13*s,0,3*s,0,Math.PI*2);CX.fill();
+      break;
+    }
+    case 'mlrs8': {
+      CX.fillStyle='#7a5a9a';CX.strokeStyle='#d0b0f0';
+      CX.beginPath();CX.moveTo(12*s,0);CX.lineTo(5*s,-4*s);CX.lineTo(-9*s,-4*s);CX.lineTo(-9*s,4*s);CX.lineTo(5*s,4*s);CX.closePath();CX.fill();CX.stroke();
+      CX.fillStyle='#ffaa00';CX.beginPath();
+      CX.moveTo(-9*s,-4*s);CX.lineTo(-17*s,-3*s);CX.lineTo(-14*s,0);CX.lineTo(-17*s,3*s);CX.lineTo(-9*s,4*s);CX.closePath();CX.fill();
+      CX.fillStyle='#fff';CX.beginPath();CX.arc(-11*s,0,2*s,0,Math.PI*2);CX.fill();
+      break;
+    }
+    case 'direct': {
+      CX.fillStyle='#3a6a6a';CX.strokeStyle='#a0e0e0';
+      CX.beginPath();CX.ellipse(0,0,9*s,5*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#80deea';CX.fillRect(7*s,-2*s,3*s,4*s);
+      break;
+    }
+    case 'homing': {
+      CX.save();CX.shadowBlur=8;CX.shadowColor='#00e5ff';
+      CX.fillStyle='#0097a7';CX.strokeStyle='#80deea';
+      CX.beginPath();CX.moveTo(13*s,0);CX.lineTo(5*s,-4*s);CX.lineTo(-10*s,-4*s);CX.lineTo(-10*s,4*s);CX.lineTo(5*s,4*s);CX.closePath();CX.fill();CX.stroke();
+      CX.restore();
+      CX.fillStyle='#00e5ff';CX.beginPath();CX.arc(8*s,0,2*s,0,Math.PI*2);CX.fill();
+      CX.fillStyle='#2a4a6a';CX.beginPath();CX.moveTo(-10*s,-4*s);CX.lineTo(-13*s,-7*s);CX.lineTo(-10*s,0);CX.lineTo(-13*s,7*s);CX.lineTo(-10*s,4*s);CX.closePath();CX.fill();
+      break;
+    }
+    case 'legend': {
+      CX.save();CX.shadowBlur=10;CX.shadowColor='#FFD700';
+      CX.fillStyle='#FFD700';CX.strokeStyle='#fff8e0';
+      CX.beginPath();CX.ellipse(0,0,11*s,7*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.restore();
+      CX.fillStyle='#fff';CX.beginPath();
+      for(let i=0;i<5;i++){const a=i*Math.PI*2/5-Math.PI/2;const r1=4*s,r2=2*s;
+        CX.lineTo(Math.cos(a)*r1,Math.sin(a)*r1);CX.lineTo(Math.cos(a+Math.PI/5)*r2,Math.sin(a+Math.PI/5)*r2);}
+      CX.closePath();CX.fill();
+      break;
+    }
+    case 'nuke': {
+      CX.save();CX.shadowBlur=12;CX.shadowColor='#7fff00';
+      CX.fillStyle='#3a4a1a';CX.strokeStyle='#aaff44';
+      CX.beginPath();CX.ellipse(0,0,12*s,8*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.restore();
+      CX.fillStyle='#ffeb3b';
+      for(let i=0;i<3;i++){CX.save();CX.rotate(i*Math.PI*2/3);
+        CX.beginPath();CX.moveTo(0,-2*s);CX.arc(0,0,6*s,-Math.PI/2-0.5,-Math.PI/2+0.5);CX.closePath();CX.fill();CX.restore();}
+      CX.fillStyle='#000';CX.beginPath();CX.arc(0,0,2*s,0,Math.PI*2);CX.fill();
+      break;
+    }
+    case 'enemy': {
+      CX.fillStyle='#7a2a2a';CX.strokeStyle='#ff8080';
+      CX.beginPath();CX.ellipse(0,0,10*s,6*s,0,0,Math.PI*2);CX.fill();CX.stroke();
+      CX.fillStyle='#ff4444';CX.fillRect(8*s,-2*s,3*s,4*s);
+      break;
+    }
+    default: {
+      CX.fillStyle='#888';CX.beginPath();CX.arc(0,0,8*s,0,Math.PI*2);CX.fill();
+    }
+  }
+}
+
 /* ══ PROJECTILES ══ */
 let _pendingShells=[]; // 분열로 새로 생긴 포탄 (filter 후 합침)
 function tickProjs(){
@@ -1293,15 +1447,14 @@ function tickProjs(){
     p._prevX=p.wx; // 이전 위치 (존 통과 판정용)
     p.wx+=p.vx+windFx; p.wy+=p.vy; p.vy+=p.grav; p.life--;
     p.age=(p.age||0)+1; // 발사 후 경과 프레임
-    // ── 풍익 유도탄: 적 근처에서 자동 유도 ──
-    if(!p.enemy && p.wid==='pungik' && p.age>15 && G.eHp>0){
+    // ── 유도탄: 풍익 관통 유도탄(특수탄)만 자동 유도 ──
+    if(!p.enemy && p.wid==='pungik' && p.am && p.am.homing && p.age>15 && G.eHp>0){
       const ey=groundYAt(eX)-30;
       const dx2=eX-p.wx, dy2=ey-p.wy;
       const dist=Math.hypot(dx2,dy2);
       if(dist<SCR_W*0.6 && dist>5){ // 적 근처 진입 시 유도
         const sp=Math.hypot(p.vx,p.vy);
         const tx=dx2/dist, ty=dy2/dist;
-        // 현재 속도방향을 적 방향으로 부드럽게 보정 (호밍 강도 0.12)
         p.vx += (tx*sp - p.vx)*0.12;
         p.vy += (ty*sp - p.vy)*0.12;
       }
@@ -1427,7 +1580,7 @@ function tickProjs(){
       CX.globalAlpha=1;
     } else { p.trailPts=[]; }
     CX.save();CX.globalAlpha=Math.min(1,p.life/15);
-    // 분열 직후 짧은 섬광만 (구분용 아님, 분열 순간 효과)
+    // 분열 직후 짧은 섬광
     if(p.splitGlow>0){
       p.splitGlow--;
       const gl=p.splitGlow/30;
@@ -1436,9 +1589,10 @@ function tickProjs(){
       CX.beginPath();CX.arc(sx,p.wy,p.sz*1.1,0,Math.PI*2);CX.fill();
       CX.globalAlpha=Math.min(1,p.life/15);
     }
-    CX.font=`${p.sz}px serif`;CX.textAlign='center';
-    CX.translate(sx,p.wy);CX.rotate(Math.atan2(p.vy,(p.vx||0)+G.wind*(p.wf||0)));
-    CX.fillText(p.ico,0,0);CX.restore();
+    CX.translate(sx,p.wy);
+    CX.rotate(Math.atan2(p.vy,(p.vx||0)+G.wind*(p.wf||0)));
+    drawShell(p.am&&p.am.st?p.am.st:(p.enemy?'enemy':'he105'), p.sz||20);
+    CX.restore();
     return true;
   });
   // 분열로 생긴 포탄을 합침 (filter 도중 push하면 누락되므로 여기서)
@@ -1845,7 +1999,7 @@ function fireEnemyBallistic(sd){
     {ico:'⚫',blast:70,pierce:4,dig:3.5,kb:2.2,name:'궤멸포'}        // 위기5
   ];
   const et=enemyAmmos[Math.min(sd.n-1,4)];
-  const eam={blast:et.blast,pierce:et.pierce,dig:et.dig,kb:et.kb,dmgMul:1,enemy:true};
+  const eam={blast:et.blast,pierce:et.pierce,dig:et.dig,kb:et.kb,dmgMul:1,enemy:true,st:'enemy'};
   projs.push({wx:ex,wy:ey, vx, vy,
     grav:g,life:Math.ceil(T)+40,ico:et.ico,sz:24,wid:'enemy',am:eam,wf:0,done:false,phase:0,
     enemy:true,trail:'#ff3030',trailPts:[]});
