@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>홍의 세계 — 방명록</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic:wght@400;700&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'Nanum Gothic',sans-serif;
+    background:linear-gradient(to bottom,#87ceeb,#b8e4f7 40%,#d4f0c0);
+    min-height:100vh; padding:16px;
+    color:#2d1a00;
+  }
+  .wrap { max-width:480px; margin:0 auto; }
+  .title {
+    font-family:'Jua',sans-serif; text-align:center;
+    font-size:24px; color:#5c3a00; margin:10px 0 4px;
+    text-shadow:0 2px 4px rgba(255,255,255,0.6);
+  }
+  .subtitle { text-align:center; font-size:13px; color:#6b5020; margin-bottom:18px; }
+  .back-btn {
+    display:inline-block; background:rgba(255,255,255,0.7);
+    color:#5c3a00; text-decoration:none; padding:6px 14px;
+    border-radius:20px; font-size:13px; font-weight:700; margin-bottom:14px;
+    border:1px solid #f5c842;
+  }
+  .form-box {
+    background:white; border:2px solid #f5c842; border-radius:16px;
+    padding:16px; margin-bottom:20px; box-shadow:0 4px 14px rgba(0,0,0,0.12);
+  }
+  .form-box input, .form-box textarea {
+    width:100%; border:1.5px solid #e0c060; border-radius:10px;
+    padding:10px 12px; font-size:14px; font-family:'Nanum Gothic',sans-serif;
+    margin-bottom:10px; resize:none;
+  }
+  .form-box input:focus, .form-box textarea:focus { outline:none; border-color:#f5c842; }
+  .form-box textarea { min-height:70px; }
+  .submit-btn {
+    width:100%; background:linear-gradient(to right,#f5c842,#e8a820);
+    color:#2d1a00; font-family:'Jua',sans-serif; font-size:15px;
+    border:none; padding:11px 0; border-radius:10px; cursor:pointer;
+    box-shadow:0 3px 8px rgba(0,0,0,0.15);
+  }
+  .submit-btn:active { transform:scale(0.98); }
+  .submit-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .posts { display:flex; flex-direction:column; gap:12px; }
+  .post {
+    background:white; border-radius:14px; padding:14px 16px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+    border-left:4px solid #f5c842;
+    animation:fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+  .post-name { font-weight:700; color:#8b6914; font-size:14px; margin-bottom:4px; }
+  .post-msg { font-size:14px; line-height:1.6; color:#2d1a00; white-space:pre-wrap; word-break:break-word; }
+  .post-date { font-size:11px; color:#aaa; margin-top:6px; text-align:right; }
+  .loading, .empty { text-align:center; color:#6b5020; padding:30px 0; font-size:14px; }
+  .count { text-align:center; font-size:13px; color:#6b5020; margin-bottom:12px; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back-btn">← 홍의 세계로</a>
+  <div class="title">📮 홍의 세계 방명록</div>
+  <div class="subtitle">방문 흔적을 남겨주세요! (익명 가능)</div>
+
+  <div class="form-box">
+    <input type="text" id="name" placeholder="이름 (비워두면 익명)" maxlength="20">
+    <textarea id="msg" placeholder="따뜻한 한마디 남겨주세요 😊" maxlength="300"></textarea>
+    <button class="submit-btn" id="submitBtn" onclick="submitPost()">✏️ 남기기</button>
+  </div>
+
+  <div class="count" id="count"></div>
+  <div class="posts" id="posts">
+    <div class="loading">방명록을 불러오는 중... 📖</div>
+  </div>
+</div>
+
+<script>
+  // ===== JSONBin 설정 (값 입력 필요) =====
+  const BIN_ID = '6a1c1a8b21f9ee59d2a0d1aa';
+  const ACCESS_KEY = '$2a$10$qVQtYmpcusypM2/w2KEkIek1ymkOPL41HikiOJs7KAjPRhqVSlTum';
+  const API = 'https://api.jsonbin.io/v3/b/' + BIN_ID;
+
+  let posts = [];
+
+  async function loadPosts() {
+    try {
+      const res = await fetch(API + '/latest', {
+        headers: { 'X-Access-Key': ACCESS_KEY }
+      });
+      const data = await res.json();
+      posts = (data.record && data.record.posts) ? data.record.posts : [];
+      renderPosts();
+    } catch (e) {
+      document.getElementById('posts').innerHTML = '<div class="empty">불러오기 실패 😢<br>잠시 후 다시 시도해주세요</div>';
+    }
+  }
+
+  function renderPosts() {
+    const box = document.getElementById('posts');
+    const cnt = document.getElementById('count');
+    if (posts.length === 0) {
+      box.innerHTML = '<div class="empty">아직 방명록이 없어요.<br>첫 번째 흔적을 남겨주세요! ✨</div>';
+      cnt.textContent = '';
+      return;
+    }
+    cnt.textContent = '💬 총 ' + posts.length + '개의 흔적';
+    box.innerHTML = posts.slice().reverse().map(p =>
+      '<div class="post"><div class="post-name">' + escapeHtml(p.name) + '</div>' +
+      '<div class="post-msg">' + escapeHtml(p.msg) + '</div>' +
+      '<div class="post-date">' + p.date + '</div></div>'
+    ).join('');
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  async function submitPost() {
+    const nameEl = document.getElementById('name');
+    const msgEl = document.getElementById('msg');
+    const btn = document.getElementById('submitBtn');
+    const msg = msgEl.value.trim();
+    if (!msg) { alert('내용을 입력해주세요!'); return; }
+    const name = nameEl.value.trim() || '익명';
+
+    btn.disabled = true;
+    btn.textContent = '저장 중...';
+
+    const now = new Date();
+    const date = now.getFullYear() + '.' +
+      String(now.getMonth()+1).padStart(2,'0') + '.' +
+      String(now.getDate()).padStart(2,'0') + ' ' +
+      String(now.getHours()).padStart(2,'0') + ':' +
+      String(now.getMinutes()).padStart(2,'0');
+
+    posts.push({ name, msg, date });
+
+    try {
+      await fetch(API, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Key': ACCESS_KEY
+        },
+        body: JSON.stringify({ posts })
+      });
+      nameEl.value = '';
+      msgEl.value = '';
+      renderPosts();
+    } catch (e) {
+      alert('저장 실패 😢 다시 시도해주세요');
+      posts.pop();
+    }
+    btn.disabled = false;
+    btn.textContent = '✏️ 남기기';
+  }
+
+  loadPosts();
+</script>
+</body>
+</html>
