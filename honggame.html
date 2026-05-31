@@ -357,11 +357,11 @@ const WD=[
    ]},
 
   {id:'pungik', name:'풍익', eng:'', ico:'🛞',
-   dmg:[38,52],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
-   spec:'🏃기동력 최강·바람 무시·근접 게릴라',
+   dmg:[20,30],ammo:6, grav:.14,spd:14, wf:0.0, unlock:0, trail:'#80deea', cd:1, mob:2.0, minAng:-10,
+   spec:'🏃기동력 최강·바람 무시·유도·약한 화력',
    ammos:[
-     {id:'basic',name:'기본 유도탄',ico:'⚪',blast:28,pierce:0,dig:1.1,kb:1.2,dmgMul:1.15,crater:0.9,desc:'바람0·정밀·이동 2배'},
-     {id:'pierce',name:'관통 유도탄',ico:'🎯',blast:22,pierce:6,dig:1.2,kb:1.6,dmgMul:1.2,crater:0.8,desc:'바람0·다중 관통·고기동'}
+     {id:'basic',name:'기본 유도탄',ico:'⚪',blast:20,pierce:0,dig:0.8,kb:1.0,dmgMul:0.75,crater:0.6,desc:'바람0·자동 유도·약한 폭발'},
+     {id:'pierce',name:'관통 유도탄',ico:'🎯',blast:16,pierce:6,dig:0.9,kb:1.3,dmgMul:0.8,crater:0.6,desc:'바람0·다중 관통·유도'}
    ]},
 
   {id:'legend', name:'원사의 전설포', eng:'', ico:'☄️',
@@ -2463,7 +2463,14 @@ async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'
 async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.sort((a,b)=>(b.score||0)-(a.score||0));bd=bd.slice(0,10);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
 
 /* ══ EVENTS ══ */
-document.getElementById('btn-start').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('btn-start').onclick=()=>{
+  G.selStage=1; G.stage=SD[0];
+  G.cleared=[]; // 새 게임 = 위기1부터
+  G.legendUnlocked=false;
+  G.totalScore=0; G.runNoMiss=true;
+  localStorage.removeItem('clr');
+  showPg('pg-stage');renderStages();
+};
 document.getElementById('btn-lb-t').onclick=()=>{showPg('pg-lb');loadLB();};
 document.getElementById('r-submit').onclick=submitScore;
 document.getElementById('btn-lb-s').onclick=()=>{showPg('pg-lb');loadLB();};
@@ -2511,7 +2518,15 @@ document.getElementById('r-retry').onclick=()=>{
   localStorage.removeItem('clr');
   goWeapon(1); // 위기1 무기 선택부터
 };
-document.getElementById('r-menu').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('r-menu').onclick=()=>{
+  // 목록으로 = 진행도 리셋 (항상 위기1부터)
+  G.selStage=1; G.stage=SD[0];
+  G.cleared=[];
+  G.legendUnlocked=false;
+  G.totalScore=0; G.runNoMiss=true;
+  localStorage.removeItem('clr');
+  showPg('pg-stage');renderStages();
+};
 function onResize(){
   if(document.getElementById('pg-title').classList.contains('show'))titleBG();
   if(running){
