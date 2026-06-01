@@ -122,6 +122,9 @@ canvas{display:block;touch-action:none;}
 <div class="ovl" id="ovl-start">
   <div class="card">
     <div style="font-size:28px;margin-bottom:5px;">🎖️</div>
+    <div style="font-size:12px;font-weight:800;letter-spacing:1px;margin-bottom:6px;">
+      <span style="color:#f87171;">둘</span><span style="color:#888;">도 없는 </span><span style="color:#fbbf24;">오</span><span style="color:#888;">직 </span><span style="color:#6ee7b7;">하나</span>
+    </div>
     <h1>재홍 원사의<br><span style="color:#f59e0b;">군생활 위기 극복</span></h1>
     <p>5개 스테이지를 돌파하라!<br><span style="color:#6ee7b7;">⏱ 빠를수록 점수 UP</span></p>
     <div class="grow">
@@ -529,9 +532,10 @@ function showOvl(id){
 function showStageBanner(cb){
   const st=getSt(),bn=document.getElementById('stage-banner');
   const rankName=['하사','중사','상사','원사','원사'][stIdx];
+  const rankAction=stIdx===0?'임관':'진급'; // 하사는 임관, 나머지는 진급
   document.getElementById('sb-region').textContent='📍 '+st.region;
   document.getElementById('sb-region').style.color=st.accentColor;
-  document.getElementById('sb-num').textContent='STAGE '+(stIdx+1)+' · '+rankName+' 진급';
+  document.getElementById('sb-num').textContent='STAGE '+(stIdx+1)+' · '+rankName+' '+rankAction;
   document.getElementById('sb-num').style.color=st.accentColor;
   document.getElementById('sb-title').textContent=st.bossName;
   document.getElementById('sb-title').style.color=st.accentColor;
