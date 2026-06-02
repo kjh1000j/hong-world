@@ -240,7 +240,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
   <div id="w-footer">
     <button class="go-btn" id="btn-random" style="background:linear-gradient(135deg,#9c27b0,#e040fb);border-color:#e040fb;margin-bottom:7px;">🎲 랜덤 화기 (전설포 확률!)</button>
     <button class="go-btn" id="btn-go">🔥 전투 개시!</button>
-    <button class="sm-btn" id="btn-back-s">← 위기 선택</button>
+    <button class="sm-btn" id="btn-back-s">← 처음으로</button>
   </div>
 </div>
 
@@ -276,7 +276,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#060d18;}
       <div class="r-btns">
         <button class="r-btn r-next" id="r-next">다음 →</button>
         <button class="r-btn r-retry" id="r-retry">↺ 재도전</button>
-        <button class="r-btn r-menu" id="r-menu">목록</button>
+        <button class="r-btn r-menu" id="r-menu">🏠 처음으로</button>
       </div>
     </div>
   </div>
@@ -1248,7 +1248,7 @@ function drawPlayer(){
 function drawGuide(){
   const wep=G.wpn;
   const power=fireHolding?firePower:0.7;
-  const pMul=0.55+power*0.9;
+  const pMul=0.25+power*0.95;
   const FLY=0.75; // doFire와 동일
   const spd=wep.spd*pMul*FLY;
   const gGrav=wep.grav*1.4*FLY*FLY;
@@ -2478,7 +2478,7 @@ function doFire(pw){
     bonusZones[0].splitY=gY*0.5;
   }
   const power=(typeof pw==='number')?pw:0.7;
-  const pMul=0.55+power*0.9;
+  const pMul=0.25+power*0.95;
   G.ammo--;G.shots++;updAmmo();
   const _firedAmmo=G.selAmmo; // 실제 발사 탄종 (변경 전 캡처)
   // 특수탄(2번째)은 3턴 쿨다운, 발사 후 기본탄으로 복귀
@@ -2580,7 +2580,7 @@ function titleBG(){
 
 /* ══ LB ══ */
 const LB='https://api.jsonbin.io/v3/b/6a1af9e421f9ee59d29dfa0e';
-const LK='$2a$10$DlaP9Oji1Udpuy2/B2oG9eXLkqUm3PwFcvJeTcCfx.qLpukOQqaXa';
+const LK='qVQtYmpcusypM2/w2KEkIek1ymkOPL41HikiOJs7KAjPRhqVSlTum';
 // 등록 UI 준비 (결과창 표시 시 호출)
 function prepRegister(total){
   const box=document.getElementById('r-register');
@@ -2613,8 +2613,8 @@ async function submitScore(){
   }
 }
 
-async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return false;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm||'원사',score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,10);const w=await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':LK},body:JSON.stringify(bd)});return w.ok;}catch(e){console.log('LB fail',e);return false;}}
-async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Master-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.sort((a,b)=>(b.score||0)-(a.score||0));bd=bd.slice(0,10);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
+async function saveLB(total,nm){try{const r=await fetch(LB+'/latest',{headers:{'X-Access-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)return false;const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.push({name:nm||'원사',score:total,stage:G.selStage,weapon:G.wpn.name,date:new Date().toLocaleDateString('ko-KR')});bd.sort((a,b)=>b.score-a.score);bd=bd.slice(0,10);const w=await fetch(LB,{method:'PUT',headers:{'Content-Type':'application/json','X-Access-Key':LK},body:JSON.stringify(bd)});return w.ok;}catch(e){console.log('LB fail',e);return false;}}
+async function loadLB(){const list=document.getElementById('lb-list');list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">불러오는 중...</div>';try{const r=await fetch(LB+'/latest',{headers:{'X-Access-Key':LK,'X-Bin-Meta':'false'}});if(!r.ok)throw new Error(r.status);const raw=await r.json();let bd=Array.isArray(raw)?raw:(raw.record||[]);bd.sort((a,b)=>(b.score||0)-(a.score||0));bd=bd.slice(0,10);if(!bd.length){list.innerHTML='<div style="color:#aaa;font-family:Noto Sans KR;text-align:center;padding:20px;">기록 없음</div>';return;}const m=['🥇','🥈','🥉'];list.innerHTML=bd.map((r2,i)=>`<div class="lb-row"><div class="lb-rank">${m[i]||i+1}</div><div class="lb-info"><div class="lb-name">${r2.name||'원사'}</div><div class="lb-detail">${r2.stage||'-'}위기 · ${r2.weapon||''} · ${r2.date||''}</div></div><div class="lb-sc">${(r2.score||0).toLocaleString()}</div></div>`).join('');}catch(e){list.innerHTML='<div style="color:#f44;font-family:Noto Sans KR;text-align:center;padding:20px;">로드 실패</div>';}}
 
 /* ══ EVENTS ══ */
 document.getElementById('btn-start').onclick=()=>{
@@ -2623,14 +2623,14 @@ document.getElementById('btn-start').onclick=()=>{
   G.legendUnlocked=false;
   G.totalScore=0; G.runNoMiss=true;
   localStorage.removeItem('clr');
-  showPg('pg-stage');renderStages();
+  goWeapon(1); // 위기 선택 건너뛰고 바로 위기1 무기 선택
 };
 document.getElementById('btn-lb-t').onclick=()=>{showPg('pg-lb');loadLB();};
 document.getElementById('r-submit').onclick=submitScore;
 document.getElementById('btn-lb-s').onclick=()=>{showPg('pg-lb');loadLB();};
 document.getElementById('btn-back-t').onclick=()=>showPg('pg-title');
-document.getElementById('btn-back-s').onclick=()=>{showPg('pg-stage');renderStages();};
-document.getElementById('btn-back-lb').onclick=()=>{showPg('pg-stage');renderStages();};
+document.getElementById('btn-back-s').onclick=()=>showPg('pg-title');
+document.getElementById('btn-back-lb').onclick=()=>showPg('pg-title');
 document.getElementById('btn-go').onclick=startGame;
 document.getElementById('btn-random').onclick=()=>{
   // 15% 확률로 전설포, 아니면 일반 6종 — 선택 화면 안 보여주고 바로 전투 시작
@@ -2673,13 +2673,13 @@ document.getElementById('r-retry').onclick=()=>{
   goWeapon(1); // 위기1 무기 선택부터
 };
 document.getElementById('r-menu').onclick=()=>{
-  // 목록으로 = 진행도 리셋 (항상 위기1부터)
+  // 처음 화면으로 (진행도 리셋)
   G.selStage=1; G.stage=SD[0];
   G.cleared=[];
   G.legendUnlocked=false;
   G.totalScore=0; G.runNoMiss=true;
   localStorage.removeItem('clr');
-  showPg('pg-stage');renderStages();
+  showPg('pg-title');
 };
 function onResize(){
   if(document.getElementById('pg-title').classList.contains('show'))titleBG();
