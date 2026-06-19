@@ -142,7 +142,7 @@ canvas{display:block;touch-action:none;}
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
-    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v3.8</div>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v3.9</div>
   </div>
 </div>
 
@@ -1425,7 +1425,7 @@ function drawPlayer(){
   for(let i=0;i<rankChevrons;i++){const o=i*7;ctx.beginPath();ctx.moveTo(-10,startY+o);ctx.lineTo(0,startY+7+o);ctx.lineTo(10,startY+o);ctx.stroke();}
   ctx.restore();
   // 계급명+이름
-  const rankName=['하사 재홍','중사 재홍','상사 재홍','상사 재홍','원사 재홍','원사 재홍','원사 재홍'][stIdx];
+  const rankName=RANK_NAMES[stIdx]+' 재홍';
   ctx.font='800 9px sans-serif';ctx.textAlign='center';
   ctx.strokeStyle='rgba(0,0,0,.9)';ctx.lineWidth=3;ctx.strokeText(rankName,player.x,player.y+player.size*.52+3);
   ctx.fillStyle='white';ctx.fillText(rankName,player.x,player.y+player.size*.52+3);
@@ -1908,142 +1908,4 @@ function loop(ts){
       if(boss.atkTimer>atkIntF){
         boss.atkTimer=0;
         const atks=st.bossAtks,atk=atks[Math.floor(Math.random()*atks.length)];
-        const spd=(185+Math.random()*85)*diff*(p2?1.2:1),t2=Math.random();
-        if(feverTimer>0){
-          // 피버 중엔 단발만 (회피 쉽게)
-          obstacles.push({id:Math.random(),x:boss.x,y:boss.y+boss.size*.55,size:38,speed:spd*.85,emoji:atk.emoji,label:atk.label,category:'obstacle'});
-        }else if(p2&&Math.random()<.24){
-          // 페이즈2 부채꼴 3발 탄막 (간격 넓게)
-          for(let k=-1;k<=1;k++)obstacles.push({id:Math.random(),x:boss.x+k*78,y:boss.y+boss.size*.4,size:32,speed:spd*.78,emoji:atk.emoji,label:atk.label,category:'obstacle'});
-        }else if(t2<.4)obstacles.push({id:Math.random(),x:boss.x,y:boss.y+boss.size*.55,size:40,speed:spd,emoji:atk.emoji,label:atk.label,category:'obstacle'});
-        else if(t2<.7)for(let k=-1;k<=1;k+=2)obstacles.push({id:Math.random(),x:boss.x+k*92,y:boss.y+boss.size*.4,size:38,speed:spd*.88,emoji:atk.emoji,label:atk.label,category:'obstacle'});
-        else for(let k=-1;k<=1;k++)obstacles.push({id:Math.random(),x:boss.x+k*96,y:boss.y+Math.abs(k)*22,size:36,speed:spd*.82,emoji:atk.emoji,label:atk.label,category:'obstacle'});
-      }
-    }
-    for(let pi=projectiles.length-1;pi>=0;pi--){
-      const p=projectiles[pi];
-      if(!bossDefeating&&Math.hypot(boss.x-p.x,boss.y-p.y)<boss.size*.62+p.size/2){
-        boss.hp-=(p.dmg||1);
-        if(!p.pierce)projectiles.splice(pi,1);
-        sfx('hit');spawnHitParticles(boss.x,boss.y,st.bossColor);
-        if(p.explode){shake=14;spawnExplosion(boss.x,boss.y,90);sfx('skill');}
-        if(boss.hp<=0){sfx('clear');defeatBoss();return;}
-      }
-    }
-    // 페이즈2 분노 오라
-    if(boss.phase2){
-      const rp=.5+Math.sin(Date.now()*.015)*.5;
-      ctx.save();ctx.shadowBlur=30;ctx.shadowColor='#ef4444';
-      ctx.strokeStyle=`rgba(239,68,68,${.4+rp*.4})`;ctx.lineWidth=3;
-      ctx.beginPath();ctx.arc(boss.x,boss.y,boss.size*1.1+rp*6,0,Math.PI*2);ctx.stroke();
-      ctx.restore();
-    }
-    drawBossChar(boss.x,boss.y,boss.size,Date.now());
-  }
-
-  player.x+=(player.tx-player.x)*.17;
-  if(player.inv>0)player.inv--;if(player.aura>0)player.aura--;if(player.dash>0)player.dash--;
-  drawPlayer();
-
-  // 장착 무기 표시
-  if(curWeapon&&weaponTimer>0){
-    const wInfo=WEAPONS.find(w=>w.key===curWeapon);
-    ctx.save();
-    ctx.font='800 12px sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
-    const txt=wInfo.emoji+' '+wInfo.label.replace('!','')+' '+Math.ceil(weaponTimer)+'초';
-    ctx.strokeStyle='rgba(0,0,0,.85)';ctx.lineWidth=4;
-    ctx.strokeText(txt,player.x,player.y-player.size*.8);
-    ctx.fillStyle='#67e8f9';ctx.fillText(txt,player.x,player.y-player.size*.8);
-    ctx.restore();
-  }
-
-  if(player.hp<=0){GS='STOP';onGameOver(Math.floor((Date.now()-gameStart)/1000));}
-  if(shake>0)ctx.restore();
-}
-
-function defeatBoss(){
-  if(bossDefeating)return; // 중복 호출 방지
-  bossDefeating=true;
-  // 막타 슬로우모션 + 폭죽 쇼 + 격파 대사
-  slowmo=1.0;shake=24;
-  const st=getSt();
-  spawnExplosion(boss.x,boss.y,140);
-  startFireworkShow(); // 연속 폭죽
-  // 격파 대사 (천천히 오래 표시)
-  showFloatText(canvas.width/2,canvas.height*.38,'"'+(st.bossDefeat||'졌다...!')+'"','#fff',{decay:.45,rise:12,size:17});
-  showFloatText(canvas.width/2,canvas.height*.3,'★ 격파! ★','#FFD700',{decay:.5,rise:10,size:26});
-  bossDefeatMsg=st.bossDefeat||'';bossDefeatT=1.8;
-  // 슬로우 후 스테이지 클리어 (대사·폭죽 감상 시간 확보)
-  setTimeout(()=>{onStageClear();},2000);
-}
-function onStageClear(){
-  bossDefeating=false; // 다음 보스 위해 리셋
-  boss=null;enemies=[];obstacles=[];projectiles=[];buffs=[];
-  stScore=0;spawnET=0;spawnOT=0;spawnBT=0;spawnWT=0;spawnGT=0;combo=0;particles=[];skillParticles=[];explosions=[];fireworkShow=0;
-  GS='STOP';stopBGM();
-  if(stIdx>=6){
-    const sec=Math.floor((Date.now()-gameStart)/1000);
-    const{final,tb,clearBonus}=calcFinalScore(score,sec,7);
-    score=final;showOvl('ovl-win');
-    document.getElementById('win-sc').textContent=final.toLocaleString();
-    document.getElementById('win-det').innerHTML=`<span>기본 ${(final-tb-clearBonus).toLocaleString()}</span><span class="hi">⏱ +${tb.toLocaleString()}</span><span class="hi2">🎖️ +${clearBonus.toLocaleString()}</span><span>${fmtT(sec)}</span>`;
-    showRankUI('win-rank','win-na','win-out','win-lb',final);
-  }else{
-    stIdx++;GS='TRANSITION';
-    // 다음 스테이지 진급 → 보상 선택 → 배너 → 시작
-    showRewardScreen(stIdx,()=>{
-      showStageBanner(()=>{lastTime=performance.now();GS='PLAYING';loopId=requestAnimationFrame(loop);startBGM();});
-    });
-  }
-}
-async function onGameOver(sec){
-  stopBGM();
-  showOvl('ovl-go');
-  const{final,tb}=calcFinalScore(score,sec,stIdx);
-  score=final;
-  document.getElementById('go-sc').textContent=Math.floor(final).toLocaleString();
-  document.getElementById('go-det').innerHTML=`<span>ST${stIdx+1} 탈락</span><span class="hi">+${tb.toLocaleString()}</span><span>${fmtT(sec)}</span>`;
-  document.getElementById('go-nick').value='';document.getElementById('btn-go-sub').disabled=false;document.getElementById('go-sub-msg').textContent='';
-  await showRankUI('go-rank','go-na','go-out','go-lb',final);
-}
-
-/* 입력 */
-function inp(cx){
-  if(GS!=='PLAYING'&&GS!=='BOSS')return;
-  const rect=canvas.getBoundingClientRect();
-  player.tx=Math.max(PS/2,Math.min(canvas.width-PS/2,(cx-rect.left)*(canvas.width/rect.width)));
-  knob.style.left=(player.tx/canvas.width)*100+'%';
-}
-canvas.addEventListener('mousemove',e=>inp(e.clientX));canvas.addEventListener('mousedown',e=>inp(e.clientX));
-canvas.addEventListener('touchmove',e=>{if(GS!=='PLAYING'&&GS!=='BOSS')return;e.preventDefault();inp(e.touches[0].clientX);},{passive:false});
-canvas.addEventListener('touchstart',e=>{if(GS!=='PLAYING'&&GS!=='BOSS')return;inp(e.touches[0].clientX);},{passive:true});
-
-/* 버튼 */
-function startGame(){
-  if(loopId){cancelAnimationFrame(loopId);loopId=null;}
-  reset();gameStart=Date.now();lastTime=performance.now();
-  GS='TRANSITION';showOvl(null);
-  if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}
-  showStageBanner(()=>{GS='PLAYING';loopId=requestAnimationFrame(loop);startBGM();});
-}
-function goStart(){GS='STOP';stopBGM();if(loopId){cancelAnimationFrame(loopId);loopId=null;}showOvl('ovl-start');}
-
-document.getElementById('btn-start').onclick=startGame;
-document.getElementById('btn-lb').onclick=showMainLb;
-document.getElementById('btn-retry-go').onclick=startGame;
-document.getElementById('btn-home-go').onclick=goStart;
-document.getElementById('btn-retry-win').onclick=startGame;
-document.getElementById('btn-home-win').onclick=goStart;
-document.getElementById('rbtn').onclick=goStart;
-document.getElementById('btn-lb-close').onclick=()=>showOvl('ovl-start');
-document.getElementById('mbtn').onclick=()=>{muted=!muted;document.getElementById('mbtn').textContent=muted?'🔇':'🔊';if(muted)stopBGM();else if(GS==='PLAYING'||GS==='BOSS')startBGM();};
-// 필살기는 자동 발동 - 버튼 클릭 없음
-document.getElementById('btn-go-sub').onclick=()=>doSubmit('go-nick','go-sub-msg','btn-go-sub',score,Math.floor((Date.now()-gameStart)/1000),stIdx+1);
-document.getElementById('btn-win-sub').onclick=()=>doSubmit('win-nick','win-sub-msg','btn-win-sub',score,Math.floor((Date.now()-gameStart)/1000),7);
-document.getElementById('go-nick').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn-go-sub').click();});
-document.getElementById('win-nick').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('btn-win-sub').click();});
-
-loopId=requestAnimationFrame(loop);
-</script>
-</body>
-</html>
+        const spd=(185+Math.random()*85)*diff*(p2?1.
