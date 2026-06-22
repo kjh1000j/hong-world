@@ -130,19 +130,19 @@ canvas{display:block;touch-action:none;}
       <span style="color:#f87171;">둘</span><span style="color:#888;">도 없는 </span><span style="color:#fbbf24;">오</span><span style="color:#888;">직 </span><span style="color:#6ee7b7;">하나</span>
     </div>
     <h1>재홍 원사의<br><span style="color:#f59e0b;">군생활 위기 극복</span></h1>
-    <p>7개 스테이지를 돌파하라!<br><span style="color:#6ee7b7;">⏱ 빠를수록 점수 UP</span></p>
+    <p>7개 스테이지를 돌파하라!<br><span style="color:#6ee7b7;">💥 많이 처치 + ⏱ 빠른 클리어 = 고득점</span></p>
     <div class="grow">
       <div class="gi gi-e"><span style="font-size:14px;">👹</span> <span style="font-size:9px;background:#ef4444;padding:1px 5px;border-radius:3px;font-weight:800;">공격가능</span><div class="gl">빨간 원 — 날려버려!</div></div>
       <div class="gi gi-o"><span style="font-size:14px;">⚠️</span> <span style="font-size:9px;background:#8b5cf6;padding:1px 5px;border-radius:3px;font-weight:800;">회피필수</span><div class="gl">보라 원 — 무조건 피해!</div></div>
       <div class="gi gi-b"><span style="font-size:14px;">✨</span> <span style="font-size:9px;background:#10b981;padding:1px 5px;border-radius:3px;font-weight:800;">버프</span><div class="gl">초록 빛 — 회복·무적·점수!</div></div>
       <div class="gi" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);"><span style="font-size:14px;">⚔️</span> <span style="font-size:9px;background:#06b6d4;padding:1px 5px;border-radius:3px;font-weight:800;">특수무기</span><div class="gl" style="color:#67e8f9;">청록 — 8초간 강력 무기!</div></div>
       <div class="gi" style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);"><span style="font-size:14px;">⭐</span> <span style="font-size:9px;background:#d4a017;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">황금포상</span><div class="gl" style="color:#fde68a;">빠르게 지나감 — 잡으면 +1500!</div></div>
-      <div class="gi gi-s"><span style="font-size:14px;">⚡</span> <span style="font-size:9px;background:#7c3aed;padding:1px 5px;border-radius:3px;font-weight:800;">필살기</span><div class="gl">30초마다 자동 발동!</div></div>
+      <div class="gi gi-s"><span style="font-size:14px;">⚡</span> <span style="font-size:9px;background:#7c3aed;padding:1px 5px;border-radius:3px;font-weight:800;">필살기</span><div class="gl">30초마다 자동! 장애물 처치 +보너스</div></div>
       <div class="gi" style="grid-column:span 2;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);"><span style="font-size:14px;">🎖️</span> <span style="font-size:9px;background:#f59e0b;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">계급 진급</span><div class="gl" style="color:#fde68a;">하사→중사→상사→원사 / 상사부터 2줄 공격!</div></div>
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
-    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v3.9</div>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v4.1</div>
   </div>
 </div>
 
@@ -1626,8 +1626,23 @@ function tickSkill(){
 function useSkill(){
   sfx('skill');skillCD=Math.max(15,30-upg.skillCd*3);shake=25; // 쿨다운 보상 (단계당 3초↓, 최소 15초)
   spawnSkillParticles();
-  const pts=(enemies.length*350)+(obstacles.length*200);
-  score+=pts;stScore+=pts;
+  let pts=0,gauge=0;
+  // 적 처치 - 콤보배율 적용 (일반보다 약간 작은 200점), 콤보도 증가
+  enemies.forEach(e=>{
+    const isGold=e.golden;
+    if(isGold){pts+=1500;} // 황금적은 그대로 보너스
+    else{
+      const killVal=e.kamikaze?320:200; // 일반(250)보다 약간 작게
+      pts+=Math.floor(killVal*getComboMult());
+      gauge+=e.kamikaze?300:200; // 보스 게이지
+      addCombo(); // 콤보 마리수만큼 증가
+    }
+  });
+  // 장애물 처치 - 필살기로만 가능, 특별 보너스 (높게)
+  pts+=obstacles.length*450;
+  score+=pts;stScore+=gauge;
+  // 점수 표시
+  if(pts>0)showFloatText(player.x,player.y-90,'⚡ +'+pts.toLocaleString(),'#a78bfa',{decay:.7,rise:20,size:20});
   enemies=[];obstacles=[];projectiles=[]; // 적+장애물+발사체 전부 제거
   updateSkillBtn();
 }
@@ -1655,13 +1670,13 @@ function getComboMult(){
 }
 
 function calcFinalScore(base,sec,stNum){
-  const targets=[80,160,240,320,400,480,560],maxB=[7000,8000,9000,11000,13000,15000,17000];
+  const targets=[80,160,240,320,400,480,560],maxB=[5000,6000,7000,8000,9500,11000,12500];
   let tb=0;
   for(let i=0;i<Math.min(stNum,7);i++){
     const segSec=i===0?Math.min(sec,targets[0]):Math.min(Math.max(0,sec-targets[i-1]),targets[i]-targets[i-1]);
     const ratio=segSec/targets[i];tb+=ratio<.6?maxB[i]:ratio<1?Math.floor(maxB[i]*(1-ratio)/.4):0;
   }
-  const clearBonus=stNum>=7?8000:stNum*1500;
+  const clearBonus=stNum>=7?10000:stNum*1500;
   return{final:Math.floor(base+tb+clearBonus),tb,clearBonus};
 }
 
@@ -1769,7 +1784,7 @@ function loop(ts){
         enemies.forEach(e2=>{if(!e2.golden&&Math.hypot(e2.x-p.x,e2.y-p.y)<R){e2.hp-=3;}});
         if(boss&&!bossDefeating&&boss.y>0&&Math.hypot(boss.x-p.x,boss.y-p.y)<R){boss.hp-=3;if(boss.hp<=0){sfx('clear');projectiles.splice(i,1);defeatBoss();return;}}
         // 죽은 적 정리
-        for(let ei=enemies.length-1;ei>=0;ei--){const e2=enemies[ei];if(e2.hp<=0){if(e2.kamikaze)spawnExplosion(e2.x,e2.y,60);const pts=Math.floor((e2.kamikaze?300:200)*getComboMult());score+=pts;stScore+=pts;addCombo();enemies.splice(ei,1);}}
+        for(let ei=enemies.length-1;ei>=0;ei--){const e2=enemies[ei];if(e2.hp<=0){if(e2.kamikaze)spawnExplosion(e2.x,e2.y,60);const mult=getComboMult();const pts=Math.floor((e2.kamikaze?400:250)*mult);const gauge=Math.floor((e2.kamikaze?300:200)*mult);score+=pts;stScore+=gauge;addCombo();enemies.splice(ei,1);}}
         projectiles.splice(i,1);renderHUD();continue;
       }
     }
@@ -1819,7 +1834,11 @@ function loop(ts){
             showFloatText(e.x,e.y,'+1500','#FFD700');
             enemies.splice(i,1);addCombo();dead=true;break;
           }
-          enemies.splice(i,1);const pts=Math.floor((e.kamikaze?300:200)*getComboMult());score+=pts;stScore+=pts;addCombo();dead=true;break;
+          enemies.splice(i,1);
+          const mult=getComboMult();
+          const pts=Math.floor((e.kamikaze?400:250)*mult); // 최종점수용 (상향)
+          const gauge=Math.floor((e.kamikaze?300:200)*mult); // 보스 게이지용 (유지)
+          score+=pts;stScore+=gauge;addCombo();dead=true;break;
         }
       }
     }
@@ -2000,9 +2019,10 @@ async function onGameOver(sec){
   stopBGM();
   showOvl('ovl-go');
   const{final,tb}=calcFinalScore(score,sec,stIdx);
+  const baseScore=score; // 시간보너스 더하기 전 = 처치 누적
   score=final;
   document.getElementById('go-sc').textContent=Math.floor(final).toLocaleString();
-  document.getElementById('go-det').innerHTML=`<span>ST${stIdx+1} 탈락</span><span class="hi">+${tb.toLocaleString()}</span><span>${fmtT(sec)}</span>`;
+  document.getElementById('go-det').innerHTML=`<span>💥 ${baseScore.toLocaleString()}</span><span class="hi">⏱ +${tb.toLocaleString()}</span><span>ST${stIdx+1}·${fmtT(sec)}</span>`;
   document.getElementById('go-nick').value='';document.getElementById('btn-go-sub').disabled=false;document.getElementById('go-sub-msg').textContent='';
   await showRankUI('go-rank','go-na','go-out','go-lb',final);
 }
