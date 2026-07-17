@@ -503,8 +503,8 @@
     <div style="font-size:13px;color:#3d2a00;line-height:2;text-align:left;margin-bottom:18px;">
       <div style="margin-bottom:6px;font-weight:700;color:#8b6914;">🕹️ 이렇게 즐기세요</div>
       <div>🕹️ 조이스틱으로 홍을 <b>이동</b></div>
-      <div>🚶 오브젝트에 <b>가까이 가면</b> 이야기 등장!<br>&nbsp;&nbsp;&nbsp;직접 돌아다니며 탐험하세요</div>
-      <div>💕 와이프 · 🐩 아들 · 🐩 딸 · ☀️ 햇님만<br>&nbsp;&nbsp;&nbsp;<b>클릭</b>하세요</div>
+      <div>👆 오브젝트를 <b>클릭</b>하면 이야기 등장!<br>&nbsp;&nbsp;&nbsp;돌아다니며 곳곳을 눌러보세요</div>
+      <div>🚌 <b>버스 정류장</b>에서 빠른 이동!</div>
       <div>⭐ 곳곳에 숨은 <b>별 5개</b>를 찾아보세요!<br>&nbsp;&nbsp;&nbsp;빠르게 찾으면 <b>랭킹</b> 등록 🏆</div>
       <div>🪖 홍 <b>한번탭</b> 점프 · <b>두번탭</b> 경력</div>
       <div>🌙 우측 버튼으로 <b>낮/밤</b> 전환</div>
@@ -560,6 +560,14 @@
 
 <div id="op-bubble" style="display:none;"></div>
 <div id="think-bubble"></div>
+<!-- 버스 메뉴 -->
+<div id="bus-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1100;align-items:center;justify-content:center;" onclick="this.style.display='none'">
+  <div style="background:linear-gradient(135deg,#fffdf0,#fff8e0);border:3px solid #3a6db5;border-radius:18px;padding:20px 22px;width:min(250px,80vw);text-align:center;font-family:'Jua',sans-serif;" onclick="event.stopPropagation()">
+    <div style="font-size:17px;color:#2d4a7a;margin-bottom:14px;">🚌 어디로 갈까요?</div>
+    <div id="bus-dests" style="display:flex;flex-direction:column;gap:8px;"></div>
+  </div>
+</div>
+
 <!-- 별 랭킹 입력 모달 -->
 <div id="rank-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:1100;align-items:center;justify-content:center;">
   <div style="background:linear-gradient(135deg,#fffdf0,#fff8e0);border:3px solid #f5c842;border-radius:18px;padding:22px 24px;width:min(280px,85vw);text-align:center;font-family:'Nanum Gothic',sans-serif;">
@@ -1162,7 +1170,7 @@
   </div>
 
   <!-- ===== 구역4: 자주포 (1060) ===== -->
-  <div class="obj" id="o-howitzer" style="top:1290px;left:7%;">
+  <div class="obj" id="o-howitzer" style="top:1145px;left:6%;">
     <svg width="104" height="66" viewBox="0 0 125 80">
       <ellipse cx="60" cy="76" rx="48" ry="4" fill="rgba(0,0,0,0.12)"/>
       <!-- 포신 (통통) -->
@@ -1385,7 +1393,7 @@
     </svg>
   </div>
   <!-- 벚꽃나무 2 (좌측 아래) -->
-  <div class="deco" style="top:1180px;left:8%;">
+  <div class="deco" style="top:865px;left:28%;">
     <svg width="68" height="92" viewBox="0 0 70 95">
       <rect x="31" y="55" width="8" height="40" fill="#8b6144" rx="3"/>
       <ellipse cx="35" cy="35" rx="26" ry="23" fill="#ffd0e0"/>
@@ -1595,16 +1603,16 @@
     </svg>
   </div>
   <!-- 국내: 부산 (벗우회 근처) -->
-  <div class="deco" style="top:1170px;left:32%;">
+  <div class="deco" style="top:1370px;left:34%;">
     <svg width="44" height="46" viewBox="0 0 44 46">
       <rect x="20" y="20" width="4" height="26" fill="#8a8a8a" rx="1.5"/>
       <rect x="2" y="2" width="40" height="18" rx="3.5" fill="#2a7d43"/>
       <rect x="3.5" y="3.5" width="37" height="15" rx="2.5" fill="none" stroke="#fff" stroke-width="1.1"/>
-      <text x="22" y="14" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">부산 ↓</text>
+      <text x="22" y="14" font-size="8" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">화천 ↑</text>
     </svg>
   </div>
   <!-- 국내: 철원 (포병 아래 길쪽) -->
-  <div class="deco" style="top:1370px;left:34%;">
+  <div class="deco" style="top:1170px;left:36%;">
     <svg width="44" height="46" viewBox="0 0 44 46">
       <rect x="20" y="20" width="4" height="26" fill="#8a8a8a" rx="1.5"/>
       <rect x="2" y="2" width="40" height="18" rx="3.5" fill="#2a7d43"/>
@@ -1613,7 +1621,7 @@
     </svg>
   </div>
   <!-- 네팔: 나무판 + 기도깃발 (안나푸르나 옆) -->
-  <div class="deco" style="top:1590px;right:27%;">
+  <div class="deco" style="top:1635px;right:27%;">
     <svg width="58" height="54" viewBox="0 0 58 54">
       <line x1="6" y1="8" x2="52" y2="4" stroke="#8a7a6a" stroke-width="1"/>
       <path d="M10,8 L15,8 L15,14 L12.5,12.5 L10,14Z" fill="#4a90d9"/>
@@ -1673,7 +1681,7 @@
 
   <!-- ===== 화천 대대 구역 ===== -->
   <!-- 북쪽 군사기지 (울타리+수송부+궤도정비고) -->
-  <div class="deco" style="top:588px;right:4%;">
+  <div class="deco" style="top:1262px;right:22%;">
     <svg width="104" height="73" viewBox="0 0 150 105">
       <!-- 울타리 -->
       <rect x="3" y="18" width="144" height="84" rx="4" fill="none" stroke="#8a8a7a" stroke-width="2" stroke-dasharray="6,3"/>
@@ -1727,7 +1735,7 @@
     </svg>
   </div>
   <!-- 육교 (길 가로지름) -->
-  <div class="deco" style="top:610px;left:30%;z-index:74;">
+  <div class="deco" style="top:1285px;left:22%;z-index:74;">
     <svg width="120" height="39" viewBox="0 0 160 52">
       <!-- 다리 상판 -->
       <path d="M4,22 Q80,8 156,22 L156,30 Q80,16 4,30Z" fill="#c9955c"/>
@@ -1746,7 +1754,7 @@
     </svg>
   </div>
   <!-- BTL 병영생활관 -->
-  <div class="obj" id="o-barrack" style="top:592px;left:12%;">
+  <div class="obj" id="o-barrack" style="top:1268px;left:6%;">
     <svg width="62" height="53" viewBox="0 0 100 86">
       <ellipse cx="50" cy="83" rx="42" ry="3" fill="rgba(0,0,0,0.12)"/>
       <!-- 본체 (BTL 신축 크림+카키) -->
@@ -1770,6 +1778,51 @@
       <circle cx="14" cy="78" r="1.3" fill="#ff8fab"/><circle cx="18.5" cy="78.5" r="1.2" fill="#ffd747"/>
     </svg>
     <div class="obj-label" style="color:#fff;">🏢 병영생활관 (BTL)</div>
+  </div>
+
+  <!-- ===== 버스 정류장 ===== -->
+  <div class="obj" id="bus-stop-0" style="top:462px;right:31%;" onclick="openBusMenu(0)">
+    <svg width="40" height="52" viewBox="0 0 40 52">
+      <rect x="17" y="14" width="4" height="38" fill="#7a8a9a" rx="1.5"/>
+      <rect x="4" y="2" width="32" height="15" rx="4" fill="#3a6db5"/>
+      <text x="20" y="12.5" font-size="9" fill="#fff" text-anchor="middle">🚌</text>
+      <rect x="8" y="44" width="24" height="3" rx="1.5" fill="#b58a5c"/>
+      <rect x="10" y="47" width="3" height="5" fill="#8b6144"/>
+      <rect x="27" y="47" width="3" height="5" fill="#8b6144"/>
+    </svg>
+    <div class="obj-label" style="color:#fff;">🚏 가족마을</div>
+  </div>
+  <div class="obj" id="bus-stop-1" style="top:1215px;left:57%;" onclick="openBusMenu(1)">
+    <svg width="40" height="52" viewBox="0 0 40 52">
+      <rect x="17" y="14" width="4" height="38" fill="#7a8a9a" rx="1.5"/>
+      <rect x="4" y="2" width="32" height="15" rx="4" fill="#3a6db5"/>
+      <text x="20" y="12.5" font-size="9" fill="#fff" text-anchor="middle">🚌</text>
+      <rect x="8" y="44" width="24" height="3" rx="1.5" fill="#b58a5c"/>
+      <rect x="10" y="47" width="3" height="5" fill="#8b6144"/>
+      <rect x="27" y="47" width="3" height="5" fill="#8b6144"/>
+    </svg>
+    <div class="obj-label" style="color:#fff;">🚏 부대앞</div>
+  </div>
+  <div class="obj" id="bus-stop-2" style="top:1782px;left:33%;" onclick="openBusMenu(2)">
+    <svg width="40" height="52" viewBox="0 0 40 52">
+      <rect x="17" y="14" width="4" height="38" fill="#7a8a9a" rx="1.5"/>
+      <rect x="4" y="2" width="32" height="15" rx="4" fill="#3a6db5"/>
+      <text x="20" y="12.5" font-size="9" fill="#fff" text-anchor="middle">🚌</text>
+      <rect x="8" y="44" width="24" height="3" rx="1.5" fill="#b58a5c"/>
+      <rect x="10" y="47" width="3" height="5" fill="#8b6144"/>
+      <rect x="27" y="47" width="3" height="5" fill="#8b6144"/>
+    </svg>
+    <div class="obj-label" style="color:#fff;">🚏 세계여행</div>
+  </div>
+
+  <!-- 국내: 사방거리 (군부대 근처) -->
+  <div class="deco" style="top:1390px;right:30%;">
+    <svg width="48" height="48" viewBox="0 0 48 48">
+      <rect x="22" y="21" width="4" height="27" fill="#8a8a8a" rx="1.5"/>
+      <rect x="2" y="2" width="44" height="19" rx="3.5" fill="#2a7d43"/>
+      <rect x="3.5" y="3.5" width="41" height="16" rx="2.5" fill="none" stroke="#fff" stroke-width="1.1"/>
+      <text x="24" y="14.5" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">사방거리 →</text>
+    </svg>
   </div>
 </div><!-- /world -->
 </div><!-- /game-wrap -->
@@ -1915,10 +1968,9 @@ function checkProx() {
     if(nearId) document.getElementById(nearId)?.classList.remove('near');
     nearId = found.id;
     document.getElementById(nearId)?.classList.add('near');
-    if (!shownOnce.has(found.id)) {
-      shownOnce.add(found.id);
-      objStory(found.id);
-    }
+    // 접근 시엔 특수 이벤트만 발동 (말풍선은 클릭으로)
+    if (found.id === 'o-mountain') triggerHeliTour();
+    if (found.id === 'o-howitzer') triggerArtillery();
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
@@ -3211,13 +3263,13 @@ function toggleMusic() {
     if (!obj) return;
     showBbl(obj.title, obj.text);
     addEnergy(id);
-    if(id==='o-mountain') { showImgPopup('annapurna.jpg'); triggerHeliTour(); }
+    if(id==='o-mountain') showImgPopup('annapurna.jpg');
     else if(id==='o-jirisan') showImgPopup('jirisan.jpg');
     else if(id==='o-house') showImgPopup('house.jpg');
     else if(id==='o-tv') showImgPopup('lotte.jpg');
     else if(id==='o-building') showImgPopup('personnel.jpg');
     else if(id==='o-dinner') showImgPopup('dinner.jpg');
-    else if(id==='o-howitzer') { showImgPopup('howitzer8.jpg'); triggerArtillery(); }
+    else if(id==='o-howitzer') showImgPopup('howitzer8.jpg');
     else if(id==='o-kusa') showImgPopup('kusa.jpg');
     else if(id==='o-shanghai') showImgPopup('guangzhou.jpg');
     else if(id==='o-sagrada') showImgPopup('sagrada.jpg');
@@ -3232,6 +3284,98 @@ function toggleMusic() {
       el.addEventListener('click', (e) => { e.stopPropagation(); objStory(o.id); });
     }
   });
+
+
+  // ===== 버스 빠른 이동 =====
+  const BUS_STOPS = [
+    { name: '🏠 가족마을', y: 500 },
+    { name: '🎖️ 부대앞', y: 1250 },
+    { name: '✈️ 세계여행', y: 1810 },
+  ];
+  let busRiding = false;
+  function openBusMenu(fromIdx) {
+    if (busRiding) return;
+    playPop();
+    const menu = document.getElementById('bus-menu');
+    const dests = document.getElementById('bus-dests');
+    dests.innerHTML = '';
+    BUS_STOPS.forEach((s, i) => {
+      if (i === fromIdx) return;
+      const btn = document.createElement('button');
+      btn.textContent = s.name + ' 가는 버스';
+      btn.style.cssText = 'background:linear-gradient(to right,#5b8fd4,#3a6db5);color:#fff;border:none;border-radius:10px;padding:11px 0;font-family:Jua,sans-serif;font-size:14px;cursor:pointer;';
+      btn.onclick = () => { menu.style.display = 'none'; rideBus(s.y); };
+      dests.appendChild(btn);
+    });
+    menu.style.display = 'flex';
+  }
+  function rideBus(destY) {
+    if (busRiding) return;
+    busRiding = true;
+    // 버스 생성
+    const bus = document.createElement('div');
+    bus.style.cssText = 'position:fixed;z-index:500;pointer-events:none;';
+    bus.innerHTML = '<svg width="86" height="46" viewBox="0 0 86 46">' +
+      '<rect x="2" y="8" width="76" height="26" rx="8" fill="#ffd21e"/>' +
+      '<rect x="2" y="8" width="76" height="10" rx="5" fill="#ffdf5c"/>' +
+      '<rect x="9" y="13" width="13" height="10" rx="2.5" fill="#bfe6f5"/>' +
+      '<rect x="26" y="13" width="13" height="10" rx="2.5" fill="#bfe6f5"/>' +
+      '<rect x="43" y="13" width="13" height="10" rx="2.5" fill="#bfe6f5"/>' +
+      '<rect x="62" y="12" width="14" height="20" rx="3" fill="#e8b400"/>' +
+      '<circle cx="18" cy="36" r="7" fill="#3a3a30"/><circle cx="18" cy="36" r="3" fill="#8a8a7a"/>' +
+      '<circle cx="60" cy="36" r="7" fill="#3a3a30"/><circle cx="60" cy="36" r="3" fill="#8a8a7a"/>' +
+      '<rect x="2" y="26" width="76" height="4" fill="#e8b400"/>' +
+      '<text x="40" y="7" font-size="6" fill="#5c3a00" text-anchor="middle" font-family="sans-serif" font-weight="bold">홍의 마을버스</text>' +
+      '</svg>';
+    document.body.appendChild(bus);
+    const prect = playerEl.getBoundingClientRect();
+    const busY = prect.top - 5;
+    bus.style.top = busY + 'px';
+    bus.style.left = '-100px';
+    // 부릉 효과음
+    try {
+      if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (sfxCtx.state === 'suspended') sfxCtx.resume();
+      const t = sfxCtx.currentTime;
+      const o = sfxCtx.createOscillator(), g = sfxCtx.createGain();
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(70, t);
+      o.frequency.linearRampToValueAtTime(110, t + 0.5);
+      o.frequency.linearRampToValueAtTime(80, t + 1.4);
+      g.gain.setValueAtTime(0.05, t);
+      g.gain.linearRampToValueAtTime(0.001, t + 1.5);
+      o.connect(g); g.connect(sfxCtx.destination);
+      o.start(t); o.stop(t + 1.5);
+    } catch(e) {}
+    // 1단계: 버스가 홍 위치로 (0.7s)
+    const targetX = prect.left - 20;
+    const t0 = performance.now();
+    function arrive(now) {
+      const t = Math.min(1, (now - t0) / 700);
+      const e = 1 - Math.pow(1 - t, 2);
+      bus.style.left = (-100 + (targetX + 100) * e) + 'px';
+      if (t < 1) requestAnimationFrame(arrive);
+      else {
+        // 2단계: 홍 탑승 (숨김) → 이동
+        playerEl.style.opacity = '0';
+        setTimeout(() => {
+          py = destY;
+          updatePlayer(); updateScroll();
+          // 3단계: 버스 퇴장 + 홍 하차
+          const nrect = playerEl.getBoundingClientRect();
+          bus.style.top = (nrect.top - 5) + 'px';
+          bus.style.left = (nrect.left - 20) + 'px';
+          setTimeout(() => {
+            playerEl.style.opacity = '1';
+            bus.style.transition = 'left 0.8s ease-in';
+            bus.style.left = (window.innerWidth + 100) + 'px';
+            setTimeout(() => { bus.remove(); busRiding = false; }, 850);
+          }, 350);
+        }, 400);
+      }
+    }
+    requestAnimationFrame(arrive);
+  }
 
 </script>
 
