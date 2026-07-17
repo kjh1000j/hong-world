@@ -366,7 +366,7 @@
     50% { opacity:1; transform:scale(1.25) rotate(8deg); }
   }
   #star-counter {
-    position:fixed; top:70px; right:10px;
+    position:fixed; top:118px; left:10px;
     z-index:200; font-family:'Nanum Gothic',sans-serif; font-size:10px;
     color:#fff; font-weight:700; background:rgba(92,58,0,0.55);
     border:1.5px solid #f5c842;
@@ -374,7 +374,7 @@
     line-height:1.4; text-align:center;
   }
   #star-rank-mini {
-    position:fixed; top:112px; right:10px;
+    position:fixed; top:170px; left:10px;
     z-index:200; font-family:'Nanum Gothic',sans-serif; font-size:9px;
     color:#fff; font-weight:700; background:rgba(92,58,0,0.45);
     border:1px solid rgba(245,200,66,0.6);
@@ -531,7 +531,7 @@
 
 
 <!-- 에너지바 -->
-<div id="star-counter">⭐ 숨은 별<br>0 / 5</div>
+<div id="star-counter">⭐ 숨은별찾기<br>0 / 5</div>
 <div id="star-rank-mini"></div>
 <div id="dday-badge" onclick="showDday()">🗓️ ...</div>
 <div id="energy-wrap">
@@ -608,7 +608,7 @@
       <svg width="56" height="24" viewBox="0 0 56 24"><ellipse cx="20" cy="15" rx="15" ry="7.5" fill="#fff" opacity="0.85"/><ellipse cx="37" cy="13" rx="13" ry="8" fill="#fff" opacity="0.85"/></svg>
     </div>
     <!-- 햇님 -->
-    <div class="obj" id="o-sun" style="top:100px;right:16px;z-index:50;" onclick="showSunBbl()">
+    <div class="obj" id="o-sun" style="top:96px;right:16px;z-index:50;" onclick="showSunBbl()">
       <svg width="70" height="70" viewBox="0 0 64 64">
         <g style="transform-origin:32px 32px;animation:spinSun 10s linear infinite;">
           <g stroke="#ffce54" stroke-width="4" stroke-linecap="round">
@@ -2872,7 +2872,7 @@ function toggleMusic() {
         this.style.opacity = '0';
         setTimeout(() => this.remove(), 400);
         const c = document.getElementById('star-counter');
-        if (c) c.innerHTML = '⭐ 숨은 별<br>' + starsFound + ' / ' + STAR_TOTAL;
+        if (c) c.innerHTML = '⭐ 숨은별찾기<br>' + starsFound + ' / ' + STAR_TOTAL;
         // 남은 개수 토스트 (클릭한 별 위치에)
         const left = STAR_TOTAL - starsFound;
         if (left > 0) {
@@ -3035,7 +3035,7 @@ function toggleMusic() {
       const el = document.getElementById('star-rank-mini');
       if (!el) return;
       const medals = ['🥇','🥈','🥉'];
-      el.innerHTML = ranks.slice(0,3).map((r,i) => medals[i] + ' ' + r.name + ' ' + r.secs + 's').join('<br>');
+      el.innerHTML = '🏆 별찾기 랭킹<br>' + ranks.slice(0,3).map((r,i) => medals[i] + ' ' + r.name + ' ' + r.secs + 's').join('<br>');
       el.style.display = 'block';
     } catch(e) {}
   })();
