@@ -457,7 +457,7 @@
 
   /* 업적 버튼/모달 */
   #achieve-btn {
-    position:fixed; bottom:174px; right:14px; z-index:500;
+    position:fixed; bottom:122px; left:14px; z-index:500;
     width:44px; height:44px;
     background:rgba(200,138,255,0.88); border:2px solid #7a4ac0; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
@@ -650,6 +650,7 @@
     <div style="font-family:'Jua',sans-serif;font-size:18px;color:#4a2c7a;text-align:center;margin-bottom:4px;">🏅 홍의 세계 업적</div>
     <div id="ach-count" style="font-size:11px;color:#8a7aa0;text-align:center;margin-bottom:12px;"></div>
     <div id="ach-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <button onclick="document.getElementById('achieve-modal').style.display='none'" style="width:100%;margin-top:12px;background:linear-gradient(to right,#c88aff,#7a4ac0);color:#fff;border:none;border-radius:10px;padding:11px 0;font-family:'Jua',sans-serif;font-size:14px;cursor:pointer;">닫기</button>
   </div>
 </div>
 
@@ -1944,7 +1945,7 @@
     try { localStorage.setItem('hong-achieve', JSON.stringify(a)); } catch(e) {}
     const def = ACHIEVEMENTS.find(x => x.id === id);
     if (!def) return;
-    playPop();
+    try { playPop(); } catch(e) {}
     const t = document.createElement('div');
     t.innerHTML = '🏅 <b>업적 달성!</b><br>' + def.icon + ' ' + def.name;
     t.style.cssText = 'position:fixed;top:38%;left:50%;transform:translateX(-50%);z-index:950;font-family:Jua,sans-serif;font-size:16px;color:#fff;background:linear-gradient(135deg,#7a4ac0,#c88aff);padding:12px 24px;border-radius:16px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.4);pointer-events:none;transition:all 0.6s;line-height:1.5;';
@@ -1968,14 +1969,14 @@
     }).join('');
     document.getElementById('achieve-modal').style.display = 'flex';
   }
-  // 첫 방문 + 단골 (visits 활용)
-  (function() {
+  // 첫 방문 + 단골 (visits 활용) - 스크립트 전체 로드 후 실행
+  setTimeout(function() {
     unlockAch('first');
     try {
       const v = parseInt(localStorage.getItem('hong-visits') || '1');
       if (v >= 5) unlockAch('vip');
     } catch(e) {}
-  })();
+  }, 600);
   // 계절 감상 누적
   function trackSeason(idx) {
     try {
