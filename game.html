@@ -142,7 +142,7 @@ canvas{display:block;touch-action:none;}
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
-    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v5.5</div>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v5.7</div>
   </div>
 </div>
 
@@ -211,22 +211,20 @@ canvas{display:block;touch-action:none;}
 </div>
 
 <div id="ctrl">
+  <button id="bomb-btn" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);border:2px solid rgba(255,100,100,.5);border-radius:12px;padding:8px 12px;color:#fff;font-weight:800;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:54px;flex-shrink:0;">
+    <span style="font-size:17px;">💣</span>
+    <span id="bomb-cnt" style="font-size:11px;">×2</span>
+  </button>
   <div class="trk-wrap"><div class="trk"><div class="knb" id="knob"></div></div></div>
-  <div id="skill-wrap" style="display:flex;gap:8px;align-items:center;">
-    <button id="bomb-btn" style="background:linear-gradient(135deg,#dc2626,#7f1d1d);border:2px solid rgba(255,100,100,.5);border-radius:12px;padding:8px 12px;color:#fff;font-weight:800;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:54px;">
-      <span style="font-size:17px;">💣</span>
-      <span id="bomb-cnt" style="font-size:11px;">×2</span>
+  <div id="skill-wrap" style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+    <div id="skill-status">⚡ 필살기 충전중</div>
+    <button id="skill-btn" title="필살기 자동발동 (30초 충전)">
+      <div class="sk-icon">⚡</div>
+      <div id="skill-cd">
+        <div class="cd-label">충전</div>
+        <div class="cd-num" id="cd-num">30</div>
+      </div>
     </button>
-    <div style="display:flex;flex-direction:column;align-items:center;">
-      <div id="skill-status">⚡ 필살기 충전중</div>
-      <button id="skill-btn" title="필살기 자동발동 (30초 충전)">
-        <div class="sk-icon">⚡</div>
-        <div id="skill-cd">
-          <div class="cd-label">충전</div>
-          <div class="cd-num" id="cd-num">30</div>
-        </div>
-      </button>
-    </div>
   </div>
 </div>
 </div>
@@ -508,7 +506,7 @@ let fireworkShow=0,fireworkT=0,bossDefeatMsg='',bossDefeatT=0,bossDefeating=fals
 let particles=[],skillParticles=[],explosions=[],floatTexts=[],bossBullets=[];
 let curWeapon=null,weaponTimer=0; // 현재 장착 무기, 남은 시간
 // 진급 영구 보상 (누적)
-let upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0,option:0};
+let upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0,option:0,bombCap:0};
 let loopId=null;
 
 function getSt(){return STAGES[stIdx];}
@@ -522,9 +520,9 @@ function buffInterval(){return[20,17,15,14,13,12,11][stIdx];}
 
 function reset(){
   stIdx=0;score=0;stScore=0;totalTime=0;scroll=0;shake=0;lastShot=0;gameStart=0;lastTime=0;
-  spawnET=0;spawnOT=0;spawnBT=0;spawnWT=4;spawnGT=0;spawnFT=0;combo=0;comboTimer=0;skillCD=30;feverTimer=0;slowmo=0;fireworkShow=0;bossDefeatT=0;bossDefeating=false;bombs=2;updateBombBtn(); // 무기 빨리 등장(4초 선충전)
+  spawnET=0;spawnOT=0;spawnBT=0;spawnWT=4;spawnGT=0;spawnFT=0;combo=0;comboTimer=0;skillCD=30;feverTimer=0;slowmo=0;fireworkShow=0;bossDefeatT=0;bossDefeating=false;bombs=2;bombFlash=0;updateBombBtn(); // 새 게임은 폭탄 2개 고정
   curWeapon=null;weaponTimer=0;
-  upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0,option:0};
+  upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0,option:0,bombCap:0};
   player={x:canvas.width/2,y:canvas.height-130,size:PS,hp:3,tx:canvas.width/2,ty:canvas.height-130,inv:0,aura:0,dash:0};
   enemies=[];obstacles=[];projectiles=[];buffs=[];boss=null;particles=[];skillParticles=[];explosions=[];floatTexts=[];bossBullets=[];
   document.getElementById('bn').style.visibility='hidden';
@@ -575,6 +573,7 @@ const REWARDS=[
   {key:'skillCd',emoji:'⚡',name:'필살기 충전↑',desc:'필살기 쿨타임 3초↓'},
   {key:'magnet',emoji:'🧲',name:'자석',desc:'아이템을 끌어당김'},
   {key:'option',emoji:'🛰️',name:'보조무기',desc:'위성 유닛이 함께 발사 (최대2)'},
+  {key:'bombCap',emoji:'💣',name:'폭탄 확장',desc:'스테이지당 폭탄 +1 (최대4)'},
 ];
 const RANK_NAMES=['하사','중사','상사(진)','상사','원사(진)','원사','원사'];
 let pendingRewardCb=null;
@@ -583,7 +582,7 @@ function showRewardScreen(nextStageIdx,cb){
   pendingRewardCb=cb;
   document.getElementById('reward-title').textContent=RANK_NAMES[nextStageIdx]+' 진급!';
   // 랜덤 3개 (보조무기는 최대 2레벨 제한)
-  const avail=REWARDS.filter(r=>!(r.key==='option'&&upg.option>=2));
+  const avail=REWARDS.filter(r=>!(r.key==='option'&&upg.option>=2)&&!(r.key==='bombCap'&&upg.bombCap>=2));
   const pool=[...avail].sort(()=>Math.random()-.5).slice(0,3);
   const box=document.getElementById('reward-choices');
   box.innerHTML='';
@@ -1551,14 +1550,14 @@ function startFireworkShow(){fireworkShow=2.2;fireworkT=0;}
 /* 필살기 파티클 */
 function spawnSkillParticles(){
   const W=canvas.width,H=canvas.height;
-  for(let i=0;i<80;i++){
+  for(let i=0;i<28;i++){ // 80→28 (렉 방지)
     const angle=Math.random()*Math.PI*2;const dist=20+Math.random()*(W/2);
     const labels=['법령','규정','예규','훈령','지침'];
     skillParticles.push({
       x:W/2+Math.cos(angle)*dist*1.2,y:H/2+Math.sin(angle)*dist,
       tx:player.x,ty:player.y-80,
       label:labels[Math.floor(Math.random()*labels.length)],
-      life:1,delay:Math.random()*.3,size:12+Math.random()*10,
+      life:1,delay:Math.random()*.25,size:12+Math.random()*8,
       color:`hsl(${260+Math.random()*60},80%,70%)`,
     });
   }
@@ -1596,7 +1595,7 @@ function updateParticles(){
     if(p.life<=0){skillParticles.splice(i,1);continue;}
     ctx.save();ctx.globalAlpha=p.life*.9;ctx.font='900 '+(p.size*p.life+p.size*.3)+'px sans-serif';
     ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=p.color;
-    ctx.shadowBlur=12;ctx.shadowColor=p.color;ctx.fillText(p.label,p.x,p.y);ctx.restore();
+    ctx.fillText(p.label,p.x,p.y);ctx.restore();
   }
 }
 
@@ -1738,17 +1737,27 @@ function tickSkill(){
 }
 
 // 수동 폭탄 (비상용, 스테이지당 2개)
+let bombFlash=0; // 폭탄 흰 플래시
 function useBomb(){
   if(bombs<=0||GS!=='PLAYING'&&GS!=='BOSS')return;
   bombs--;updateBombBtn();
-  sfx('skill');shake=20;
-  spawnExplosion(player.x,player.y-100,150);
+  sfx('skill');shake=30;
+  const W=canvas.width,H=canvas.height;
+  bombFlash=1; // 화면 흰 플래시
+  // 각 적 위치에서 개별 폭발 (연쇄 폭발 느낌)
+  enemies.forEach((e,i)=>{
+    if(!e.golden)setTimeout(()=>{if(GS==='PLAYING'||GS==='BOSS')spawnExplosion(e.x,e.y,60);},i*45);
+  });
+  // 중앙 대형 충격파 3연타
+  spawnExplosion(W/2,H*.45,200);
+  setTimeout(()=>{if(GS==='PLAYING'||GS==='BOSS')spawnExplosion(W*.3,H*.35,140);},120);
+  setTimeout(()=>{if(GS==='PLAYING'||GS==='BOSS')spawnExplosion(W*.7,H*.55,140);},240);
   // 점수는 낮게 (비상 탈출용) - 적당 100점, 장애물 150점
   let pts=0;
   enemies.forEach(e=>{if(!e.golden)pts+=100;});
   pts+=obstacles.length*150;
   score+=pts;
-  if(pts>0)showFloatText(player.x,player.y-90,'💣 +'+pts.toLocaleString(),'#f87171',{decay:.8,rise:20,size:18});
+  if(pts>0)showFloatText(W/2,H*.4,'💣 +'+pts.toLocaleString(),'#f87171',{decay:.7,rise:20,size:24});
   // 황금적은 남기고 전부 제거
   enemies=enemies.filter(e=>e.golden);
   obstacles=[];bossBullets=[];
@@ -1849,6 +1858,12 @@ function loop(ts){
       ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(lx,ly+len);ctx.stroke();
     }
     ctx.restore();
+  }
+  // ── 폭탄 흰 플래시 ──
+  if(bombFlash>0){
+    bombFlash-=dt*3.5;
+    ctx.fillStyle=`rgba(255,240,220,${Math.max(0,bombFlash)*.75})`;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
   }
   // ── 보스전 분위기 (붉은 비네팅 + 어두움) ──
   if(GS==='BOSS'&&boss&&boss.y>=100){
@@ -2256,7 +2271,7 @@ function defeatBoss(){
 }
 function onStageClear(){
   bossDefeating=false; // 다음 보스 위해 리셋
-  bombs=2;updateBombBtn(); // 폭탄 보충
+  bombs=2+upg.bombCap;updateBombBtn(); // 폭탄 보충 (확장 반영)
   boss=null;enemies=[];obstacles=[];projectiles=[];buffs=[];
   stScore=0;spawnET=0;spawnOT=0;spawnBT=0;spawnWT=0;spawnGT=0;spawnFT=0;combo=0;particles=[];skillParticles=[];explosions=[];bossBullets=[];fireworkShow=0;
   GS='STOP';stopBGM();
