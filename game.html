@@ -142,7 +142,7 @@ canvas{display:block;touch-action:none;}
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
-    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v5.7</div>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v5.8</div>
   </div>
 </div>
 
@@ -330,37 +330,37 @@ const STAGES=[
     buffs:[{emoji:'🏖️',label:'휴가!',type:'inv'},{emoji:'📑',label:'장기복무!',type:'score'},{emoji:'⬆️',label:'진급!',type:'hp'}],
     bossAtks:[{emoji:'😡',label:'얼차려!!'},{emoji:'🪖',label:'구보집합!!'},{emoji:'🔊',label:'집합명령!!'}],
   },
-  {num:2,region:'철원 (행정반)',bossName:'인사업무의 병맛',bossSub:'서류에 파묻혀 죽어봐라!',bossDefeat:'서류는... 영원한데...!',bossColor:'#0ea5e9',bossHp:185,scoreThresh:6500,barColor:'#0ea5e9',accentColor:'#0ea5e9',bnColor:'#0ea5e9',
+  {num:2,region:'철원 (행정반)',bossName:'인사업무의 병맛',bossSub:'서류에 파묻혀 죽어봐라!',bossDefeat:'서류는... 영원한데...!',bossColor:'#0ea5e9',bossHp:185,scoreThresh:8500,barColor:'#0ea5e9',accentColor:'#0ea5e9',bnColor:'#0ea5e9',
     enemies:[{emoji:'📝',label:'성과평가입력',hp:2},{emoji:'📂',label:'문서수발',hp:3},{emoji:'🖨️',label:'출력오류',hp:2},{emoji:'📧',label:'공문폭주',hp:3}],
     obstacles:[{emoji:'✍️',label:'평정수기작성'},{emoji:'🗃️',label:'기록물이관'},{emoji:'🎙️',label:'2부행사사회'},{emoji:'🚧',label:'안전통제'}],
     buffs:[{emoji:'🧑‍💼',label:'인력획득!',type:'hp'},{emoji:'🚪',label:'출타의맛!',type:'inv'},{emoji:'⬆️',label:'진급!',type:'score'}],
     bossAtks:[{emoji:'📋',label:'결재반려!!'},{emoji:'📠',label:'야근지시!!'},{emoji:'⏰',label:'마감독촉!!'}],
   },
-  {num:3,region:'포천 (지휘소)',bossName:'간부가 사고치면 답도 없다',bossSub:'수습은 네 몫이다!',bossDefeat:'이건 다 부대 탓이야...!',bossColor:'#dc2626',bossHp:215,scoreThresh:9500,barColor:'#dc2626',accentColor:'#dc2626',bnColor:'#dc2626',
+  {num:3,region:'포천 (지휘소)',bossName:'간부가 사고치면 답도 없다',bossSub:'수습은 네 몫이다!',bossDefeat:'이건 다 부대 탓이야...!',bossColor:'#dc2626',bossHp:215,scoreThresh:12500,barColor:'#dc2626',accentColor:'#dc2626',bnColor:'#dc2626',
     enemies:[{emoji:'🍻',label:'음주운전',hp:3},{emoji:'💸',label:'금전사고',hp:2},{emoji:'📵',label:'보안위반',hp:3},{emoji:'🚗',label:'무단외출',hp:2}],
     obstacles:[{emoji:'🐢',label:'지연출근'},{emoji:'📴',label:'연락두절'},{emoji:'🤬',label:'상관모욕'},{emoji:'👨‍👧',label:'아빠찬스'}],
     buffs:[{emoji:'👍',label:'인정!',type:'hp'},{emoji:'⚖️',label:'진실의힘!',type:'inv'},{emoji:'🚚',label:'부대이동!',type:'score'}],
     bossAtks:[{emoji:'🚨',label:'사건접수!!'},{emoji:'📰',label:'언론제보!!'},{emoji:'👮',label:'헌병출동!!'}],
   },
-  {num:4,region:'계룡 (육본)',bossName:'전투병과는 진급 공석 없음',bossSub:'아스팔트 군대의 맛이다!',bossDefeat:'시간이 지나면 아스팔트도 풀은 자란다',bossColor:'#eab308',bossHp:245,scoreThresh:13000,barColor:'#eab308',accentColor:'#eab308',bnColor:'#eab308',
+  {num:4,region:'계룡 (육본)',bossName:'전투병과는 진급 공석 없음',bossSub:'아스팔트 군대의 맛이다!',bossDefeat:'시간이 지나면 아스팔트도 풀은 자란다',bossColor:'#eab308',bossHp:245,scoreThresh:17000,barColor:'#eab308',accentColor:'#eab308',bnColor:'#eab308',
     enemies:[{emoji:'🎤',label:'음주가무',hp:2},{emoji:'📺',label:'매스컴보도',hp:3},{emoji:'✈️',label:'잦은출장',hp:2},{emoji:'😤',label:'잘난체',hp:3}],
     obstacles:[{emoji:'👁️',label:'내시력맛감'},{emoji:'📨',label:'민원의홍수'},{emoji:'😔',label:'힘없는과의한계'}],
     buffs:[{emoji:'🏅',label:'표창!',type:'score'},{emoji:'👔',label:'근무복!',type:'inv'},{emoji:'🎉',label:'워크샵!',type:'hp'}],
     bossAtks:[{emoji:'📊',label:'실적압박!!'},{emoji:'🗂️',label:'서류폭탄!!'},{emoji:'📱',label:'카톡지시!!'}],
   },
-  {num:5,region:'횡성 (산악)',bossName:'관심이 필요한 어린 친구',bossSub:'사고를 치고 말겠어!',bossDefeat:'엄마한테 이를거야...!',bossColor:'#3b82f6',bossHp:275,scoreThresh:17000,barColor:'#3b82f6',accentColor:'#3b82f6',bnColor:'#3b82f6',
+  {num:5,region:'횡성 (산악)',bossName:'관심이 필요한 어린 친구',bossSub:'사고를 치고 말겠어!',bossDefeat:'엄마한테 이를거야...!',bossColor:'#3b82f6',bossHp:275,scoreThresh:22000,barColor:'#3b82f6',accentColor:'#3b82f6',bnColor:'#3b82f6',
     enemies:[{emoji:'📦',label:'보급품분실',hp:2},{emoji:'🏃',label:'출타미복귀',hp:3},{emoji:'👮',label:'군기위반',hp:2},{emoji:'📞',label:'부모호출',hp:4}],
     obstacles:[{emoji:'🚶',label:'인솔임무'},{emoji:'😭',label:'탈영시도'}],
     buffs:[{emoji:'🎖️',label:'무사전역!',type:'inv'},{emoji:'😇',label:'개과천선!',type:'hp'},{emoji:'🔄',label:'보직변경!',type:'score'}],
     bossAtks:[{emoji:'🚨',label:'긴급사고!!'},{emoji:'📢',label:'민원폭탄!!'},{emoji:'🆘',label:'위기상황!!'}],
   },
-  {num:6,region:'원주 (도심)',bossName:'열등감 가득한 인사 마녀',bossSub:'널 갈아버리겠어!',bossDefeat:'인사 병과 욕보이지말고 전역할껄',bossColor:'#a855f7',bossHp:310,scoreThresh:21000,barColor:'#a855f7',accentColor:'#a855f7',bnColor:'#a855f7',
+  {num:6,region:'원주 (도심)',bossName:'열등감 가득한 인사 마녀',bossSub:'널 갈아버리겠어!',bossDefeat:'인사 병과 욕보이지말고 전역할껄',bossColor:'#a855f7',bossHp:310,scoreThresh:27000,barColor:'#a855f7',accentColor:'#a855f7',bnColor:'#a855f7',
     enemies:[{emoji:'📢',label:'거짓정보공개',hp:2},{emoji:'😤',label:'인사갑질',hp:3},{emoji:'🔍',label:'감찰조사',hp:2},{emoji:'🤬',label:'악성민원',hp:4}],
     obstacles:[{emoji:'🤫',label:'뒷다마'},{emoji:'🃏',label:'짜고치는고스톱'},{emoji:'🚫',label:'인사상담거절'}],
     buffs:[{emoji:'💰',label:'상여금!',type:'inv'},{emoji:'🖼️',label:'가족응원!',type:'hp'}],
     bossAtks:[{emoji:'✂️',label:'진급누락!!'},{emoji:'⛓️',label:'강제교류!!'},{emoji:'❌',label:'히스테리!!'}],
   },
-  {num:7,region:'화천 (붕어섬)',bossName:'수시로 떠오르는 전역의 꿈',bossSub:'지금 당장 나가고 싶다...',bossDefeat:'전역은... 신기루였나...!',bossColor:'#10b981',bossHp:350,scoreThresh:25000,barColor:'#10b981',accentColor:'#10b981',bnColor:'#10b981',
+  {num:7,region:'화천 (붕어섬)',bossName:'수시로 떠오르는 전역의 꿈',bossSub:'지금 당장 나가고 싶다...',bossDefeat:'전역은... 신기루였나...!',bossColor:'#10b981',bossHp:350,scoreThresh:32000,barColor:'#10b981',accentColor:'#10b981',bnColor:'#10b981',
     enemies:[{emoji:'📜',label:'명예전역',hp:2},{emoji:'📉',label:'진급실패',hp:3},{emoji:'😰',label:'헬보직',hp:2},{emoji:'⚖️',label:'징계',hp:4}],
     obstacles:[{emoji:'🔬',label:'감찰조사'},{emoji:'😓',label:'체력저하'},{emoji:'🤝',label:'듣보잡인맥'}],
     buffs:[{emoji:'💳',label:'대출성공!',type:'score'},{emoji:'👨‍👩‍👧',label:'가족의힘!',type:'hp'},{emoji:'⭐',label:'진급!',type:'inv'}],
@@ -458,8 +458,8 @@ function startBGM(bossMode){
       hg.gain.value=step%2===1?.05:.025; // 뒷박 강조
       src.start(n);
     }
-    // ── 스네어 (보스전 - 매 4스텝의 2번째) ──
-    if(bossMode&&step%4===2){
+    // ── 스네어 (매 4스텝의 2번째 - 리듬감) ──
+    if(step%4===2){
       const bufSize=AC.sampleRate*.08;
       const buf=AC.createBuffer(1,bufSize,AC.sampleRate);
       const data=buf.getChannelData(0);
@@ -468,14 +468,19 @@ function startBGM(bossMode){
       const sg=AC.createGain();const sf=AC.createBiquadFilter();
       sf.type='bandpass';sf.frequency.value=1800;
       src.connect(sf);sf.connect(sg);sg.connect(AC.destination);
-      sg.gain.value=.09;src.start(n);
+      sg.gain.value=bossMode?.09:.055;src.start(n);
     }
-    // ── 멜로디 ──
-    const freq=notes[step%notes.length];
+    // ── 멜로디 (반복 2회차는 옥타브 위 변주) ──
+    const melLen=notes.length;
+    const cycle=Math.floor(step/melLen)%2; // 0=원래, 1=옥타브 위
+    let freq=notes[step%melLen];
+    if(freq>0&&cycle===1)freq*=2;
     if(freq>0){
       const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);
-      o.type=bossMode?'sawtooth':'triangle';o.frequency.value=freq;
-      const vol=bossMode?.028:.035;
+      // 스테이지별 음색 변화
+      const timbres=['triangle','square','triangle','sine','square','triangle','sine'];
+      o.type=bossMode?'sawtooth':(timbres[stIdx]||'triangle');o.frequency.value=freq;
+      const vol=(bossMode?.028:.035)*(cycle===1?.75:1);
       g.gain.setValueAtTime(0,n);g.gain.linearRampToValueAtTime(vol,n+.02);
       g.gain.exponentialRampToValueAtTime(.001,n+.26);
       o.start(n);o.stop(n+.28);
@@ -594,6 +599,7 @@ function showRewardScreen(nextStageIdx,cb){
     btn.innerHTML=`<span style="font-size:22px;">${r.emoji}</span><span style="flex:1;"><span style="font-weight:800;font-size:13px;color:#f59e0b;">${r.name}${lv>0?` <span style="color:#6ee7b7;font-size:10px;">Lv.${lv+1}</span>`:''}</span><br><span style="font-size:11px;color:#999;">${r.desc}</span></span>`;
     btn.onclick=()=>{
       upg[r.key]++;sfx('item');
+      if(r.key==='bombCap'){bombs=2+upg.bombCap;updateBombBtn();} // 즉시 반영
       showOvl(null);
       if(pendingRewardCb){const f=pendingRewardCb;pendingRewardCb=null;f();}
     };
