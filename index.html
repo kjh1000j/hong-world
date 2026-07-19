@@ -1920,7 +1920,7 @@
   </div>
 
   <!-- 집 옆 열매나무 -->
-  <div class="obj" id="o-fruittree" style="top:300px;left:14%;">
+  <div class="obj" id="o-fruittree" style="top:300px;right:8%;">
     <svg width="80" height="98" viewBox="0 0 70 88">
       <ellipse cx="35" cy="85" rx="24" ry="3" fill="rgba(0,0,0,0.1)"/>
       <!-- 줄기 -->
@@ -2179,8 +2179,8 @@ function checkProx() {
       triggerDucklings();
     }
     // 열매나무 근접 (352px, left19%)
-    const treeX = vw2 * 0.14, treeY = 300;
-    if (Math.abs(pcy2 - (treeY+40)) < 85 && Math.abs(pcx2 - (treeX+33)) < 85) {
+    const treeX = vw2 * 0.92 - 40, treeY = 300;
+    if (Math.abs(pcy2 - (treeY+40)) < 85 && Math.abs(pcx2 - treeX) < 85) {
       growFruits();
     }
   }
