@@ -98,6 +98,7 @@ canvas{display:block;touch-action:none;}
 #skill-cd .cd-label{font-size:7px;color:rgba(255,255,255,.55);font-weight:700;letter-spacing:.3px;margin-bottom:1px;}
 #skill-cd .cd-num{font-size:16px;font-weight:900;color:#fff;line-height:1;}
 #combo-el{position:absolute;top:48px;left:50%;transform:translateX(-50%);z-index:60;pointer-events:none;display:none;font-size:13px;font-weight:900;text-shadow:0 0 10px currentColor;}
+@keyframes cfall{0%{transform:translateY(0) rotate(0deg);}100%{transform:translateY(105vh) rotate(720deg);}}
 </style>
 </head>
 <body>
@@ -137,12 +138,14 @@ canvas{display:block;touch-action:none;}
       <div class="gi gi-b"><span style="font-size:14px;">✨</span> <span style="font-size:9px;background:#10b981;padding:1px 5px;border-radius:3px;font-weight:800;">버프</span><div class="gl">초록 빛 — 회복·무적·점수!</div></div>
       <div class="gi" style="background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.25);"><span style="font-size:14px;">⚔️</span> <span style="font-size:9px;background:#06b6d4;padding:1px 5px;border-radius:3px;font-weight:800;">특수무기</span><div class="gl" style="color:#67e8f9;">청록 — 8초간 강력 무기!</div></div>
       <div class="gi" style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.25);"><span style="font-size:14px;">⭐</span> <span style="font-size:9px;background:#d4a017;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">황금포상</span><div class="gl" style="color:#fde68a;">빠르게 지나감 — 잡으면 +1500!</div></div>
+      <div class="gi" style="background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.25);"><span style="font-size:14px;">🛡️</span> <span style="font-size:9px;background:#3b82f6;padding:1px 5px;border-radius:3px;font-weight:800;">드랍템</span><div class="gl" style="color:#bfdbfe;">적 처치 시 ₩코인·실드 획득!</div></div>
+      <div class="gi" style="background:rgba(103,232,249,.06);border:1px solid rgba(103,232,249,.22);"><span style="font-size:14px;">✨</span> <span style="font-size:9px;background:#0891b2;padding:1px 5px;border-radius:3px;font-weight:800;">그레이즈</span><div class="gl" style="color:#a5f3fc;">탄막 아슬아슬 스치면 +점수!</div></div>
       <div class="gi gi-s"><span style="font-size:14px;">⚡</span> <span style="font-size:9px;background:#7c3aed;padding:1px 5px;border-radius:3px;font-weight:800;">필살기</span><div class="gl">⚡자동 필살기 / 💣수동 폭탄 ×2</div></div>
       <div class="gi" style="grid-column:span 2;background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);"><span style="font-size:14px;">🎖️</span> <span style="font-size:9px;background:#f59e0b;padding:1px 5px;border-radius:3px;font-weight:800;color:#000;">계급 진급</span><div class="gl" style="color:#fde68a;">하사→중사→상사→원사 / 상사부터 2줄 공격!</div></div>
     </div>
     <button class="btn-y" id="btn-start">작전 개시!</button>
     <button class="btn-g" id="btn-lb">🏆 명예의 전당</button>
-    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v5.8</div>
+    <div style="font-size:9px;color:#444;margin-top:10px;letter-spacing:.5px;">v6.2</div>
   </div>
 </div>
 
@@ -168,6 +171,22 @@ canvas{display:block;touch-action:none;}
 </div>
 
 <!-- 클리어 -->
+<!-- 엔딩 컷씬 -->
+<div id="ovl-ending" style="display:none;position:absolute;inset:0;z-index:600;background:linear-gradient(180deg,#0a1420,#1a2030);flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;overflow:hidden;">
+  <div id="confetti-layer" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
+  <div id="ending-content" style="opacity:0;transition:opacity 1.2s;max-width:320px;position:relative;z-index:2;">
+    <div style="font-size:44px;margin-bottom:12px;">🎖️</div>
+    <div style="font-size:13px;color:#7dd3fc;letter-spacing:2px;margin-bottom:8px;">전 역 명 령</div>
+    <h1 style="color:#fbbf24;font-size:22px;line-height:1.4;margin-bottom:16px;">재홍 원사<br>전역을 명받았습니다!</h1>
+    <p id="ending-story" style="color:#cbd5e1;font-size:13px;line-height:1.8;margin-bottom:20px;"></p>
+    <div style="font-size:11px;color:#64748b;line-height:1.7;border-top:1px solid rgba(255,255,255,.1);padding-top:14px;margin-top:8px;">
+      🏅 대한민국 육군<br>재홍 원사의 군생활 위기 극복<br><br>
+      <span style="color:#94a3b8;">Game by HongDev Studio</span>
+    </div>
+    <button id="btn-ending-next" class="btn-y" style="margin-top:20px;">최종 결산 보기 →</button>
+  </div>
+</div>
+
 <div class="ovl" id="ovl-win" style="display:none;">
   <div class="card" style="border-color:rgba(245,158,11,.25);">
     <div style="font-size:32px;margin-bottom:4px;">🏆</div>
@@ -324,43 +343,43 @@ async function showMainLb(){showOvl('ovl-lb');const{scores}=await lbLoad();rende
 
 /* ══ 스테이지 데이터 ══ */
 const STAGES=[
-  {num:1,region:'철원 (DMZ)',bossName:'졸라 빡신 선임',bossSub:'군기를 잡겠다!',bossDefeat:'내 짬바가... 이게 아닌데...!',bossColor:'#f97316',bossHp:160,scoreThresh:4000,barColor:'#f97316',accentColor:'#f97316',bnColor:'#f97316',
+  {num:1,region:'철원 (DMZ)',bossName:'졸라 빡신 선임',bossSub:'군기를 잡겠다!',bossDefeat:'내 짬바가... 이게 아닌데...!',bossIntro:'신병 주제에 까불어?',bossColor:'#f97316',bossHp:160,scoreThresh:4000,barColor:'#f97316',accentColor:'#f97316',bnColor:'#f97316',
     enemies:[{emoji:'🍺',label:'술자리강제',hp:2},{emoji:'👊',label:'기합폭격',hp:3},{emoji:'😎',label:'선임병질',hp:2},{emoji:'📣',label:'억지근무',hp:3}],
     obstacles:[{emoji:'👴',label:'꼰대훈화'},{emoji:'🏃',label:'체력측정'}],
     buffs:[{emoji:'🏖️',label:'휴가!',type:'inv'},{emoji:'📑',label:'장기복무!',type:'score'},{emoji:'⬆️',label:'진급!',type:'hp'}],
     bossAtks:[{emoji:'😡',label:'얼차려!!'},{emoji:'🪖',label:'구보집합!!'},{emoji:'🔊',label:'집합명령!!'}],
   },
-  {num:2,region:'철원 (행정반)',bossName:'인사업무의 병맛',bossSub:'서류에 파묻혀 죽어봐라!',bossDefeat:'서류는... 영원한데...!',bossColor:'#0ea5e9',bossHp:185,scoreThresh:8500,barColor:'#0ea5e9',accentColor:'#0ea5e9',bnColor:'#0ea5e9',
+  {num:2,region:'철원 (행정반)',bossName:'인사업무의 병맛',bossSub:'서류에 파묻혀 죽어봐라!',bossDefeat:'서류는... 영원한데...!',bossIntro:'이 결재판에 파묻어주마!',bossColor:'#0ea5e9',bossHp:185,scoreThresh:8500,barColor:'#0ea5e9',accentColor:'#0ea5e9',bnColor:'#0ea5e9',
     enemies:[{emoji:'📝',label:'성과평가입력',hp:2},{emoji:'📂',label:'문서수발',hp:3},{emoji:'🖨️',label:'출력오류',hp:2},{emoji:'📧',label:'공문폭주',hp:3}],
     obstacles:[{emoji:'✍️',label:'평정수기작성'},{emoji:'🗃️',label:'기록물이관'},{emoji:'🎙️',label:'2부행사사회'},{emoji:'🚧',label:'안전통제'}],
     buffs:[{emoji:'🧑‍💼',label:'인력획득!',type:'hp'},{emoji:'🚪',label:'출타의맛!',type:'inv'},{emoji:'⬆️',label:'진급!',type:'score'}],
     bossAtks:[{emoji:'📋',label:'결재반려!!'},{emoji:'📠',label:'야근지시!!'},{emoji:'⏰',label:'마감독촉!!'}],
   },
-  {num:3,region:'포천 (지휘소)',bossName:'간부가 사고치면 답도 없다',bossSub:'수습은 네 몫이다!',bossDefeat:'이건 다 부대 탓이야...!',bossColor:'#dc2626',bossHp:215,scoreThresh:12500,barColor:'#dc2626',accentColor:'#dc2626',bnColor:'#dc2626',
+  {num:3,region:'포천 (지휘소)',bossName:'간부가 사고치면 답도 없다',bossSub:'수습은 네 몫이다!',bossDefeat:'이건 다 부대 탓이야...!',bossIntro:'뒷수습은 니가 해라!',bossColor:'#dc2626',bossHp:215,scoreThresh:12500,barColor:'#dc2626',accentColor:'#dc2626',bnColor:'#dc2626',
     enemies:[{emoji:'🍻',label:'음주운전',hp:3},{emoji:'💸',label:'금전사고',hp:2},{emoji:'📵',label:'보안위반',hp:3},{emoji:'🚗',label:'무단외출',hp:2}],
     obstacles:[{emoji:'🐢',label:'지연출근'},{emoji:'📴',label:'연락두절'},{emoji:'🤬',label:'상관모욕'},{emoji:'👨‍👧',label:'아빠찬스'}],
     buffs:[{emoji:'👍',label:'인정!',type:'hp'},{emoji:'⚖️',label:'진실의힘!',type:'inv'},{emoji:'🚚',label:'부대이동!',type:'score'}],
     bossAtks:[{emoji:'🚨',label:'사건접수!!'},{emoji:'📰',label:'언론제보!!'},{emoji:'👮',label:'헌병출동!!'}],
   },
-  {num:4,region:'계룡 (육본)',bossName:'전투병과는 진급 공석 없음',bossSub:'아스팔트 군대의 맛이다!',bossDefeat:'시간이 지나면 아스팔트도 풀은 자란다',bossColor:'#eab308',bossHp:245,scoreThresh:17000,barColor:'#eab308',accentColor:'#eab308',bnColor:'#eab308',
+  {num:4,region:'계룡 (육본)',bossName:'전투병과는 진급 공석 없음',bossSub:'아스팔트 군대의 맛이다!',bossDefeat:'시간이 지나면 아스팔트도 풀은 자란다',bossIntro:'전투병과는 진급 없어~',bossColor:'#eab308',bossHp:245,scoreThresh:17000,barColor:'#eab308',accentColor:'#eab308',bnColor:'#eab308',
     enemies:[{emoji:'🎤',label:'음주가무',hp:2},{emoji:'📺',label:'매스컴보도',hp:3},{emoji:'✈️',label:'잦은출장',hp:2},{emoji:'😤',label:'잘난체',hp:3}],
     obstacles:[{emoji:'👁️',label:'내시력맛감'},{emoji:'📨',label:'민원의홍수'},{emoji:'😔',label:'힘없는과의한계'}],
     buffs:[{emoji:'🏅',label:'표창!',type:'score'},{emoji:'👔',label:'근무복!',type:'inv'},{emoji:'🎉',label:'워크샵!',type:'hp'}],
     bossAtks:[{emoji:'📊',label:'실적압박!!'},{emoji:'🗂️',label:'서류폭탄!!'},{emoji:'📱',label:'카톡지시!!'}],
   },
-  {num:5,region:'횡성 (산악)',bossName:'관심이 필요한 어린 친구',bossSub:'사고를 치고 말겠어!',bossDefeat:'엄마한테 이를거야...!',bossColor:'#3b82f6',bossHp:275,scoreThresh:22000,barColor:'#3b82f6',accentColor:'#3b82f6',bnColor:'#3b82f6',
+  {num:5,region:'횡성 (산악)',bossName:'관심이 필요한 어린 친구',bossSub:'사고를 치고 말겠어!',bossDefeat:'엄마한테 이를거야...!',bossIntro:'나 사고칠거야! 막아봐!',bossColor:'#3b82f6',bossHp:275,scoreThresh:22000,barColor:'#3b82f6',accentColor:'#3b82f6',bnColor:'#3b82f6',
     enemies:[{emoji:'📦',label:'보급품분실',hp:2},{emoji:'🏃',label:'출타미복귀',hp:3},{emoji:'👮',label:'군기위반',hp:2},{emoji:'📞',label:'부모호출',hp:4}],
     obstacles:[{emoji:'🚶',label:'인솔임무'},{emoji:'😭',label:'탈영시도'}],
     buffs:[{emoji:'🎖️',label:'무사전역!',type:'inv'},{emoji:'😇',label:'개과천선!',type:'hp'},{emoji:'🔄',label:'보직변경!',type:'score'}],
     bossAtks:[{emoji:'🚨',label:'긴급사고!!'},{emoji:'📢',label:'민원폭탄!!'},{emoji:'🆘',label:'위기상황!!'}],
   },
-  {num:6,region:'원주 (도심)',bossName:'열등감 가득한 인사 마녀',bossSub:'널 갈아버리겠어!',bossDefeat:'인사 병과 욕보이지말고 전역할껄',bossColor:'#a855f7',bossHp:310,scoreThresh:27000,barColor:'#a855f7',accentColor:'#a855f7',bnColor:'#a855f7',
+  {num:6,region:'원주 (도심)',bossName:'열등감 가득한 인사 마녀',bossSub:'널 갈아버리겠어!',bossDefeat:'인사 병과 욕보이지말고 전역할껄',bossIntro:'네 평정, 내 손안에 있다!',bossColor:'#a855f7',bossHp:310,scoreThresh:27000,barColor:'#a855f7',accentColor:'#a855f7',bnColor:'#a855f7',
     enemies:[{emoji:'📢',label:'거짓정보공개',hp:2},{emoji:'😤',label:'인사갑질',hp:3},{emoji:'🔍',label:'감찰조사',hp:2},{emoji:'🤬',label:'악성민원',hp:4}],
     obstacles:[{emoji:'🤫',label:'뒷다마'},{emoji:'🃏',label:'짜고치는고스톱'},{emoji:'🚫',label:'인사상담거절'}],
     buffs:[{emoji:'💰',label:'상여금!',type:'inv'},{emoji:'🖼️',label:'가족응원!',type:'hp'}],
     bossAtks:[{emoji:'✂️',label:'진급누락!!'},{emoji:'⛓️',label:'강제교류!!'},{emoji:'❌',label:'히스테리!!'}],
   },
-  {num:7,region:'화천 (붕어섬)',bossName:'수시로 떠오르는 전역의 꿈',bossSub:'지금 당장 나가고 싶다...',bossDefeat:'전역은... 신기루였나...!',bossColor:'#10b981',bossHp:350,scoreThresh:32000,barColor:'#10b981',accentColor:'#10b981',bnColor:'#10b981',
+  {num:7,region:'화천 (붕어섬)',bossName:'수시로 떠오르는 전역의 꿈',bossSub:'지금 당장 나가고 싶다...',bossDefeat:'전역은... 신기루였나...!',bossIntro:'전역까지 D-1! 마지막 관문이다!',bossColor:'#10b981',bossHp:350,scoreThresh:32000,barColor:'#10b981',accentColor:'#10b981',bnColor:'#10b981',
     enemies:[{emoji:'📜',label:'명예전역',hp:2},{emoji:'📉',label:'진급실패',hp:3},{emoji:'😰',label:'헬보직',hp:2},{emoji:'⚖️',label:'징계',hp:4}],
     obstacles:[{emoji:'🔬',label:'감찰조사'},{emoji:'😓',label:'체력저하'},{emoji:'🤝',label:'듣보잡인맥'}],
     buffs:[{emoji:'💳',label:'대출성공!',type:'score'},{emoji:'👨‍👩‍👧',label:'가족의힘!',type:'hp'},{emoji:'⭐',label:'진급!',type:'inv'}],
@@ -506,7 +525,7 @@ let GS='START',stIdx=0,score=0,stScore=0,totalTime=0,lastTime=0,dt=0;
 let player,enemies,obstacles,projectiles,buffs,boss;
 let scroll=0,shake=0,lastShot=0,gameStart=0;
 let spawnET=0,spawnOT=0,spawnBT=0,spawnWT=0,spawnGT=0,spawnFT=0;
-let combo=0,comboTimer=0,skillCD=0,feverTimer=0,slowmo=0,bombs=2;
+let combo=0,comboTimer=0,skillCD=0,feverTimer=0,slowmo=0,bombs=2,grazeCount=0;
 let fireworkShow=0,fireworkT=0,bossDefeatMsg='',bossDefeatT=0,bossDefeating=false;
 let particles=[],skillParticles=[],explosions=[],floatTexts=[],bossBullets=[];
 let curWeapon=null,weaponTimer=0; // 현재 장착 무기, 남은 시간
@@ -525,10 +544,10 @@ function buffInterval(){return[20,17,15,14,13,12,11][stIdx];}
 
 function reset(){
   stIdx=0;score=0;stScore=0;totalTime=0;scroll=0;shake=0;lastShot=0;gameStart=0;lastTime=0;
-  spawnET=0;spawnOT=0;spawnBT=0;spawnWT=4;spawnGT=0;spawnFT=0;combo=0;comboTimer=0;skillCD=30;feverTimer=0;slowmo=0;fireworkShow=0;bossDefeatT=0;bossDefeating=false;bombs=2;bombFlash=0;updateBombBtn(); // 새 게임은 폭탄 2개 고정
+  spawnET=0;spawnOT=0;spawnBT=0;spawnWT=4;spawnGT=0;spawnFT=0;combo=0;comboTimer=0;skillCD=30;feverTimer=0;slowmo=0;fireworkShow=0;bossDefeatT=0;bossDefeating=false;bombs=2;bombFlash=0;grazeCount=0;updateBombBtn(); // 새 게임은 폭탄 2개 고정
   curWeapon=null;weaponTimer=0;
   upg={fireRate:0,pierce:0,bulletSize:0,skillCd:0,magnet:0,option:0,bombCap:0};
-  player={x:canvas.width/2,y:canvas.height-130,size:PS,hp:3,tx:canvas.width/2,ty:canvas.height-130,inv:0,aura:0,dash:0};
+  player={x:canvas.width/2,y:canvas.height-130,size:PS,hp:3,tx:canvas.width/2,ty:canvas.height-130,inv:0,aura:0,dash:0,shield:false};
   enemies=[];obstacles=[];projectiles=[];buffs=[];boss=null;particles=[];skillParticles=[];explosions=[];floatTexts=[];bossBullets=[];
   document.getElementById('bn').style.visibility='hidden';
   document.getElementById('bbw').style.display='none';
@@ -599,7 +618,8 @@ function showRewardScreen(nextStageIdx,cb){
     btn.innerHTML=`<span style="font-size:22px;">${r.emoji}</span><span style="flex:1;"><span style="font-weight:800;font-size:13px;color:#f59e0b;">${r.name}${lv>0?` <span style="color:#6ee7b7;font-size:10px;">Lv.${lv+1}</span>`:''}</span><br><span style="font-size:11px;color:#999;">${r.desc}</span></span>`;
     btn.onclick=()=>{
       upg[r.key]++;sfx('item');
-      if(r.key==='bombCap'){bombs=2+upg.bombCap;updateBombBtn();} // 즉시 반영
+      if(r.key==='bombCap'){bombs=2+upg.bombCap;updateBombBtn();
+        setTimeout(()=>showFloatText(canvas.width/2,canvas.height*.5,'💣 폭탄 총 '+bombs+'개!','#f87171',{decay:.5,rise:15,size:22}),100);} // 즉시 반영+표시
       showOvl(null);
       if(pendingRewardCb){const f=pendingRewardCb;pendingRewardCb=null;f();}
     };
@@ -1344,6 +1364,30 @@ function drawObstacle(o){
 
 function drawBuff(b){
   const bv=Math.sin(Date.now()*.007)*4;const pulse=(.7+Math.sin(Date.now()*.004)*.3);ctx.save();
+  // 실드 드랍
+  if(b.type==='shield'){
+    const bx=b.x,by=b.y+bv;
+    ctx.shadowBlur=14;ctx.shadowColor='#60a5fa';
+    ctx.fillStyle='#3b82f6';
+    ctx.beginPath();ctx.moveTo(bx,by-b.size*.5);
+    ctx.lineTo(bx+b.size*.42,by-b.size*.24);ctx.lineTo(bx+b.size*.42,by+b.size*.1);
+    ctx.quadraticCurveTo(bx,by+b.size*.55,bx-b.size*.42,by+b.size*.1);
+    ctx.lineTo(bx-b.size*.42,by-b.size*.24);ctx.closePath();ctx.fill();
+    ctx.shadowBlur=0;ctx.fillStyle='#dbeafe';ctx.font='bold '+(b.size*.4)+'px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🛡',bx,by);
+    ctx.restore();return;
+  }
+  // 코인 드랍
+  if(b.type==='coin'){
+    const bx=b.x,by=b.y+bv,spin=Math.abs(Math.cos(Date.now()*.006));
+    ctx.shadowBlur=10;ctx.shadowColor='#fbbf24';
+    const cg=ctx.createRadialGradient(bx-2,by-2,1,bx,by,b.size*.5);
+    cg.addColorStop(0,'#fef3c7');cg.addColorStop(.6,'#fbbf24');cg.addColorStop(1,'#b45309');
+    ctx.fillStyle=cg;ctx.beginPath();ctx.ellipse(bx,by,b.size*.4*spin+2,b.size*.4,0,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;ctx.fillStyle='#92400e';ctx.font='bold '+(b.size*.4)+'px sans-serif';
+    ctx.textAlign='center';ctx.textBaseline='middle';if(spin>.4)ctx.fillText('₩',bx,by);
+    ctx.restore();return;
+  }
   // 무기는 청록색 별도 처리
   if(b.type==='weapon'){
     ctx.shadowBlur=20+pulse*10;ctx.shadowColor='#22d3ee';
@@ -1450,6 +1494,7 @@ function drawPlayer(){
   // 오라 (회복/무적)
   if(player.aura>0){ctx.shadowBlur=20;ctx.shadowColor='#10b981';ctx.fillStyle='rgba(16,185,129,.2)';ctx.beginPath();ctx.arc(px,py,S*.95,0,Math.PI*2);ctx.fill();}
   if(player.dash>0){ctx.shadowBlur=16;ctx.shadowColor='#f59e0b';ctx.strokeStyle='rgba(245,158,11,.5)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(px,py,S*.78,0,Math.PI*2);ctx.stroke();}
+  if(player.shield){const sp=.6+Math.sin(Date.now()*.008)*.4;ctx.shadowBlur=14;ctx.shadowColor='#60a5fa';ctx.strokeStyle=`rgba(96,165,250,${sp})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(px,py,S*.92,0,Math.PI*2);ctx.stroke();ctx.fillStyle='rgba(96,165,250,.08)';ctx.beginPath();ctx.arc(px,py,S*.92,0,Math.PI*2);ctx.fill();}
   ctx.shadowBlur=0;
   const bob=Math.sin(Date.now()*.005)*1.5; // 살짝 둥실
   const yy=py+bob;
@@ -1657,11 +1702,28 @@ function spawnObs(){
   obstacles.push({id:Math.random(),x:40+Math.random()*(canvas.width-80),y:-62,size:36,
     speed:(150+Math.random()*85)*diff,emoji:cfg.emoji,label:cfg.label,category:'obstacle'});
 }
+// 피격 처리 (실드 우선 소모)
+function takeDamage(col){
+  if(player.shield){player.shield=false;player.inv=90;shake=14;sfx('item');
+    showFloatText(player.x,player.y-30,'🛡️ 방어!','#60a5fa',{decay:1,rise:18,size:15});renderHUD();return;}
+  player.hp--;player.inv=100;shake=16;sfx('damage');combo=0;spawnHitParticles(player.x,player.y,col||'#fb7185');renderHUD();
+}
 function spawnBuff(){
   const st=getSt();
   const cfg=st.buffs[Math.floor(Math.random()*st.buffs.length)];
   buffs.push({id:Math.random(),x:40+Math.random()*(canvas.width-80),y:-50,size:30,
     speed:105,emoji:cfg.emoji,label:cfg.label,type:cfg.type,category:'buff'});
+}
+// 적 처치 시 아이템 드랍 (낮은 확률)
+function tryDrop(x,y){
+  const r=Math.random();
+  if(r<.06){
+    // 실드 (2.5%) - 파란 방패
+    buffs.push({id:Math.random(),x,y,size:26,speed:90,type:'shield',label:'실드',category:'buff',drop:true});
+  }else if(r<.20){
+    // 코인 (14%) - 작은 점수
+    buffs.push({id:Math.random(),x,y,size:22,speed:130,type:'coin',label:'',category:'buff',drop:true});
+  }
 }
 // 황금 보너스 적 - 빠르게 가로지름, 잡으면 대박
 function spawnGolden(){
@@ -1948,6 +2010,8 @@ function loop(ts){
     const bn=document.getElementById('bn');bn.style.color=st.bnColor;
     bn.textContent='⚠ '+st.bossName+' 출현! ⚠';bn.style.visibility='visible';
     setTimeout(()=>bn.style.visibility='hidden',3000);
+    // 보스 도발 대사 (등장 후 잠깐 뒤)
+    if(st.bossIntro)setTimeout(()=>{if(boss)showFloatText(canvas.width/2,canvas.height*.28,'"'+st.bossIntro+'"',st.bossColor,{decay:.5,rise:8,size:16});},900);
   }
 
   // 발사체
@@ -2026,11 +2090,12 @@ function loop(ts){
             showFloatText(e.x,e.y,'+1500','#FFD700');
             enemies.splice(i,1);addCombo();dead=true;break;
           }
+          const dropX=e.x,dropY=e.y;
           enemies.splice(i,1);
           const mult=getComboMult();
           const pts=Math.floor((e.kamikaze?400:250)*mult); // 최종점수용 (상향)
           const gauge=Math.floor((e.kamikaze?300:200)*mult); // 보스 게이지용 (유지)
-          score+=pts;stScore+=gauge;addCombo();dead=true;break;
+          score+=pts;stScore+=gauge;addCombo();tryDrop(dropX,dropY);dead=true;break;
         }
       }
     }
@@ -2049,7 +2114,7 @@ function loop(ts){
       }
       else{
         if(e.kamikaze){spawnExplosion(e.x,e.y,70);sfx('skill');}
-        player.hp--;player.inv=100;shake=18;sfx('damage');combo=0;renderHUD();
+        takeDamage('#ef4444');
         if(e.kamikaze)enemies.splice(i,1); // 자폭병은 충돌 후 사라짐
       }
       continue;
@@ -2061,7 +2126,7 @@ function loop(ts){
   for(let i=obstacles.length-1;i>=0;i--){
     const o=obstacles[i];o.y+=o.speed*dt;drawObstacle(o);
     if(player.inv===0&&Math.hypot(o.x-player.x,o.y-player.y)<o.size/2+player.size/2){
-      player.hp--;player.inv=100;shake=16;sfx('damage');combo=0;spawnHitParticles(player.x,player.y,'#8b5cf6');renderHUD();
+      takeDamage('#8b5cf6');
     }
     if(o.y>canvas.height+55)obstacles.splice(i,1);
   }
@@ -2078,9 +2143,18 @@ function loop(ts){
     ctx.fillStyle=bg2;ctx.beginPath();ctx.arc(bb.x,bb.y,bb.size,0,Math.PI*2);ctx.fill();
     ctx.restore();
     // 충돌
-    if(player.inv===0&&Math.hypot(bb.x-player.x,bb.y-player.y)<bb.size+player.size*.38){
-      player.hp--;player.inv=100;shake=16;sfx('damage');combo=0;spawnHitParticles(player.x,player.y,'#fb7185');renderHUD();
+    const distP=Math.hypot(bb.x-player.x,bb.y-player.y);
+    if(player.inv===0&&distP<bb.size+player.size*.38){
+      takeDamage('#fb7185');
       bossBullets.splice(i,1);continue;
+    }
+    // 그레이즈 (스침) - 아슬아슬하게 지나가면 보너스
+    if(!bb.grazed&&distP<bb.size+player.size*.85&&distP>bb.size+player.size*.38){
+      bb.grazed=true;grazeCount++;
+      const gp=50;score+=gp;
+      showFloatText(player.x+8,player.y-20,'+'+gp,'#67e8f9',{decay:1.6,rise:35,size:12});
+      // 스침 이펙트 (작은 청록 반짝)
+      for(let k=0;k<3;k++){const a=Math.random()*Math.PI*2;particles.push({x:player.x,y:player.y,vx:Math.cos(a)*90,vy:Math.sin(a)*90,life:1,color:'#67e8f9',size:2+Math.random()*2});}
     }
     // 화면 밖 제거
     if(bb.x<-30||bb.x>canvas.width+30||bb.y<-30||bb.y>canvas.height+30)bossBullets.splice(i,1);
@@ -2106,6 +2180,8 @@ function loop(ts){
       else if(b.type==='hp'){player.aura=280;player.inv=180;player.hp=Math.min(3,player.hp+1);renderHUD();}
       else if(b.type==='score'){score+=1000;stScore+=1000;}
       else if(b.type==='weapon'){curWeapon=b.weaponKey;weaponTimer=8;} // 8초 장착
+      else if(b.type==='shield'){player.shield=true;renderHUD();showFloatText(player.x,player.y-30,'🛡️ 실드!','#60a5fa',{decay:.8,rise:20,size:16});}
+      else if(b.type==='coin'){const cp=120;score+=cp;showFloatText(b.x,b.y,'+'+cp,'#fcd34d',{decay:1.4,rise:30,size:13});}
       buffs.splice(i,1);
     }
     if(b.y>canvas.height+55)buffs.splice(i,1);
@@ -2284,16 +2360,50 @@ function onStageClear(){
   if(stIdx>=6){
     const sec=Math.floor((Date.now()-gameStart)/1000);
     const{final,tb,clearBonus}=calcFinalScore(score,sec,7);
-    score=final;showOvl('ovl-win');
+    score=final;
+    // 승리 화면 데이터 미리 세팅
     document.getElementById('win-sc').textContent=final.toLocaleString();
     document.getElementById('win-det').innerHTML=`<span>기본 ${(final-tb-clearBonus).toLocaleString()}</span><span class="hi">⏱ +${tb.toLocaleString()}</span><span class="hi2">🎖️ +${clearBonus.toLocaleString()}</span><span>${fmtT(sec)}</span>`;
-    showRankUI('win-rank','win-na','win-out','win-lb',final);
+    // 엔딩 컷씬 먼저 재생
+    playEnding(final);
   }else{
     stIdx++;GS='TRANSITION';
     // 다음 스테이지 진급 → 보상 선택 → 배너 → 시작
     showRewardScreen(stIdx,()=>{
       showStageBanner(()=>{lastTime=performance.now();GS='PLAYING';loopId=requestAnimationFrame(loop);startBGM();});
     });
+  }
+}
+
+function playEnding(finalScore){
+  stopBGM();
+  const ov=document.getElementById('ovl-ending');
+  const content=document.getElementById('ending-content');
+  const story=document.getElementById('ending-story');
+  story.textContent='졸라 빡신 선임부터 전역의 꿈까지, 모든 위기를 극복한 재홍 원사. 오랜 군생활을 마치고 마침내 사회로 첫 발을 내딛습니다. 그동안 고생 많으셨습니다!';
+  ov.style.display='flex';content.style.opacity='0';
+  // CSS 색종이 생성
+  const cl=document.getElementById('confetti-layer');cl.innerHTML='';
+  const cols=['#f87171','#fbbf24','#34d399','#60a5fa','#c084fc','#f472b6'];
+  for(let i=0;i<40;i++){
+    const d=document.createElement('div');
+    const sz=6+Math.random()*6;
+    d.style.cssText=`position:absolute;width:${sz}px;height:${sz*.6}px;background:${cols[i%cols.length]};left:${Math.random()*100}%;top:-20px;opacity:.9;border-radius:2px;animation:cfall ${2+Math.random()*2.5}s linear ${Math.random()*2}s infinite;transform:rotate(${Math.random()*360}deg);`;
+    cl.appendChild(d);
+  }
+  // 폭죽 축하
+  setTimeout(()=>{content.style.opacity='1';},300);
+  startFireworkShow&&startFireworkShow();
+  // 축하 BGM (승리 멜로디)
+  if(!muted&&AC){
+    const notes=[523,659,784,1047,784,880,1047];
+    notes.forEach((f,i)=>{setTimeout(()=>{
+      if(muted||!AC)return;const n=AC.currentTime;
+      const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(.001,n);g.gain.linearRampToValueAtTime(.08,n+.03);
+      g.gain.exponentialRampToValueAtTime(.001,n+.5);o.start(n);o.stop(n+.5);
+    },300+i*180);});
   }
 }
 async function onGameOver(sec){
@@ -2303,7 +2413,7 @@ async function onGameOver(sec){
   const baseScore=score; // 시간보너스 더하기 전 = 처치 누적
   score=final;
   document.getElementById('go-sc').textContent=Math.floor(final).toLocaleString();
-  document.getElementById('go-det').innerHTML=`<span>💥 ${baseScore.toLocaleString()}</span><span class="hi">⏱ +${tb.toLocaleString()}</span><span>ST${stIdx+1}·${fmtT(sec)}</span>`;
+  document.getElementById('go-det').innerHTML=`<span>💥 ${baseScore.toLocaleString()}</span><span class="hi">⏱ +${tb.toLocaleString()}</span><span>ST${stIdx+1}·${fmtT(sec)}${grazeCount>0?' · ✨'+grazeCount:''}</span>`;
   document.getElementById('go-nick').value='';document.getElementById('btn-go-sub').disabled=false;document.getElementById('go-sub-msg').textContent='';
   await showRankUI('go-rank','go-na','go-out','go-lb',final);
 }
@@ -2335,6 +2445,11 @@ function startGame(){
 function goStart(){GS='STOP';stopBGM();if(loopId){cancelAnimationFrame(loopId);loopId=null;}showOvl('ovl-start');}
 
 document.getElementById('bomb-btn').onclick=useBomb;
+document.getElementById('btn-ending-next').onclick=()=>{
+  document.getElementById('ovl-ending').style.display='none';
+  showOvl('ovl-win');
+  showRankUI('win-rank','win-na','win-out','win-lb',score);
+};
 document.getElementById('btn-start').onclick=startGame;
 document.getElementById('btn-lb').onclick=showMainLb;
 document.getElementById('btn-retry-go').onclick=startGame;
