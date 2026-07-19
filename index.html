@@ -1920,8 +1920,8 @@
   </div>
 
   <!-- 집 옆 열매나무 -->
-  <div class="obj" id="o-fruittree" style="top:352px;left:19%;">
-    <svg width="66" height="82" viewBox="0 0 70 88">
+  <div class="obj" id="o-fruittree" style="top:300px;left:14%;">
+    <svg width="80" height="98" viewBox="0 0 70 88">
       <ellipse cx="35" cy="85" rx="24" ry="3" fill="rgba(0,0,0,0.1)"/>
       <!-- 줄기 -->
       <path d="M31,84 Q30,58 33,44 L38,44 Q40,58 39,84Z" fill="#9a6a3c"/>
@@ -1934,12 +1934,12 @@
       <ellipse cx="35" cy="18" rx="16" ry="13" fill="#8fce5a"/>
       <!-- 열매 자리 (id로 제어, 초기 숨김) -->
       <g id="fruits" style="opacity:0;transition:opacity 0.5s;">
-        <circle class="fruit" cx="24" cy="26" r="3.5" fill="#8fce5a"/>
-        <circle class="fruit" cx="44" cy="24" r="3.5" fill="#8fce5a"/>
-        <circle class="fruit" cx="34" cy="36" r="3.5" fill="#8fce5a"/>
-        <circle class="fruit" cx="18" cy="34" r="3.5" fill="#8fce5a"/>
-        <circle class="fruit" cx="50" cy="34" r="3.5" fill="#8fce5a"/>
-        <circle class="fruit" cx="35" cy="16" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="22" cy="26" r="5" fill="#8fce5a"/>
+        <circle class="fruit" cx="46" cy="23" r="5" fill="#8fce5a"/>
+        <circle class="fruit" cx="34" cy="38" r="5" fill="#8fce5a"/>
+        <circle class="fruit" cx="16" cy="36" r="5" fill="#8fce5a"/>
+        <circle class="fruit" cx="52" cy="36" r="5" fill="#8fce5a"/>
+        <circle class="fruit" cx="35" cy="14" r="5" fill="#8fce5a"/>
       </g>
     </svg>
     <div class="obj-label" style="color:#5da035;">🌳 열매나무</div>
@@ -2179,8 +2179,8 @@ function checkProx() {
       triggerDucklings();
     }
     // 열매나무 근접 (352px, left19%)
-    const treeX = vw2 * 0.19, treeY = 352;
-    if (Math.abs(pcy2 - (treeY+40)) < 80 && Math.abs(pcx2 - (treeX+33)) < 80) {
+    const treeX = vw2 * 0.14, treeY = 300;
+    if (Math.abs(pcy2 - (treeY+40)) < 85 && Math.abs(pcx2 - (treeX+33)) < 85) {
       growFruits();
     }
   }
@@ -3776,7 +3776,7 @@ function toggleMusic() {
         f.style.transition = 'fill 1s ease, r 0.4s ease';
         f.setAttribute('fill', '#ff9f3a'); // 주황
         setTimeout(() => f.setAttribute('fill', '#e83a4a'), 700); // 빨강
-        f.setAttribute('r', '4.2');
+        f.setAttribute('r', '6.5');
       }, i * 350 + 400);
     });
     setTimeout(() => {
@@ -3787,6 +3787,8 @@ function toggleMusic() {
       fruits.forEach(f => {
         f.style.cursor = 'pointer';
         f.style.pointerEvents = 'auto';
+        f.setAttribute('stroke', 'rgba(232,58,74,0.001)');
+        f.setAttribute('stroke-width', '14');
       });
     }, 2500 + fruits.length * 350);
   }
