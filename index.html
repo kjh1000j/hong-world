@@ -1918,6 +1918,32 @@
       <text x="24" y="14.5" font-size="7.5" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="bold">사방거리 →</text>
     </svg>
   </div>
+
+  <!-- 집 옆 열매나무 -->
+  <div class="obj" id="o-fruittree" style="top:352px;left:19%;">
+    <svg width="66" height="82" viewBox="0 0 70 88">
+      <ellipse cx="35" cy="85" rx="24" ry="3" fill="rgba(0,0,0,0.1)"/>
+      <!-- 줄기 -->
+      <path d="M31,84 Q30,58 33,44 L38,44 Q40,58 39,84Z" fill="#9a6a3c"/>
+      <path d="M35,56 Q26,50 22,42" stroke="#9a6a3c" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M35,52 Q45,47 49,40" stroke="#9a6a3c" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- 잎 뭉게 -->
+      <ellipse cx="35" cy="28" rx="28" ry="24" fill="#6dbb4a"/>
+      <ellipse cx="18" cy="34" rx="14" ry="12" fill="#7dc95a"/>
+      <ellipse cx="52" cy="32" rx="14" ry="12" fill="#7dc95a"/>
+      <ellipse cx="35" cy="18" rx="16" ry="13" fill="#8fce5a"/>
+      <!-- 열매 자리 (id로 제어, 초기 숨김) -->
+      <g id="fruits" style="opacity:0;transition:opacity 0.5s;">
+        <circle class="fruit" cx="24" cy="26" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="44" cy="24" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="34" cy="36" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="18" cy="34" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="50" cy="34" r="3.5" fill="#8fce5a"/>
+        <circle class="fruit" cx="35" cy="16" r="3.5" fill="#8fce5a"/>
+      </g>
+    </svg>
+    <div class="obj-label" style="color:#5da035;">🌳 열매나무</div>
+  </div>
 </div><!-- /world -->
 </div><!-- /game-wrap -->
 <div id="hint">🕹️ 조이스틱 이동 | 홍 두번탭 경력</div>
@@ -2138,10 +2164,25 @@ function checkProx() {
     // 접근 시엔 특수 이벤트만 발동 (말풍선은 클릭으로)
     if (found.id === 'o-mountain') triggerHeliTour();
     if (found.id === 'o-howitzer') triggerArtillery();
+    if (found.id === 'o-shanghai') triggerFireworks();
   } else if(!found && nearId) {
     document.getElementById(nearId)?.classList.remove('near');
     nearId = null;
     closeAll(false);
+  }
+  // 연못 근접 (오리 가족) - 함수 끝에서 상시 체크
+  {
+    const vw2 = window.innerWidth;
+    const pcx2 = getPx()+26, pcy2 = py+35;
+    const pondX = vw2 * 0.06, pondY = 652;
+    if (Math.abs(pcy2 - (pondY+36)) < 80 && Math.abs(pcx2 - (pondX+60)) < 90) {
+      triggerDucklings();
+    }
+    // 열매나무 근접 (352px, left19%)
+    const treeX = vw2 * 0.19, treeY = 352;
+    if (Math.abs(pcy2 - (treeY+40)) < 80 && Math.abs(pcx2 - (treeX+33)) < 80) {
+      growFruits();
+    }
   }
 }
 
@@ -3596,6 +3637,194 @@ function toggleMusic() {
   }
 
 
+
+
+  // ===== 광저우 타워 불꽃쇼 =====
+  let fwCooldown = 0;
+  function triggerFireworks() {
+    const now = Date.now();
+    if (now < fwCooldown) return;
+    fwCooldown = now + 20000;
+    const tower = document.getElementById('o-shanghai');
+    if (!tower) return;
+    const trect = tower.getBoundingClientRect();
+    const topX = trect.left + trect.width/2;
+    const topY = trect.top + 6;
+    const colors = ['#ff5a7a','#ffd747','#7ec8e3','#c88aff','#8fce5a','#ff9f3a','#fff'];
+    let bursts = 0;
+    const maxBursts = 5;
+    function launchOne() {
+      if (bursts >= maxBursts) return;
+      bursts++;
+      // 발사 지점 (타워 위 랜덤)
+      const bx = topX + (Math.random()-0.5) * 90;
+      const by = topY - 30 - Math.random() * 70;
+      // 펑 소리
+      try {
+        if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (sfxCtx.state === 'suspended') sfxCtx.resume();
+        const t = sfxCtx.currentTime;
+        const o = sfxCtx.createOscillator(), g = sfxCtx.createGain();
+        o.type = 'sine';
+        o.frequency.setValueAtTime(800, t);
+        o.frequency.exponentialRampToValueAtTime(180, t + 0.15);
+        g.gain.setValueAtTime(0.12, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+        o.connect(g); g.connect(sfxCtx.destination);
+        o.start(t); o.stop(t + 0.3);
+      } catch(e){}
+      // 파티클 폭발
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      const n = 14;
+      for (let i = 0; i < n; i++) {
+        const ang = (Math.PI * 2 * i) / n;
+        const dist = 26 + Math.random() * 16;
+        const p = document.createElement('div');
+        p.style.cssText = 'position:fixed;z-index:600;pointer-events:none;width:5px;height:5px;border-radius:50%;background:' + color + ';box-shadow:0 0 6px ' + color + ';left:' + bx + 'px;top:' + by + 'px;transition:all 0.8s ease-out;';
+        document.body.appendChild(p);
+        requestAnimationFrame(() => {
+          p.style.left = (bx + Math.cos(ang) * dist) + 'px';
+          p.style.top = (by + Math.sin(ang) * dist + 14) + 'px';
+          p.style.opacity = '0';
+        });
+        setTimeout(() => p.remove(), 850);
+      }
+      setTimeout(launchOne, 350 + Math.random()*300);
+    }
+    launchOne();
+  }
+
+
+  // ===== 아기오리 가족 행진 =====
+  let ducklingCooldown = 0;
+  function triggerDucklings() {
+    const now = Date.now();
+    if (now < ducklingCooldown) return;
+    ducklingCooldown = now + 25000;
+    const pond = document.querySelector('#pond-duck');
+    if (!pond) return;
+    const prect = pond.getBoundingClientRect();
+    const startX = prect.left + prect.width/2;
+    const startY = prect.top + prect.height/2;
+    // 삑삑 소리
+    try {
+      if (!sfxCtx) sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (sfxCtx.state === 'suspended') sfxCtx.resume();
+      for (let k = 0; k < 3; k++) {
+        const t = sfxCtx.currentTime + k * 0.18;
+        const o = sfxCtx.createOscillator(), g = sfxCtx.createGain();
+        o.type = 'square';
+        o.frequency.setValueAtTime(520, t);
+        o.frequency.exponentialRampToValueAtTime(380, t + 0.1);
+        g.gain.setValueAtTime(0.05, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+        o.connect(g); g.connect(sfxCtx.destination);
+        o.start(t); o.stop(t + 0.13);
+      }
+    } catch(e){}
+    // 아기오리 3마리 줄지어
+    for (let i = 0; i < 3; i++) {
+      const baby = document.createElement('div');
+      baby.style.cssText = 'position:fixed;z-index:400;pointer-events:none;transition:none;';
+      baby.innerHTML = '<svg width="18" height="16" viewBox="0 0 18 16">' +
+        '<ellipse cx="8" cy="10" rx="6" ry="4.5" fill="#ffe066"/>' +
+        '<circle cx="13" cy="6" r="3.5" fill="#ffe066"/>' +
+        '<path d="M16,6 L18.5,6.6 L16,7.4Z" fill="#ff9f3a"/>' +
+        '<circle cx="13.5" cy="5.3" r="0.7" fill="#3a2a15"/>' +
+        '<path d="M4,11 Q8,13 12,11" stroke="#e8c84a" stroke-width="1" fill="none"/>' +
+        '</svg>';
+      document.body.appendChild(baby);
+      const delay = i * 400;
+      const t0 = performance.now();
+      const DUR = 3500;
+      const offset = (i + 1) * 16; // 엄마 뒤로 간격
+      function swim(now2) {
+        const el = now2 - t0 - delay;
+        if (el < 0) { requestAnimationFrame(swim); return; }
+        const t = Math.min(1, el / DUR);
+        // 연못 주위 반원 헤엄
+        const ang = Math.PI * 0.2 + t * Math.PI * 1.2;
+        const rx = 42, ry = 20;
+        const wob = Math.sin(el / 120) * 2;
+        baby.style.left = (startX + Math.cos(ang) * (rx - i*3) - 9) + 'px';
+        baby.style.top = (startY + Math.sin(ang) * (ry - i*2) + wob - 8) + 'px';
+        if (t < 1) requestAnimationFrame(swim);
+        else {
+          baby.style.transition = 'opacity 0.6s';
+          baby.style.opacity = '0';
+          setTimeout(() => baby.remove(), 650);
+        }
+      }
+      requestAnimationFrame(swim);
+    }
+  }
+
+
+  // ===== 열매나무: 맺힘 → 익음 → 수확 =====
+  let fruitState = 'empty'; // empty, growing, ripe
+  let harvestCount = 0;
+  function growFruits() {
+    if (fruitState !== 'empty') return;
+    fruitState = 'growing';
+    const g = document.getElementById('fruits');
+    const fruits = document.querySelectorAll('#fruits .fruit');
+    if (!g) return;
+    g.style.opacity = '1';
+    // 초록 → 빨강 익어가기 (2.5초)
+    fruits.forEach((f, i) => {
+      setTimeout(() => {
+        f.style.transition = 'fill 1s ease, r 0.4s ease';
+        f.setAttribute('fill', '#ff9f3a'); // 주황
+        setTimeout(() => f.setAttribute('fill', '#e83a4a'), 700); // 빨강
+        f.setAttribute('r', '4.2');
+      }, i * 350 + 400);
+    });
+    setTimeout(() => {
+      fruitState = 'ripe';
+      // 익으면 반짝 + 클릭 유도
+      const label = document.querySelector('#o-fruittree .obj-label');
+      if (label) label.innerHTML = '🍒 수확하기!';
+      fruits.forEach(f => {
+        f.style.cursor = 'pointer';
+        f.style.pointerEvents = 'auto';
+      });
+    }, 2500 + fruits.length * 350);
+  }
+  // 열매 클릭 수확 (이벤트 위임)
+  document.addEventListener('click', function(e) {
+    if (fruitState !== 'ripe') return;
+    const f = e.target.closest('.fruit');
+    if (!f) return;
+    e.stopPropagation();
+    // 수확 이펙트
+    playPop();
+    harvestCount++;
+    f.setAttribute('r', '0');
+    f.style.pointerEvents = 'none';
+    // 톡 튀는 열매
+    const trect = f.getBoundingClientRect();
+    const pop = document.createElement('div');
+    pop.textContent = '🍒';
+    pop.style.cssText = 'position:fixed;z-index:500;pointer-events:none;font-size:16px;transition:all 0.7s ease-out;left:' + trect.left + 'px;top:' + trect.top + 'px;';
+    document.body.appendChild(pop);
+    requestAnimationFrame(() => { pop.style.top = (trect.top - 40) + 'px'; pop.style.opacity = '0'; });
+    setTimeout(() => pop.remove(), 750);
+    // 다 수확했는지
+    const left = [...document.querySelectorAll('#fruits .fruit')].filter(x => x.getAttribute('r') !== '0').length;
+    if (left === 0) {
+      showBbl('🧺 수확 완료!', '열매 6개를 모두 땄어요! 🍒<br>새콤달콤 잘 익었네요 😋<br>잠시 후 다시 열려요!');
+      fruitState = 'empty';
+      const label = document.querySelector('#o-fruittree .obj-label');
+      if (label) label.innerHTML = '🌳 열매나무';
+      // 초록으로 리셋 (재방문 시 다시 맺힘)
+      setTimeout(() => {
+        document.getElementById('fruits').style.opacity = '0';
+        document.querySelectorAll('#fruits .fruit').forEach(x => {
+          x.setAttribute('fill', '#8fce5a'); x.setAttribute('r', '3.5');
+        });
+      }, 2000);
+    }
+  });
 
 </script>
 
